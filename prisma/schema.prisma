@@ -1,0 +1,1055 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// ADMIN & AUTHENTICATION
+// ============================================================================
+
+model AdminUser {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         String   @default("admin")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("admin_users")
+}
+
+// ============================================================================
+// PORTAL SESSION & ENGAGEMENT
+// ============================================================================
+
+model PortalSession {
+  id               String   @id @default(uuid())
+  sessionToken     String   @unique @default(uuid()) @map("session_token")
+  displayName      String?  @map("display_name")
+  assessmentStage  String   @default("Not Yet Assessed") @map("assessment_stage")
+  completedModules String[] @default([]) @map("completed_modules")
+  currentFocus     String?  @map("current_focus")
+  lastActivityAt   DateTime @default(now()) @map("last_activity_at")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  profile         PortalProfile?
+  membership      MembershipEnrollment?
+  surahViews      SurahView[]
+  reflections     ReflectionEntry[]
+  activityEvents  ActivityEvent[]
+  supportTickets  SupportTicket[]
+
+  @@index([sessionToken])
+  @@map("portal_sessions")
+}
+
+model PortalProfile {
+  id          String   @id @default(uuid())
+  sessionToken String  @unique @map("session_token")
+  session     PortalSession @relation(fields: [sessionToken], references: [sessionToken], onDelete: Cascade)
+  fullName    String   @default("") @map("full_name")
+  displayName String   @default("") @map("display_name")
+  location    String   @default("")
+  bio         String   @default("")
+  interests   String[] @default([])
+  avatarUrl   String   @default("") @map("avatar_url")
+  email       String   @default("")
+  phone       String   @default("")
+  addressLine1 String  @default("") @map("address_line1")
+  addressLine2 String  @default("") @map("address_line2")
+  city        String   @default("")
+  country     String   @default("")
+  postalCode  String   @default("") @map("postal_code")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([sessionToken])
+  @@map("portal_profiles")
+}
+
+model MembershipEnrollment {
+  id           String   @id @default(uuid())
+  sessionToken String   @map("session_token")
+  session      PortalSession @relation(fields: [sessionToken], references: [sessionToken], onDelete: Cascade)
+  tier         String   @default("seeker")
+  status       String   @default("active")
+  appliedAt    DateTime @default(now()) @map("applied_at")
+  activatedAt  DateTime @default(now()) @map("activated_at")
+  cancelledAt  DateTime? @map("cancelled_at")
+  notes        String   @default("")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@unique([sessionToken])
+  @@index([sessionToken])
+  @@map("membership_enrollments")
+}
+
+model SurahView {
+  id           String   @id @default(uuid())
+  sessionToken String   @map("session_token")
+  session      PortalSession @relation(fields: [sessionToken], references: [sessionToken], onDelete: Cascade)
+  surahNumber  Int      @map("surah_number")
+  viewedAt     DateTime @default(now()) @map("viewed_at")
+
+  @@unique([sessionToken, surahNumber])
+  @@index([sessionToken])
+  @@index([surahNumber])
+  @@map("surah_views")
+}
+
+model ReflectionEntry {
+  id             String   @id @default(uuid())
+  sessionToken   String   @map("session_token")
+  session        PortalSession @relation(fields: [sessionToken], references: [sessionToken], onDelete: Cascade)
+  surahNumber    Int      @map("surah_number")
+  reflectionText String   @map("reflection_text")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@unique([sessionToken, surahNumber])
+  @@index([sessionToken])
+  @@index([surahNumber])
+  @@map("reflection_journal")
+}
+
+model ActivityEvent {
+  id         String   @id @default(uuid())
+  sessionToken String @map("session_token")
+  session    PortalSession @relation(fields: [sessionToken], references: [sessionToken], onDelete: Cascade)
+  eventType  String   @default("") @map("event_type")
+  eventLabel String   @default("") @map("event_label")
+  eventMetadata Json? @default("{}") @map("event_metadata")
+  occurredAt DateTime @default(now()) @map("occurred_at")
+
+  @@index([sessionToken])
+  @@index([occurredAt])
+  @@map("portal_activity_events")
+}
+
+// ============================================================================
+// SUPPORT TICKETS
+// ============================================================================
+
+model SupportTicket {
+  id           String   @id @default(uuid())
+  sessionToken String   @map("session_token")
+  session      PortalSession @relation(fields: [sessionToken], references: [sessionToken], onDelete: Cascade)
+  ticketNumber String   @unique @map("ticket_number")
+  subject      String
+  description  String
+  category     String   @default("general")
+  priority     String   @default("medium")
+  status       String   @default("open")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  replies      SupportTicketReply[]
+
+  @@index([sessionToken])
+  @@map("support_tickets")
+}
+
+model SupportTicketReply {
+  id         String   @id @default(uuid())
+  ticketId   String   @map("ticket_id")
+  ticket     SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  authorType String   @default("admin") @map("author_type")
+  authorName String   @default("SSC Support Team") @map("author_name")
+  body       String
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([ticketId])
+  @@map("support_ticket_replies")
+}
+
+// ============================================================================
+// DONATIONS
+// ============================================================================
+
+model Donation {
+  id                    String    @id @default(uuid())
+  donorName             String    @map("donor_name")
+  donorEmail            String    @map("donor_email")
+  amount                Float
+  currency              String    @default("usd")
+  frequency             String    @default("one_time")
+  status                String    @default("pending")
+  processor             String?
+  processingEntity      String?   @map("processing_entity")
+  transactionId         String    @unique @map("transaction_id")
+  stripeSessionId       String?   @map("stripe_session_id")
+  stripePaymentIntentId String?   @map("stripe_payment_intent_id")
+  receiptUrl            String?   @map("receipt_url")
+  message               String?
+  completedAt           DateTime? @map("completed_at")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  @@index([donorEmail])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+  @@map("donations")
+}
+
+// ============================================================================
+// APPLICATIONS
+// ============================================================================
+
+model MembershipApplication {
+  id                  String   @id @default(uuid())
+  membershipType      String   @map("membership_type")
+  status              String   @default("pending")
+  fullName            String   @map("full_name")
+  displayName         String   @default("") @map("display_name")
+  email               String
+  location            String   @default("")
+  affiliation         String   @default("")
+  areasOfStudy        String[] @default([]) @map("areas_of_study")
+  bio                 String   @default("")
+  statement           String   @default("")
+  linkedPublications  String[] @default([]) @map("linked_publications")
+  academicFocus       String?  @map("academic_focus")
+  researchInterest    String?  @map("research_interest")
+  yearsOfEngagement   String?  @map("years_of_engagement")
+  leadershipRoles     String?  @map("leadership_roles")
+  publicationsList    String?  @map("publications_list")
+  referenceContact    String?  @map("reference_contact")
+  reviewNotes         String?  @map("review_notes")
+  reviewedAt          DateTime? @map("reviewed_at")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([email])
+  @@map("membership_applications")
+}
+
+model VolunteerApplication {
+  id          String   @id @default(uuid())
+  fullName    String   @map("full_name")
+  email       String
+  status      String   @default("pending")
+  reviewNotes String?  @map("review_notes")
+  reviewedAt  DateTime? @map("reviewed_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([email])
+  @@map("volunteer_applications")
+}
+
+model PathwayApplication {
+  id          String   @id @default(uuid())
+  fullName    String   @map("full_name")
+  email       String
+  status      String   @default("pending")
+  reviewNotes String?  @map("review_notes")
+  reviewedAt  DateTime? @map("reviewed_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([email])
+  @@map("pathway_applications")
+}
+
+model MentorshipApplication {
+  id                        String    @id @default(uuid())
+  programId                 String?   @map("program_id")
+  fullName                  String    @map("full_name")
+  email                     String
+  phone                     String?
+  backgroundSummary         String?   @map("background_summary")
+  spiritualGoals            String?   @map("spiritual_goals")
+  relevantExperience        String?   @map("relevant_experience")
+  whyThisProgram            String?   @map("why_this_program")
+  commitmentLevel           String?   @map("commitment_level")
+  availability              String?
+  previousMentorshipExperience String? @map("previous_mentorship_experience")
+  status                    String    @default("pending")
+  reviewNotes               String?   @map("review_notes")
+  reviewedAt                DateTime? @map("reviewed_at")
+  interviewScheduledFor     DateTime? @map("interview_scheduled_for")
+  createdAt                 DateTime  @default(now()) @map("created_at")
+  updatedAt                 DateTime  @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([email])
+  @@map("mentorship_applications")
+}
+
+model CollaborationProposal {
+  id                String   @id @default(uuid())
+  organizationType  String   @map("organization_type")
+  organizationName  String   @map("organization_name")
+  contactName       String   @map("contact_name")
+  contactEmail      String   @map("contact_email")
+  contactPhone      String?  @map("contact_phone")
+  collaborationType String   @map("collaboration_type")
+  proposalSummary   String   @map("proposal_summary")
+  proposalDetails   String   @map("proposal_details")
+  scope             String
+  timeline          String
+  status            String   @default("pending")
+  reviewNotes       String?  @map("review_notes")
+  reviewedAt        DateTime? @map("reviewed_at")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([contactEmail])
+  @@map("collaboration_proposals")
+}
+
+model ConferenceSubmission {
+  id                   String   @id @default(uuid())
+  trackingCode         String   @unique @map("tracking_code")
+  submissionType       String   @map("submission_type")
+  title                String
+  abstract             String
+  keywords             String?
+  presenterName        String   @map("presenter_name")
+  presenterEmail       String   @map("presenter_email")
+  presenterAffiliation String   @map("presenter_affiliation")
+  presenterBio         String   @map("presenter_bio")
+  coPresenters         Json     @default("[]") @map("co_presenters")
+  fileName             String?  @map("file_name")
+  fileSizeBytes        Int?     @map("file_size_bytes")
+  status               String   @default("submitted")
+  adminNotes           String?  @map("admin_notes")
+  reviewerDecision     String?  @map("reviewer_decision")
+  reviewedBy           String?  @map("reviewed_by")
+  reviewedAt           DateTime? @map("reviewed_at")
+  submittedAt          DateTime @default(now()) @map("submitted_at")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([presenterEmail])
+  @@index([trackingCode])
+  @@map("conference_submissions")
+}
+
+// ============================================================================
+// CONTENT MANAGEMENT
+// ============================================================================
+
+model MediaTrack {
+  id        String   @id @default(uuid())
+  slug      String   @unique
+  title     String
+  viewCount Int      @default(0) @map("view_count")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([slug])
+  @@map("media_tracks")
+}
+
+model Saint {
+  id           String    @id @default(uuid())
+  slug         String    @unique @default("")
+  name         String
+  birthYear    Int?      @map("birth_year")
+  deathYear    Int?      @map("death_year")
+  biography    String?
+  shortSummary String?   @map("short_summary")
+  region       String?
+  isFounder    Boolean   @default(false) @map("is_founder")
+  deletedAt    DateTime? @map("deleted_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  saintLineages SaintLineage[]
+  saintThemes   SaintTheme[]
+
+  @@index([slug])
+  @@index([birthYear])
+  @@index([deathYear])
+  @@index([region])
+  @@map("saints_cms")
+}
+
+model Dialogue {
+  id                    String    @id @default(uuid())
+  slug                  String    @unique @default("untitled")
+  title                 String
+  subtitle              String?
+  description           String?
+  type                  String?
+  host                  String?
+  isPublished           Boolean   @default(false) @map("is_published")
+  publishedAt           DateTime? @map("published_at")
+  viewCount             Int       @default(0) @map("view_count")
+  difficultyLevel       String?   @map("difficulty_level")
+  totalEpisodes         Int       @default(0) @map("total_episodes")
+  totalDurationMinutes  Int       @default(0) @map("total_duration_minutes")
+  participants          String[]  @default([])
+  isFeatured            Boolean   @default(false) @map("is_featured")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  episodes              Episode[]
+
+  @@index([slug])
+  @@index([isPublished])
+  @@index([publishedAt])
+  @@map("dialogues_cms")
+}
+
+model Episode {
+  id              String   @id @default(uuid())
+  seriesId        String   @map("series_id")
+  series          Dialogue @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  episodeNumber   Int      @map("episode_number")
+  slug            String   @unique
+  title           String
+  description     String
+  transcript      String?
+  keyQuestions    Json     @default("[]") @map("key_questions")
+  keyInsights     Json     @default("[]") @map("key_insights")
+  participants    String[] @default([])
+  durationMinutes Int?     @map("duration_minutes")
+  videoUrl        String?  @map("video_url")
+  audioUrl        String?  @map("audio_url")
+  publishedAt     DateTime @default(now()) @map("published_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@unique([seriesId, episodeNumber])
+  @@unique([seriesId, slug])
+  @@index([seriesId])
+  @@index([publishedAt])
+  @@map("series_episodes")
+}
+
+model HardTalkSession {
+  id                  String   @id @default(uuid())
+  slug                String   @unique
+  title               String
+  description         String
+  transcript          String?
+  participants        String[] @default([])
+  videoUrl            String?  @map("video_url")
+  audioUrl            String?  @map("audio_url")
+  controversialPoints Json     @default("[]") @map("controversial_points")
+  citations           Json     @default("[]")
+  themes              String[] @default([])
+  publishedAt         DateTime @default(now()) @map("published_at")
+  featured            Boolean  @default(false)
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  @@index([slug])
+  @@index([publishedAt])
+  @@map("hard_talk_sessions")
+}
+
+model PracticeProfile {
+  id              String   @id @default(uuid())
+  slug            String   @unique
+  title           String
+  description     String
+  methodology     String?
+  steps           String[] @default([])
+  practiceType    String   @map("practice_type")
+  durationMinutes Int?     @map("duration_minutes")
+  difficultyLevel String?  @map("difficulty_level")
+  relatedSaints   String[] @default([]) @map("related_saints")
+  themes          String[] @default([])
+  tags            String[] @default([])
+  featured        Boolean  @default(false)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@index([slug])
+  @@index([practiceType])
+  @@map("practices_profiles")
+}
+
+model InspiringInterview {
+  id                   String   @id @default(uuid())
+  slug                 String   @unique
+  title                String
+  description          String
+  transcript           String?
+  intervieweeName      String   @map("interviewee_name")
+  intervieweeAffiliation String? @map("interviewee_affiliation")
+  intervieweeBio       String?  @map("interviewee_bio")
+  videoUrl             String?  @map("video_url")
+  audioUrl             String?  @map("audio_url")
+  keyClips             Json     @default("[]") @map("key_clips")
+  themes               String[] @default([])
+  relatedSaints        String[] @default([]) @map("related_saints")
+  publishedAt          DateTime @default(now()) @map("published_at")
+  featured             Boolean  @default(false)
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  @@index([slug])
+  @@index([publishedAt])
+  @@map("inspiring_interviews")
+}
+
+model InterviewApplication {
+  id           String   @id @default(uuid())
+  name         String
+  email        String
+  affiliation  String?
+  fieldOfWork  String   @map("field_of_work")
+  summary      String
+  themes       String[] @default([])
+  links        Json     @default("[]")
+  availability Json     @default("{}")
+  status       String   @default("pending")
+  adminNotes   String?  @map("admin_notes")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@map("interview_applications")
+}
+
+model ResearchPaper {
+  id            String   @id @default(uuid())
+  title         String
+  abstract      String?
+  authors       Json     @default("[]")
+  publishedYear Int?     @map("published_year")
+  journal       String?
+  doi           String?
+  url           String?
+  isFeatured    Boolean  @default(false) @map("is_featured")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("research_papers_cms")
+}
+
+model SacredKalam {
+  id        String   @id @default(uuid())
+  slug      String   @unique @default("")
+  title     String
+  viewCount Int      @default(0) @map("view_count")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([slug])
+  @@map("sacred_kalam")
+}
+
+model SurahCommentary {
+  id                String   @id @default(uuid())
+  surahNumber       Int      @unique @map("surah_number")
+  arabicName        String   @default("") @map("arabic_name")
+  englishName       String   @default("") @map("english_name")
+  revelationType    String   @default("meccan") @map("revelation_type")
+  coreTheme         String   @default("") @map("core_theme")
+  structuralAxis    String?  @map("structural_axis")
+  sufiReflection    String?  @map("sufi_reflection")
+  interfaithResonance String? @map("interfaith_resonance")
+  hasInterfaithNote Boolean  @default(false) @map("has_interfaith_note")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@index([surahNumber])
+  @@map("surah_commentary")
+}
+
+// ============================================================================
+// USER ROLE MANAGEMENT
+// ============================================================================
+
+model UserRoleGrant {
+  id          String    @id @default(uuid())
+  email       String    @unique
+  grantedRole String    @default("seeker") @map("granted_role")
+  permissions Json      @default("{}")
+  notes       String?
+  isBlocked   Boolean   @default(false) @map("is_blocked")
+  blockReason String?   @map("block_reason")
+  blockedAt   DateTime? @map("blocked_at")
+  grantedAt   DateTime  @default(now()) @map("granted_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("user_role_grants")
+}
+
+// ============================================================================
+// KNOWLEDGE GRAPH & TAXONOMY
+// ============================================================================
+
+model Lineage {
+  id               String    @id @default(uuid())
+  slug             String    @unique
+  name             String
+  description      String?
+  parentLineageId  String?   @map("parent_lineage_id")
+  parentLineage    Lineage?  @relation("LineageHierarchy", fields: [parentLineageId], references: [id])
+  childLineages    Lineage[] @relation("LineageHierarchy")
+  level            Int       @default(0)
+  displayOrder     Int       @default(0) @map("display_order")
+  deletedAt        DateTime? @map("deleted_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  saints           SaintLineage[]
+
+  @@index([slug])
+  @@index([parentLineageId])
+  @@map("lineages")
+}
+
+model Theme {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  name        String
+  description String?
+  category    String   @default("interdisciplinary")
+  displayOrder Int     @default(0) @map("display_order")
+  deletedAt   DateTime? @map("deleted_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  saintThemes SaintTheme[]
+  paperThemes PaperTheme[]
+
+  @@index([slug])
+  @@index([category])
+  @@map("themes")
+}
+
+model Region {
+  id               String    @id @default(uuid())
+  name             String
+  parentRegionId   String?   @map("parent_region_id")
+  parentRegion     Region?   @relation("RegionHierarchy", fields: [parentRegionId], references: [id])
+  childRegions     Region[]  @relation("RegionHierarchy")
+  level            Int       @default(0)
+  slug             String    @unique
+  description      String?
+  displayOrder     Int       @default(0) @map("display_order")
+  deletedAt        DateTime? @map("deleted_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  @@index([parentRegionId])
+  @@index([level])
+  @@map("regions")
+}
+
+model HistoricalPeriod {
+  id                   String    @id @default(uuid())
+  name                 String
+  slug                 String    @unique
+  startYear            Int       @map("start_year")
+  endYear              Int?      @map("end_year")
+  islamicCalendarStart String?   @map("islamic_calendar_start")
+  islamicCalendarEnd   String?   @map("islamic_calendar_end")
+  description          String?
+  significance         String?
+  displayOrder         Int       @default(0) @map("display_order")
+  deletedAt            DateTime? @map("deleted_at")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  @@index([startYear, endYear])
+  @@map("historical_periods")
+}
+
+model InfluenceType {
+  id           String    @id @default(uuid())
+  name         String
+  slug         String    @unique
+  description  String?
+  icon         String?
+  displayOrder Int       @default(0) @map("display_order")
+  deletedAt    DateTime? @map("deleted_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  @@map("influence_types")
+}
+
+model SaintTheme {
+  id        String   @id @default(uuid())
+  saintId   String   @map("saint_id")
+  saint     Saint    @relation(fields: [saintId], references: [id])
+  theme     Theme    @relation(fields: [themeId], references: [id])
+  themeId   String   @map("theme_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([saintId, themeId])
+  @@index([saintId])
+  @@index([themeId])
+  @@map("saint_themes")
+}
+
+model PaperTheme {
+  id        String   @id @default(uuid())
+  paperId   String   @map("paper_id")
+  theme     Theme    @relation(fields: [themeId], references: [id])
+  themeId   String   @map("theme_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([paperId, themeId])
+  @@index([paperId])
+  @@index([themeId])
+  @@map("paper_themes")
+}
+
+model SaintLineage {
+  id         String   @id @default(uuid())
+  saintId    String   @map("saint_id")
+  saint      Saint    @relation(fields: [saintId], references: [id])
+  lineage    Lineage  @relation(fields: [lineageId], references: [id])
+  lineageId  String   @map("lineage_id")
+  role       String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@unique([saintId, lineageId])
+  @@index([saintId])
+  @@index([lineageId])
+  @@map("saint_lineages")
+}
+
+model Relationship {
+  id              String   @id @default(uuid())
+  entityTypeA     String   @map("entity_type_a")
+  entityIdA       String   @map("entity_id_a")
+  entityTypeB     String   @map("entity_type_b")
+  entityIdB       String   @map("entity_id_b")
+  relationshipType String  @map("relationship_type")
+  metadata        Json?
+  influenceTypeId String?  @map("influence_type_id")
+  deletedAt       DateTime? @map("deleted_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@index([relationshipType])
+  @@index([entityTypeA, entityIdA])
+  @@index([entityTypeB, entityIdB])
+  @@map("relationships")
+}
+
+// ============================================================================
+// ASSESSMENTS
+// ============================================================================
+
+model Assessment {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  title       String
+  description String?
+  version     Int      @default(1)
+  isActive    Boolean  @default(true) @map("is_active")
+  deletedAt   DateTime? @map("deleted_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  questions   AssessmentQuestion[]
+  results     AssessmentResult[]
+
+  @@index([slug])
+  @@map("assessments")
+}
+
+model AssessmentQuestion {
+  id            String   @id @default(uuid())
+  assessmentId  String   @map("assessment_id")
+  assessment    Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  dimension     String
+  questionText  String   @map("question_text")
+  weight        Float    @default(1.0)
+  orderIndex    Int      @map("order_index")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@index([assessmentId])
+  @@index([dimension])
+  @@map("assessment_questions")
+}
+
+model AssessmentResult {
+  id          String   @id @default(uuid())
+  assessmentId String  @map("assessment_id")
+  assessment  Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  resultJson  Json     @map("result_json")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([assessmentId])
+  @@map("assessment_results")
+}
+
+// ============================================================================
+// INNER DEVELOPMENT
+// ============================================================================
+
+model Practice {
+  id              String   @id @default(uuid())
+  title           String
+  slug            String   @unique
+  category        String
+  difficultyLevel String   @default("beginner") @map("difficulty_level")
+  durationMinutes Int      @default(15) @map("duration_minutes")
+  description     String
+  instructions    String
+  benefits        String[] @default([])
+  prerequisites   String[] @default([])
+  traditionSource String?  @map("tradition_source")
+  videoUrl        String?  @map("video_url")
+  audioUrl        String?  @map("audio_url")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  resources       PracticeResource[]
+
+  @@index([category])
+  @@index([difficultyLevel])
+  @@index([slug])
+  @@map("practices")
+}
+
+model PracticeResource {
+  id              String   @id @default(uuid())
+  practiceId      String   @map("practice_id")
+  practice        Practice @relation(fields: [practiceId], references: [id], onDelete: Cascade)
+  resourceType    String   @map("resource_type")
+  title           String
+  url             String
+  description     String
+  durationMinutes Int?     @map("duration_minutes")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@map("practice_resources")
+}
+
+model TransformationStage {
+  id                 String   @id @default(uuid())
+  title              String
+  slug               String   @unique
+  arabicName         String   @map("arabic_name")
+  stageNumber        Int      @map("stage_number")
+  category           String   @default("maqam")
+  description        String
+  characteristics    String[] @default([])
+  practicesAssociated String[] @default([]) @map("practices_associated")
+  classicalReferences String[] @default([]) @map("classical_references")
+  challenges         String[] @default([])
+  signsOfProgress    String[] @default([]) @map("signs_of_progress")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  @@index([stageNumber])
+  @@map("transformation_stages")
+}
+
+model EmotionalModule {
+  id               String   @id @default(uuid())
+  title            String
+  slug             String   @unique
+  focusArea        String   @map("focus_area")
+  description      String
+  sufiApproach     String   @map("sufi_approach")
+  modernPsychology String   @map("modern_psychology")
+  practices        String[] @default([])
+  reflectionQuestions String[] @default([]) @map("reflection_questions")
+  resources        Json     @default("[]")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  @@map("emotional_modules")
+}
+
+model StudyCircle {
+  id               String   @id @default(uuid())
+  title            String
+  slug             String   @unique
+  description      String
+  focusText        String   @map("focus_text")
+  facilitator      String
+  meetingFrequency String   @map("meeting_frequency")
+  durationWeeks    Int      @map("duration_weeks")
+  capacity         Int
+  currentEnrollment Int     @default(0) @map("current_enrollment")
+  status           String   @default("upcoming")
+  startDate        DateTime @map("start_date") @db.Date
+  endDate          DateTime? @map("end_date") @db.Date
+  meetingFormat    String   @default("online") @map("meeting_format")
+  prerequisites    String[] @default([])
+  syllabus         Json     @default("{}")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  @@index([status])
+  @@map("study_circles")
+}
+
+model MentorshipProgram {
+  id                     String   @id @default(uuid())
+  title                  String
+  slug                   String   @unique
+  description            String
+  mentorName             String   @map("mentor_name")
+  mentorBio              String   @map("mentor_bio")
+  mentorLineage          String?  @map("mentor_lineage")
+  focusAreas             String[] @default([]) @map("focus_areas")
+  programDurationMonths  Int      @map("program_duration_months")
+  meetingFrequency       String   @map("meeting_frequency")
+  format                 String   @default("one_on_one")
+  capacity               Int
+  currentParticipants    Int      @default(0) @map("current_participants")
+  status                 String   @default("accepting")
+  requirements           String[] @default([])
+  applicationProcess     String   @map("application_process")
+  createdAt              DateTime @default(now()) @map("created_at")
+
+  @@index([status])
+  @@map("mentorship_programs")
+}
+
+model GuidancePathway {
+  id                   String   @id @default(uuid())
+  title                String
+  description          String
+  targetAudience       String   @map("target_audience")
+  assessmentProfile    Json     @default("{}") @map("assessment_profile")
+  recommendedPractices String[] @default([]) @map("recommended_practices")
+  recommendedStages    String[] @default([]) @map("recommended_stages")
+  durationWeeks        Int      @map("duration_weeks")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  @@map("guidance_pathways")
+}
+
+// ============================================================================
+// STATIONS OF THE PATH
+// ============================================================================
+
+model StationPhase {
+  id                   String   @id @default(uuid())
+  phaseNumber          Int      @unique @map("phase_number")
+  nameEnglish          String   @map("name_english")
+  nameArabic           String?  @map("name_arabic")
+  description          String
+  developmentalFocus String   @map("developmental_focus")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  stations             SpiritualStation[]
+
+  @@map("station_phases")
+}
+
+model SpiritualStation {
+  id                    String   @id @default(uuid())
+  phaseId               String   @map("phase_id")
+  phase                 StationPhase @relation(fields: [phaseId], references: [id], onDelete: Cascade)
+  orderInPhase          Int      @map("order_in_phase")
+  nameArabic            String   @map("name_arabic")
+  nameTransliteration   String   @map("name_transliteration")
+  nameEnglish           String   @map("name_english")
+  classicalDefinition   String   @map("classical_definition")
+  psychologicalDimension String  @map("psychological_dimension")
+  developmentalMarkers  String   @map("developmental_markers")
+  commonDistortions     String   @map("common_distortions")
+  integrationNotes      String   @map("integration_notes")
+  createdAt             DateTime @default(now()) @map("created_at")
+
+  @@unique([phaseId, orderInPhase])
+  @@index([phaseId])
+  @@map("spiritual_stations")
+}
+
+// ============================================================================
+// SUBMISSIONS
+// ============================================================================
+
+model Submission {
+  id               String   @id @default(uuid())
+  submissionType   String   @map("submission_type")
+  title            String
+  abstract         String
+  content          String
+  attachmentsJson  Json     @default("[]") @map("attachments_json")
+  contactName      String   @map("contact_name")
+  contactEmail     String   @map("contact_email")
+  contactAffiliation String? @map("contact_affiliation")
+  status           String   @default("submitted")
+  adminNotes       String?  @map("admin_notes")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  reviews          SubmissionReview[]
+
+  @@index([status])
+  @@index([submissionType])
+  @@index([createdAt(sort: Desc)])
+  @@map("submissions")
+}
+
+model SubmissionReview {
+  id            String   @id @default(uuid())
+  submissionId  String   @map("submission_id")
+  submission    Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  reviewerId    String   @map("reviewer_id")
+  reviewNotes   String   @map("review_notes")
+  decision      String
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@index([submissionId])
+  @@index([reviewerId])
+  @@map("submission_reviews")
+}
+
+// ============================================================================
+// CONFERENCE & DIALOGUES
+// ============================================================================
+
+model ConferenceEvent {
+  id                       String   @id @default(uuid())
+  slug                     String   @unique
+  title                    String
+  subtitle                 String?
+  theme                    String?
+  description              String?
+  startDate                DateTime? @map("start_date") @db.Date
+  endDate                  DateTime? @map("end_date") @db.Date
+  location                 String?
+  locationDetail           String?   @map("location_detail")
+  submissionDeadline       DateTime? @map("submission_deadline")
+  registrationDeadline     DateTime? @map("registration_deadline")
+  isActive                 Boolean   @default(false) @map("is_active")
+  isOpenForSubmissions     Boolean   @default(false) @map("is_open_for_submissions")
+  isOpenForRegistration    Boolean   @default(false) @map("is_open_for_registration")
+  maxSubmissions           Int?      @map("max_submissions")
+  submissionTypes          String[]  @default(["paper", "workshop", "panel", "poster"]) @map("submission_types")
+  contactEmail             String?   @map("contact_email")
+  websiteUrl               String?   @map("website_url")
+  coverImageUrl            String?   @map("cover_image_url")
+  status                   String    @default("draft")
+  createdAt                DateTime  @default(now()) @map("created_at")
+  updatedAt                DateTime  @updatedAt @map("updated_at")
+
+  @@map("conference_events")
+}
+
+// ============================================================================
+// MEDIA CONNECTIONS
+// ============================================================================
+
+model MediaThemeConnection {
+  id            String   @id @default(uuid())
+  mediaType     String   @map("media_type")
+  mediaId       String   @map("media_id")
+  themeCategory String   @map("theme_category")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@index([mediaType, mediaId])
+  @@index([themeCategory])
+  @@map("media_theme_connections")
+}
+
