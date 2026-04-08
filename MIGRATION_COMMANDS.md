@@ -289,3 +289,4 @@ After running all migrations, check the data:
 psql -U postgres -d sufisciencecenter_db -c "SELECT 'study_circles' as table_name, COUNT(*) FROM study_circles UNION ALL SELECT 'saints', COUNT(*) FROM saints_cms UNION ALL SELECT 'dialogues', COUNT(*) FROM dialogues_cms;"
 ```
 
+ bbbb
