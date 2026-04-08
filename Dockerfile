@@ -63,6 +63,7 @@ COPY --from=builder /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/lib ./lib
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
+COPY --from=builder /app/node_modules/bcryptjs ./node_modules/bcryptjs
 
 # Switch to non-root user
 USER nextjs
