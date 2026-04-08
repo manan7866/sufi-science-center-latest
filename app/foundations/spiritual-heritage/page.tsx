@@ -14,6 +14,7 @@ import {
   SufiOrder,
   SufiRole,
 } from '@/lib/heritage-data';
+import { ObservatoryHero } from '@/components/observatory-hero'
 
 const ORDER_COLORS: Partial<Record<SufiOrder, string>> = {
   Qadiriyya: '#C8A75E',
@@ -201,10 +202,7 @@ export default function SpiritualHeritagePage() {
 
   return (
     <div className="min-h-screen bg-[#0B0F2A]">
-      <div className="max-w-6xl mx-auto px-6 py-16 sm:px-8 lg:px-12">
-
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-2 mb-10 text-xs text-[#AAB0D6]/50">
+<div className="flex items-center gap-2 max-w-6xl px-6 sm:px-8 lg:px-12 mx-auto mt-6 text-xs text-[#AAB0D6]/50">
           <Link href="/foundations" className="hover:text-[#AAB0D6] transition-colors">
             Foundational Studies
           </Link>
@@ -212,8 +210,22 @@ export default function SpiritualHeritagePage() {
           <span className="text-[#AAB0D6]/80">Spiritual Heritage</span>
         </div>
 
+      <ObservatoryHero
+      subtitle='Archive  Documented Figures'
+      title='Spiritual Heritage'
+      subDescription='Lineages, Orders, and Inner Knowledge Systems'
+      description='Tasawwuf (Sufism) is the systematic discipline of inner development within the Islamic tradition.
+            This archive documents its principal transmitters — the shuyukh, scholars, poets, and reformers
+            who shaped the methodological, doctrinal, and institutional forms of this discipline across fourteen centuries.
+            Entries are organized chronologically with filters for order, region, and role.'
+      />
+      <div className="max-w-6xl mx-auto px-6 py-16 sm:px-8 lg:px-12">
+
+        {/* Breadcrumb */}
+        
+
         {/* Hero */}
-        <div className="mb-12">
+        {/* <div className="mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#C8A75E]/25 bg-[#C8A75E]/8 mb-6">
             <GitBranch className="h-3 w-3 text-[#C8A75E]" />
             <span className="text-[10px] font-bold text-[#C8A75E] uppercase tracking-widest">
@@ -232,7 +244,7 @@ export default function SpiritualHeritagePage() {
             who shaped the methodological, doctrinal, and institutional forms of this discipline across fourteen centuries.
             Entries are organized chronologically with filters for order, region, and role.
           </p>
-        </div>
+        </div> */}
 
         {/* Filter Bar */}
         <div className="mb-8">

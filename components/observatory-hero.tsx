@@ -5,10 +5,11 @@ import { useEffect, useRef } from 'react';
 interface ObservatoryHeroProps {
   title: string;
   subtitle?: string;
+  subDescription? : string;
   description?: string;
 }
 
-export function ObservatoryHero({ title, subtitle, description }: ObservatoryHeroProps) {
+export function ObservatoryHero({ title, subtitle, description , subDescription}: ObservatoryHeroProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -113,6 +114,12 @@ export function ObservatoryHero({ title, subtitle, description }: ObservatoryHer
         <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-[#F5F3EE] mb-6 leading-[1.1] tracking-tight animate-in fade-in duration-700 delay-100">
           {title}
         </h1>
+
+        {subDescription && (
+          <p className="text-lg md:text-xl mb-4 text-[#AAB0D6] max-w-3xl leading-relaxed animate-in fade-in duration-700 delay-200" >
+            {subDescription}
+          </p>
+        )}
 
         {description && (
           <p className="text-base md:text-lg text-[#AAB0D6] max-w-3xl leading-relaxed animate-in fade-in duration-700 delay-200">

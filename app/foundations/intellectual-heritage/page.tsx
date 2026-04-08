@@ -14,6 +14,7 @@ import {
   HeritageField,
   ImpactLevel,
 } from '@/lib/heritage-data';
+import { ObservatoryHero } from '@/components/observatory-hero'
 
 const IMPACT_COLORS: Record<ImpactLevel, string> = {
   Foundational: '#C8A75E',
@@ -182,10 +183,10 @@ export default function IntellectualHeritagePage() {
 
   return (
     <div className="min-h-screen bg-[#0B0F2A]">
-      <div className="max-w-6xl mx-auto px-6 py-16 sm:px-8 lg:px-12">
+      
 
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 mb-10 text-xs text-[#AAB0D6]/50">
+        <div className="flex items-center gap-2 max-w-6xl px-6 sm:px-8 lg:px-12 mx-auto mt-6  text-xs text-[#AAB0D6]/50">
           <Link href="/foundations" className="hover:text-[#AAB0D6] transition-colors">
             Foundational Studies
           </Link>
@@ -194,7 +195,18 @@ export default function IntellectualHeritagePage() {
         </div>
 
         {/* Hero */}
-        <div className="mb-12">
+
+        <ObservatoryHero
+        subtitle='Archive Documented Figures'
+        title='Intellectual Heritage'
+        subDescription='Scientific, Institutional, and Knowledge Contributions — 7th to 21st Century'
+        description='A structured archive of thinkers, scientists, and scholars whose work shaped the intellectual
+            foundations of Islamic civilization and contributed to global knowledge systems. Organized
+            chronologically with cross-referential filters for region, field, and impact level.'
+        />
+        <div className="max-w-6xl mx-auto px-6 py-16 sm:px-8 lg:px-12">
+
+        {/* <div className="mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#C8A75E]/25 bg-[#C8A75E]/8 mb-6">
             <BookOpen className="h-3 w-3 text-[#C8A75E]" />
             <span className="text-[10px] font-bold text-[#C8A75E] uppercase tracking-widest">
@@ -212,7 +224,7 @@ export default function IntellectualHeritagePage() {
             foundations of Islamic civilization and contributed to global knowledge systems. Organized
             chronologically with cross-referential filters for region, field, and impact level.
           </p>
-        </div>
+        </div> */}
 
         {/* Filter Bar */}
         <div className="mb-8">
