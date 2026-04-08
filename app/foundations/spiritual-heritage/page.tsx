@@ -145,12 +145,12 @@ function EraSection({
   if (filteredEntries.length === 0) return null;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
       <button
         className="w-full flex items-center justify-between gap-3 group py-1"
         onClick={() => setCollapsed(!collapsed)}
       >
-        <div className="flex items-start gap-3">
+        <div className="flex items-start  gap-3">
           <div className="text-left">
             <div className="flex items-baseline gap-3 flex-wrap">
               <h2 className="text-base font-bold text-[#F5F3EE] group-hover:text-[#C8A75E] transition-colors">
@@ -200,7 +200,7 @@ export default function SpiritualHeritagePage() {
   }, [regionFilter, orderFilter, roleFilter]);
 
   return (
-    <div className="min-h-screen bg-[#08091A]">
+    <div className="min-h-screen bg-[#0B0F2A]">
       <div className="max-w-6xl mx-auto px-6 py-16 sm:px-8 lg:px-12">
 
         {/* Breadcrumb */}

@@ -173,7 +173,7 @@ export default function AlignmentAssessmentPage() {
   const [activeReflection, setActiveReflection] = useState<string | null>(null);
 
   return (
-    <div className="min-h-screen bg-[#08091A]">
+    <div className="min-h-screen bg-[#0B0F2A]">
       <div className="max-w-5xl mx-auto px-5 py-16 sm:px-8 lg:px-12">
 
         {/* Breadcrumb */}

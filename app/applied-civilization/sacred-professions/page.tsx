@@ -288,10 +288,10 @@ export default function SacredProfessionsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#08091A]">
+    <div className="min-h-screen bg-[#0B0F2A]">
 
       {/* Sticky Nav Bar */}
-      <div className="sticky top-0 z-30 border-b border-white/8 bg-[#08091A]/95 backdrop-blur-md">
+      <div className="sticky top-0 z-30 border-b border-white/8 bg-[#0B0F2A]/95 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-xs text-[#AAB0D6]/40 flex-shrink-0">
             <Link href="/applied-civilization" className="hover:text-[#AAB0D6] transition-colors">Applied Civilization</Link>

@@ -67,7 +67,7 @@ export default function NextGenSufiSeekerPage() {
   }, [search, activeCategory]);
 
   return (
-    <div className="min-h-screen bg-[#08091A]">
+    <div className="min-h-screen bg-[#0B0F2A]">
 
       <section className="relative pt-24 pb-20 px-4 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">

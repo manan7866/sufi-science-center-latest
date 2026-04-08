@@ -10,7 +10,7 @@ import { Eye, EyeOff, Loader2, Mail, Lock, LogIn } from 'lucide-react';
 function SignInForm() {
   const { login } = useAuth();
   const searchParams = useSearchParams();
-  const redirect = searchParams.get('redirect') || '/dashboard';
+  const redirect = searchParams.get('redirect') || '/portal';
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

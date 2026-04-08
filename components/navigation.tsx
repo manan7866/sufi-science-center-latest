@@ -28,7 +28,7 @@ const navLinks: NavLink[] = [
   { href: '/dialogues', label: 'Scholarly Dialogues', ariaLabel: 'Dialogues' },
   { href: '/interfaith-coherence', label: 'Interfaith Coherence', ariaLabel: 'Interfaith Coherence' },
   { href: '/nextgen-sufi-seeker', label: 'NextGEN Program', ariaLabel: 'NextGEN Sufi Seeker Program' },
-  { href: '/ecommerce/purple-soul-collective', label: 'PSC By DKC Ecommerce', ariaLabel: 'PSC By DKC Ecommerce' },
+  // { href: '/ecommerce/purple-soul-collective', label: 'PSC By DKC Ecommerce', ariaLabel: 'PSC By DKC Ecommerce' },
   { href: '/research', label: 'Sufi Research', ariaLabel: 'Sufi Research' },
   { href: '/institute', label: 'Institute Overview', ariaLabel: 'Institute' },
 ];
@@ -138,7 +138,7 @@ export function Navigation() {
         }`}
       >
         <div className="max-w-[1400px] mx-auto px-8">
-          <div className="py-5">
+          <div className="py-5 ">
             <Link href="/" className="flex items-center space-x-5 group">
               <div className="w-14 h-14 rounded-full overflow-hidden shadow-lg group-hover:shadow-[#C8A75E]/20 transition-shadow duration-300 flex-shrink-0 bg-[#0B0F2A]">
                 <Image
@@ -170,7 +170,7 @@ export function Navigation() {
         } border-b border-white/5`}
       >
         <div className="max-w-[1400px] mx-auto px-8">
-          <div className="flex items-center h-16">
+          <div className="flex mr-6 items-center h-16">
             {/* Compact Logo - Shows when scrolled on desktop */}
             <Link
               href="/"
@@ -178,7 +178,7 @@ export function Navigation() {
                 scrolled ? 'opacity-100' : 'opacity-0 pointer-events-none absolute'
               }`}
             >
-              <div className="w-10 h-10 rounded-full overflow-hidden bg-[#0B0F2A]">
+              <div className="w-10 h-10  rounded-full overflow-hidden bg-[#0B0F2A]">
                 <Image
                   src="/SSC_LOGO.png"
                   alt="Sufi Science Center USA"
@@ -210,7 +210,7 @@ export function Navigation() {
             </Link>
 
             {/* Desktop Navigation - Left Aligned on Same Spine */}
-            <div className="hidden lg:flex items-center space-x-1 flex-1">
+            <div className="hidden lg:flex ml-2 items-center space-x-1 flex-1">
               {navLinks.map((link) => {
                 const hasSubmenu = link.label === 'Foundational Studies' || link.label === 'Knowledge Systems' || link.label === 'PSC By DKC Ecommerce' || link.label === 'Research' || link.label === 'Institute Overview' || link.label === 'NextGEN Program';
                 const submenu = link.label === 'Foundational Studies' ? foundationsSubmenu : link.label === 'Knowledge Systems' ? knowledgeSystemsSubmenu : link.label === 'PSC By DKC Ecommerce' ? ecommerceSubmenu : link.label === 'Research' ? researchSubmenu : link.label === 'Institute Overview' ? instituteSubmenu : link.label === 'NextGEN Program' ? nextgenSubmenu : [];
