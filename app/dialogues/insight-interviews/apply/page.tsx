@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { CircleUser as UserCircle, Briefcase, BookOpen, MessageSquare, CircleCheck as CheckCircle, Users, FlaskConical, Heart, Building, ArrowLeft, ArrowRight, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { useAuth } from '@/lib/auth-context';
+import FormGuard from '@/components/form-guard';
 
 const ELIGIBLE = [
   { icon: FlaskConical, label: 'Researchers & Scientists' },
@@ -44,7 +46,8 @@ interface FormData {
   availability: string;
 }
 
-export default function ApplyPage() {
+export function ApplyPage() {
+  const { user } = useAuth();
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -67,6 +70,7 @@ export default function ApplyPage() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        userId: user?.id || null,
         name: form.name,
         email: form.email,
         affiliation: form.affiliation || null,
@@ -321,5 +325,24 @@ export default function ApplyPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function ApplyPageWithGuard() {
+  return (
+    <FormGuard
+      formType="interview"
+      checkExisting={async (uid) => {
+        const res = await fetch('/api/form-status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: uid, formType: 'interview' }),
+        });
+        const data = await res.json();
+        return data.exists;
+      }}
+    >
+      <ApplyPage />
+    </FormGuard>
   );
 }

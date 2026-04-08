@@ -4,6 +4,8 @@ import { useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Check, ChevronRight, ChevronLeft, Upload, X, Loader as Loader2, GraduationCap, Award, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { useAuth } from '@/lib/auth-context';
+import FormGuard from '@/components/form-guard';
 
 const AREAS = [
   'Sufi Metaphysics', 'Contemplative Science', 'Consciousness Studies',
@@ -68,9 +70,10 @@ function stepLabels(type: AppType): string[] {
   return ['Personal Info', 'Background', 'Academic Focus', 'Statement', 'Review & Submit'];
 }
 
-export default function MembershipApplyPage() {
+export function MembershipApplyPage() {
   const type = useAppType();
   const router = useRouter();
+  const { user } = useAuth();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<FormData>(EMPTY);
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
@@ -135,10 +138,11 @@ export default function MembershipApplyPage() {
     setSubmitting(true);
     try {
       const payload = {
+        userId: user?.id || null,
         membership_type: type,
-        full_name: form.full_name.trim(),
-        display_name: form.display_name.trim() || form.full_name.trim(),
-        email: form.email.trim().toLowerCase(),
+        full_name: user?.name || form.full_name.trim(),
+        display_name: form.display_name.trim() || (user?.name || form.full_name.trim()),
+        email: user?.email || form.email.trim().toLowerCase(),
         location: form.location.trim(),
         affiliation: form.affiliation.trim(),
         areas_of_study: form.areas_of_study,
@@ -532,5 +536,24 @@ export default function MembershipApplyPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function MembershipApplyPageWithGuard() {
+  return (
+    <FormGuard
+      formType="membership"
+      checkExisting={async (uid) => {
+        const res = await fetch('/api/form-status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: uid, formType: 'membership' }),
+        });
+        const data = await res.json();
+        return data.exists;
+      }}
+    >
+      <MembershipApplyPage />
+    </FormGuard>
   );
 }

@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   if (!session) return NextResponse.json({ views: [] });
 
   const views = await prisma.surahView.findMany({
-    where: { sessionId: session.id },
+    where: { sessionToken },
     orderBy: { viewedAt: 'desc' },
   });
 
@@ -24,8 +24,14 @@ export async function POST(req: NextRequest) {
     const session = await prisma.portalSession.findUnique({ where: { sessionToken } });
     if (!session) return NextResponse.json({ error: 'Session not found' }, { status: 404 });
 
+    const existing = await prisma.surahView.findFirst({
+      where: { sessionToken, surahNumber: Number(surahNumber) },
+    });
+
+    if (existing) return NextResponse.json({ view: existing });
+
     const view = await prisma.surahView.create({
-      data: { sessionId: session.id, surahNumber: Number(surahNumber) },
+      data: { sessionToken, surahNumber: Number(surahNumber) },
     });
 
     return NextResponse.json({ view });

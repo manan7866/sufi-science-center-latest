@@ -1,0 +1,78 @@
+Build a complete authentication system for a Next.js application with a modern, production-level approach.
+
+Requirements:
+
+1. Tech Stack:
+- Use bcrypt for password hashing
+- Use JWT or session-based authentication (store session in localStorage)
+
+2. Authentication Pages:
+- Create Sign Up and Sign In pages
+- UI should be clean, modern, and match an existing app theme (responsive design)
+
+3. Sign Up Features:
+- Fields: Name, Email, Password, Confirm Password
+- Validate confirm password (must match password)
+- Password must be hashed before saving in the database
+- After signup, send an OTP to the user’s email
+- OTP should:
+  - Expire after 10 minutes
+  - Be stored securely in the database
+- Add "Resend OTP" functionality using a predefined email template (template ID already exists)
+- Do not activate user account until OTP is verified
+
+4. OTP Verification:
+- Create OTP verification page
+- Allow user to input OTP
+- Show error if expired or incorrect
+- Allow "Resend OTP" option
+- After successful verification, redirect user to Home page
+
+5. Sign In Features:
+- Login with email and password
+- Validate credentials with hashed password comparison
+- On success:
+  - Store session/token in localStorage
+  - Redirect user to Home page
+
+6. UI/UX Features:
+- Add password visibility toggle (eye icon) in both Sign In and Sign Up pages
+- Disable submit button while request is processing
+- Show loading indicators
+- Show proper error and success messages
+- Make the UI user-friendly and polished
+
+7. Header Behavior:
+- If user is NOT logged in → show "Sign In" button
+- If user IS logged in → show user info (name/avatar) and logout option
+
+8. Session Management:
+- Store session/token in localStorage
+- Protect routes (e.g., dashboard/home)
+- Auto-redirect unauthenticated users to Sign In
+
+9. Database Design:
+- User model should include:
+  - name
+  - email (unique)
+  - password (hashed)
+  - isVerified (boolean)
+  - otp
+  - otpExpiry
+  - createdAt
+
+10. Security & Best Practices:
+- Use proper validation (frontend + backend)
+- Handle errors securely
+- Avoid exposing sensitive data
+- Use environment variables for secrets
+
+11. Bonus:
+- Clean folder structure
+- Reusable components
+- API routes for auth logic
+- Middleware for protected routes
+
+Output:
+- Provide full working code including frontend, backend (API routes), and database schema.
+- Keep code modular and production-ready.

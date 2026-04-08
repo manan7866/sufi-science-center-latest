@@ -1,6 +1,9 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { ConditionalLayout } from '@/components/conditional-layout';
+import { AuthProvider } from '@/lib/auth-context';
+import RootHeader from '@/components/root-header';
+import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
   title: 'Sufi Science Center | Consciousness Research Institute',
@@ -19,9 +22,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <body className="min-h-screen flex flex-col">
-        <ConditionalLayout>{children}</ConditionalLayout>
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+      <body className="min-h-screen bg-[#0B0F2A]">
+        <AuthProvider>
+          <RootHeader />
+          <main className="flex-1">
+            <ConditionalLayout>{children}</ConditionalLayout>
+          </main>
+          <Toaster position="top-right" />
+        </AuthProvider>
       </body>
     </html>
   );

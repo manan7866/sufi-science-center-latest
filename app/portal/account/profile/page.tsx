@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { CircleUser as UserCircle, Save, Camera, X, CircleCheck as CheckCircle2 } from 'lucide-react';
-import { usePortalSession } from '@/hooks/use-portal-session';
+import { useAuth } from '@/lib/auth-context';
+import { CircleUser as UserCircle, Save, Camera, X, CircleCheck as CheckCircle2, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 
 const STUDY_INTERESTS = [
@@ -19,45 +19,109 @@ const INPUT_CLS = `w-full bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF]
 const LABEL_CLS = 'block text-xs font-medium text-[#AAB0D6]/70 mb-2 tracking-wide uppercase';
 
 export default function ProfilePage() {
-  const { session, profile, saveProfile, loading } = usePortalSession();
+  const { user } = useAuth();
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [avatar, setAvatar] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState({
     fullName: '',
-    displayName: '',
     location: '',
     bio: '',
     interests: [] as string[],
   });
 
   useEffect(() => {
-    if (!loading) {
+    if (user) {
       setForm({
-        fullName: profile.fullName,
-        displayName: profile.displayName || session?.displayName || '',
-        location: profile.location,
-        bio: profile.bio,
-        interests: profile.interests,
+        fullName: user.name || '',
+        location: '',
+        bio: '',
+        interests: [],
       });
-      const storedAvatar = localStorage.getItem('ssc_profile_avatar');
-      if (storedAvatar) setAvatar(storedAvatar);
+      if (user.avatarUrl) setAvatar(user.avatarUrl);
     }
-  }, [loading, profile, session]);
+  }, [user]);
 
   async function handleSave() {
+    if (!user) return;
     setSaving(true);
-    await saveProfile({
-      fullName: form.fullName,
-      displayName: form.displayName,
-      location: form.location,
-      bio: form.bio,
-      interests: form.interests,
-    });
-    setSaving(false);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
+    try {
+      await fetch('/api/user-profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          name: form.fullName,
+          location: form.location,
+          bio: form.bio,
+        }),
+      });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    } catch (error) {
+      console.error('Failed to save profile:', error);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image must be under 5 MB.');
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetch('/api/upload-avatar', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error('Upload failed');
+
+      const data = await res.json();
+
+      // Save URL to database
+      await fetch('/api/user-profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          avatarUrl: data.url,
+        }),
+      });
+
+      setAvatar(data.url);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    } catch (error) {
+      console.error('Failed to upload avatar:', error);
+      alert('Failed to upload image. Please try again.');
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  async function removeAvatar() {
+    if (!user) return;
+    try {
+      await fetch('/api/user-profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, avatarUrl: null }),
+      });
+      setAvatar(null);
+    } catch (error) {
+      console.error('Failed to remove avatar:', error);
+    }
   }
 
   function toggleInterest(interest: string) {
@@ -69,37 +133,9 @@ export default function ProfilePage() {
     }));
   }
 
-  function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-      alert('Image must be under 5 MB.');
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const dataUrl = ev.target?.result as string;
-      setAvatar(dataUrl);
-      localStorage.setItem('ssc_profile_avatar', dataUrl);
-    };
-    reader.readAsDataURL(file);
-  }
+  if (!user) return null;
 
-  function removeAvatar() {
-    setAvatar(null);
-    localStorage.removeItem('ssc_profile_avatar');
-    if (fileInputRef.current) fileInputRef.current.value = '';
-  }
-
-  const displayName = form.displayName || session?.displayName || 'S';
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <div className="w-6 h-6 border-2 border-[#C8A75E]/20 border-t-[#C8A75E] rounded-full animate-spin" />
-      </div>
-    );
-  }
+  const displayName = form.fullName || user.name || 'User';
 
   return (
     <div>
@@ -114,13 +150,16 @@ export default function ProfilePage() {
       </div>
 
       <div className="space-y-6">
+        {/* Profile Photo */}
         <div className="glass-panel rounded-2xl p-6 border border-white/5">
           <h2 className="text-[10px] tracking-[0.18em] text-[#AAB0D6]/40 uppercase mb-5">Profile Photo</h2>
           <div className="flex items-center gap-6">
             <div className="relative group flex-shrink-0">
               <div className="w-20 h-20 rounded-full border-2 border-[#C8A75E]/25 overflow-hidden bg-[#141A3A] flex items-center justify-center">
-                {avatar ? (
-                  <Image src={avatar} alt="Profile photo" width={80} height={80} className="w-full h-full object-cover" />
+                {uploading ? (
+                  <Loader2 className="w-6 h-6 animate-spin text-[#C8A75E]" />
+                ) : avatar ? (
+                  <Image src={avatar} alt="Profile" width={80} height={80} className="w-full h-full object-cover" />
                 ) : (
                   <span className="text-2xl font-bold font-serif text-[#C8A75E]">
                     {displayName.charAt(0).toUpperCase()}
@@ -129,7 +168,8 @@ export default function ProfilePage() {
               </div>
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                disabled={uploading}
+                className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-0"
               >
                 <Camera className="w-5 h-5 text-white" />
               </button>
@@ -142,13 +182,15 @@ export default function ProfilePage() {
                 accept="image/jpeg,image/png,image/webp"
                 className="hidden"
                 onChange={handleAvatarChange}
+                disabled={uploading}
               />
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="flex items-center gap-2 text-xs font-semibold text-[#C8A75E] bg-[#C8A75E]/10 border border-[#C8A75E]/25 px-4 py-2 rounded-lg hover:bg-[#C8A75E]/16 hover:border-[#C8A75E]/40 transition-all"
+                disabled={uploading}
+                className="flex items-center gap-2 text-xs font-semibold text-[#C8A75E] bg-[#C8A75E]/10 border border-[#C8A75E]/25 px-4 py-2 rounded-lg hover:bg-[#C8A75E]/16 hover:border-[#C8A75E]/40 transition-all disabled:opacity-50"
               >
-                <Camera className="w-3.5 h-3.5" />
-                {avatar ? 'Change Photo' : 'Upload Photo'}
+                {uploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Camera className="w-3.5 h-3.5" />}
+                {uploading ? 'Uploading...' : avatar ? 'Change Photo' : 'Upload Photo'}
               </button>
               {avatar && (
                 <button
@@ -164,6 +206,7 @@ export default function ProfilePage() {
           </div>
         </div>
 
+        {/* Personal Details */}
         <div className="glass-panel rounded-2xl p-6 border border-white/5">
           <h2 className="text-[10px] tracking-[0.18em] text-[#AAB0D6]/40 uppercase mb-5">Personal Details</h2>
           <div className="space-y-5">
@@ -178,13 +221,12 @@ export default function ProfilePage() {
               />
             </div>
             <div>
-              <label className={LABEL_CLS}>Display Name</label>
+              <label className={LABEL_CLS}>Email Address</label>
               <input
-                type="text"
-                value={form.displayName}
-                onChange={(e) => setForm((p) => ({ ...p, displayName: e.target.value }))}
-                placeholder="How you appear in the portal"
-                className={INPUT_CLS}
+                type="email"
+                value={user.email}
+                disabled
+                className="w-full bg-white/3 border-white/5 text-[#AAB0D6]/50 rounded-xl px-4 py-3 text-sm cursor-not-allowed"
               />
             </div>
             <div>
@@ -200,6 +242,7 @@ export default function ProfilePage() {
           </div>
         </div>
 
+        {/* Areas of Study Interest */}
         <div className="glass-panel rounded-2xl p-6 border border-white/5">
           <h2 className="text-[10px] tracking-[0.18em] text-[#AAB0D6]/40 uppercase mb-5">Areas of Study Interest</h2>
           <div className="flex flex-wrap gap-2">
@@ -222,6 +265,7 @@ export default function ProfilePage() {
           </div>
         </div>
 
+        {/* Short Bio */}
         <div className="glass-panel rounded-2xl p-6 border border-white/5">
           <h2 className="text-[10px] tracking-[0.18em] text-[#AAB0D6]/40 uppercase mb-5">Short Bio</h2>
           <textarea
@@ -234,6 +278,7 @@ export default function ProfilePage() {
           <p className="text-[10px] text-[#AAB0D6]/25 mt-2">{form.bio.length} characters</p>
         </div>
 
+        {/* Save Button */}
         <button
           onClick={handleSave}
           disabled={saving}
@@ -243,7 +288,7 @@ export default function ProfilePage() {
               : 'bg-[#C8A75E]/12 border border-[#C8A75E]/30 text-[#C8A75E] hover:bg-[#C8A75E]/18 hover:border-[#C8A75E]/45'
           }`}
         >
-          {saved ? <CheckCircle2 className="w-4 h-4" /> : <Save className="w-4 h-4" />}
+          {saved ? <CheckCircle2 className="w-4 h-4" /> : saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           {saving ? 'Saving…' : saved ? 'Profile Saved' : 'Save Profile'}
         </button>
       </div>

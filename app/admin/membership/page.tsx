@@ -50,14 +50,26 @@ export default function AdminMembershipPage() {
 
   const fetchApplications = useCallback(async () => {
     setLoading(true);
-    const res = await fetch('/api/admin/membership');
-    const data = await res.json();
-    const apps: Application[] = data.applications ?? [];
-    setApplications(apps);
-    const n: Record<string, string> = {};
-    apps.forEach((a) => { if (a.reviewNotes) n[a.id] = a.reviewNotes; });
-    setNotes(n);
-    setLoading(false);
+    try {
+      const res = await fetch('/api/admin/membership', { credentials: 'include' });
+      if (!res.ok) {
+        console.error('Failed to fetch applications:', res.status);
+        setApplications([]);
+        setLoading(false);
+        return;
+      }
+      const data = await res.json();
+      const apps: Application[] = data.applications ?? [];
+      setApplications(apps);
+      const n: Record<string, string> = {};
+      apps.forEach((a) => { if (a.reviewNotes) n[a.id] = a.reviewNotes; });
+      setNotes(n);
+    } catch (err) {
+      console.error('Error fetching applications:', err);
+      setApplications([]);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => { fetchApplications(); }, [fetchApplications]);

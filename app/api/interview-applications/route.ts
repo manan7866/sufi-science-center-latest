@@ -26,14 +26,15 @@ export async function POST(request: Request) {
 
     const application = await prisma.interviewApplication.create({
       data: {
+        userId: body.userId || null,
         name: name.trim(),
         email: email.trim().toLowerCase(),
-        affiliation: affiliation?.trim() || null,
+        affiliation: affiliation || null,
         fieldOfWork: field_of_work.trim(),
         summary: summary.trim(),
         themes: Array.isArray(themes) ? themes : [],
         links: Array.isArray(links) ? links : [],
-        availability: availability ? { text: availability } : {},
+        availability: typeof availability === 'string' ? availability : JSON.stringify(availability || {}),
         status: 'pending',
       },
     });

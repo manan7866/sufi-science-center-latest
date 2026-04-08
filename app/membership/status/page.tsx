@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { Suspense, useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Search, Clock, CircleCheck as CheckCircle2, Circle as XCircle, Eye, ArrowRight, GraduationCap, Award, Loader as Loader2 } from 'lucide-react';
 import Link from 'next/link';
@@ -29,7 +29,7 @@ const STATUS_META: Record<Status, { label: string; color: string; bg: string; ic
 
 const INPUT = 'w-full bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30 shadow-inner shadow-black/20 transition-all';
 
-export default function MembershipStatusPage() {
+function MembershipStatusForm() {
   const searchParams = useSearchParams();
   const [email, setEmail] = useState(searchParams?.get('email') ?? '');
   const [applications, setApplications] = useState<Application[]>([]);
@@ -188,5 +188,17 @@ export default function MembershipStatusPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function MembershipStatusPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-[#0B0F2A]">
+        <Loader2 className="w-8 h-8 animate-spin text-[#C8A75E]" />
+      </div>
+    }>
+      <MembershipStatusForm />
+    </Suspense>
   );
 }

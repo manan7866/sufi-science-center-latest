@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, BookOpen, Compass, Users, HandHeart, FlaskConical, CalendarDays, CircleUser as UserCircle, Phone, Shield, BadgeCheck, Receipt, LogOut, X, Menu, UserPlus, LifeBuoy, MessageSquare, ShieldCheck } from 'lucide-react';
-import { usePortalSession } from '@/hooks/use-portal-session';
+import { LayoutDashboard, BookOpen, Compass, Users, HandHeart, FlaskConical, CalendarDays, CircleUser as UserCircle, Phone, Shield, BadgeCheck, Receipt, LogOut, X, Menu, UserPlus, LifeBuoy, MessageSquare, ShieldCheck, Loader2 } from 'lucide-react';
+import { useAuth } from '@/lib/auth-context';
 
 interface NavItem {
   label: string;
@@ -58,40 +58,36 @@ const NAV_GROUPS: NavGroup[] = [
 function SidebarContent({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { session, profile, membership, clearSession } = usePortalSession();
+  const { user, logout, loading } = useAuth();
   const [avatar, setAvatar] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem('ssc_profile_avatar');
-    if (stored) setAvatar(stored);
-
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === 'ssc_profile_avatar') setAvatar(e.newValue);
-    };
-    window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
-  }, []);
-
-  useEffect(() => {
+    if (user?.avatarUrl) {
+      setAvatar(user.avatarUrl);
+    }
     setIsAdmin(document.cookie.includes('admin_token='));
-  }, []);
+  }, [user?.avatarUrl]);
 
   const isActive = (href: string) => {
     if (href === '/portal') return pathname === '/portal';
     return pathname.startsWith(href);
   };
 
-  const displayName = profile?.displayName || session?.displayName || 'Seeker';
-  const sscId = session?.sessionToken?.slice(0, 8).toUpperCase() || '--------';
-  const tierName = membership?.tier
-    ? membership.tier.charAt(0).toUpperCase() + membership.tier.slice(1)
-    : 'Active Seeker';
+  const displayName = user?.name || 'User';
+  const userEmail = user?.email || '';
 
   function handleLogout() {
-    clearSession();
+    logout();
     if (onClose) onClose();
-    router.push('/');
+  }
+
+  if (loading) {
+    return (
+      <div className="flex flex-col h-full items-center justify-center">
+        <Loader2 className="w-6 h-6 animate-spin text-[#C8A75E]" />
+      </div>
+    );
   }
 
   return (
@@ -124,14 +120,9 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-[#F5F3EE] font-serif truncate">{displayName}</p>
-            <div className="flex items-center gap-1.5 mt-0.5">
-              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[#C8A75E]/12 border border-[#C8A75E]/20 text-[#C8A75E] uppercase tracking-wider font-medium">
-                {tierName}
-              </span>
-            </div>
+            <p className="text-[10px] text-[#AAB0D6]/40 truncate">{userEmail}</p>
           </div>
         </Link>
-        <p className="text-[10px] text-[#AAB0D6]/30 mt-2.5 tracking-widest">SSC ID: {sscId}</p>
       </div>
 
       <nav className="flex-1 overflow-y-auto py-4 px-3">
@@ -191,7 +182,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
           className="flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-[#AAB0D6]/40 hover:text-rose-400/70 hover:bg-rose-400/5 transition-all w-full group"
         >
           <LogOut className="w-3.5 h-3.5 flex-shrink-0" />
-          <span>Clear Session &amp; Exit</span>
+          <span>Sign Out</span>
         </button>
       </div>
     </div>

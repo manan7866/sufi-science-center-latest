@@ -78,8 +78,14 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/admin/dashboard')
-      .then(res => res.json())
+    fetch('/api/admin/dashboard', { credentials: 'include' })
+      .then(res => {
+        if (!res.ok) {
+          console.error('Dashboard API failed:', res.status);
+          return { modules: [], totalDonations: 0, donationCount: 0, totalUsers: 0, recentActivity: [] };
+        }
+        return res.json();
+      })
       .then(data => {
         if (data.modules) setModules(data.modules);
         if (data.totalDonations !== undefined) setTotalDonations(data.totalDonations);

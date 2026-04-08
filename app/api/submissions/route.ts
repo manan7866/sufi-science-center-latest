@@ -25,6 +25,7 @@ export async function POST(request: Request) {
 
     const submission = await prisma.submission.create({
       data: {
+        userId: body.userId || null,
         submissionType: submission_type,
         title: title.trim(),
         abstract: abstractText.trim(),

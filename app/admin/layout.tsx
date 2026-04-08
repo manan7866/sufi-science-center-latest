@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -134,9 +134,54 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [checking, setChecking] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Check auth on mount
+  useEffect(() => {
+    // Skip auth check for login and unauthorized pages
+    if (pathname === '/admin/login' || pathname === '/admin/unauthorized') {
+      setChecking(false);
+      setIsAuthenticated(true);
+      return;
+    }
+
+    // Check for admin_token cookie
+    const hasToken = document.cookie.includes('admin_token=');
+    if (!hasToken) {
+      router.push('/admin/login?redirect=' + encodeURIComponent(pathname));
+      return;
+    }
+
+    // Verify token by fetching dashboard
+    fetch('/api/admin/dashboard')
+      .then(res => {
+        if (res.ok) {
+          setIsAuthenticated(true);
+        } else {
+          router.push('/admin/login?redirect=' + encodeURIComponent(pathname));
+        }
+      })
+      .catch(() => {
+        router.push('/admin/login?redirect=' + encodeURIComponent(pathname));
+      })
+      .finally(() => setChecking(false));
+  }, [router, pathname]);
 
   if (pathname === '/admin/login' || pathname === '/admin/unauthorized') {
     return <>{children}</>;
+  }
+
+  if (checking) {
+    return (
+      <div className="min-h-screen bg-[#080A18] flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-[#C8A75E] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null;
   }
 
   async function handleLogout() {

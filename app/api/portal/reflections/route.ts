@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   if (!session) return NextResponse.json({ reflections: [] });
 
   const reflections = await prisma.reflectionEntry.findMany({
-    where: { sessionId: session.id },
+    where: { sessionToken },
     orderBy: { updatedAt: 'desc' },
   });
 
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     if (!session) return NextResponse.json({ error: 'Session not found' }, { status: 404 });
 
     const existing = await prisma.reflectionEntry.findFirst({
-      where: { sessionId: session.id, surahNumber: Number(surahNumber) },
+      where: { sessionToken, surahNumber: Number(surahNumber) },
     });
 
     let reflection;
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       });
     } else {
       reflection = await prisma.reflectionEntry.create({
-        data: { sessionId: session.id, surahNumber: Number(surahNumber), reflectionText },
+        data: { sessionToken, surahNumber: Number(surahNumber), reflectionText },
       });
     }
 

@@ -15,7 +15,7 @@ export async function GET(req: Request) {
     const session = await prisma.portalSession.findUnique({ where: { sessionToken } });
     if (!session) return NextResponse.json({ membership: null });
 
-    const membership = await prisma.membershipEnrollment.findUnique({ where: { sessionId: session.id } });
+    const membership = await prisma.membershipEnrollment.findUnique({ where: { sessionToken } });
     return NextResponse.json({ membership });
   } catch (error) {
     console.error('[portal/membership GET]', error);
@@ -35,9 +35,9 @@ export async function POST(request: Request) {
       if (!session) return NextResponse.json({ error: 'Session not found' }, { status: 404 });
 
       const membership = await prisma.membershipEnrollment.upsert({
-        where: { sessionId: session.id },
-        update: { tier, status: 'active', enrolledAt: new Date() },
-        create: { sessionId: session.id, tier, status: 'active' },
+        where: { sessionToken },
+        update: { tier, status: 'active' },
+        create: { sessionToken, tier, status: 'active' },
       });
 
       return NextResponse.json({ membership });
@@ -74,6 +74,7 @@ export async function POST(request: Request) {
 
     const application = await prisma.membershipApplication.create({
       data: {
+        userId: body.userId || null,
         membershipType: membership_type,
         fullName: full_name.trim(),
         displayName: display_name?.trim() || full_name.trim(),
@@ -90,7 +91,6 @@ export async function POST(request: Request) {
         leadershipRoles: leadership_roles || null,
         publicationsList: publications_list || null,
         referenceContact: reference_contact || null,
-        sessionToken: session_token || null,
         status: 'pending',
       },
     });

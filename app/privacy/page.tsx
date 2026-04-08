@@ -32,7 +32,7 @@ const SECTIONS = [
     content: [
       'We do not sell, rent, or share your personal information with third parties for commercial purposes.',
       'We may share anonymised, aggregated data for research and reporting purposes.',
-      'We use Supabase as our secure database and authentication provider, which processes data in accordance with its own privacy policy.',
+      'We use PostgreSQL via Prisma ORM as our secure database provider. Data is encrypted in transit and at rest.',
       'We may disclose information if required by law, court order, or to protect the rights and safety of our community.',
       'In the event of a merger or acquisition, user data would be subject to the privacy policy of the acquiring entity.',
     ],

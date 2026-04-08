@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   const session = await getSession(sessionToken);
   if (!session) return NextResponse.json({ error: 'Session not found' }, { status: 404 });
 
-  const profile = await prisma.portalProfile.findUnique({ where: { sessionId: session.id } });
+  const profile = await prisma.portalProfile.findUnique({ where: { sessionToken } });
 
   return NextResponse.json({
     profile: profile ?? {
@@ -33,14 +33,14 @@ export async function PUT(req: NextRequest) {
     if (!session) return NextResponse.json({ error: 'Session not found' }, { status: 404 });
 
     const profile = await prisma.portalProfile.upsert({
-      where: { sessionId: session.id },
+      where: { sessionToken },
       update: { ...profileData, updatedAt: new Date() },
-      create: { sessionId: session.id, ...profileData },
+      create: { sessionToken, ...profileData },
     });
 
     if (profileData.displayName) {
       await prisma.portalSession.update({
-        where: { id: session.id },
+        where: { sessionToken },
         data: { displayName: profileData.displayName },
       });
     }

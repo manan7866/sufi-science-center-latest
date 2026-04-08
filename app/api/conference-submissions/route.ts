@@ -36,7 +36,7 @@ export async function POST(request: Request) {
       );
     }
 
-    let trackingCode: string;
+    let trackingCode = '';
     let unique = false;
     while (!unique) {
       trackingCode = generateTrackingCode();
@@ -48,6 +48,7 @@ export async function POST(request: Request) {
 
     const submission = await prisma.conferenceSubmission.create({
       data: {
+        userId: body.userId || null,
         trackingCode,
         submissionType,
         title,

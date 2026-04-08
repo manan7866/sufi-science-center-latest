@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { CheckCircle2, Clock, ArrowRight } from 'lucide-react';
+import { CheckCircle2, Clock, ArrowRight, Loader2 } from 'lucide-react';
 
 interface DonationInfo {
   status: string;
@@ -17,6 +17,18 @@ interface DonationInfo {
 }
 
 export default function ThankYouPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-[#0B0F2A]">
+        <Loader2 className="w-8 h-8 animate-spin text-[#C8A75E]" />
+      </div>
+    }>
+      <ThankYouContent />
+    </Suspense>
+  );
+}
+
+function ThankYouContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
 

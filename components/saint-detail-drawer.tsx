@@ -123,7 +123,6 @@ function deriveDoctrinalFoundations(saint: SaintWithRelations): { category: stri
   if ((saint.lineages?.length ?? 0) > 0) {
     transmissionNotes.push(`Transmitter within ${saint.lineages!.map(l => l.name).join(', ')}`);
   }
-  if (saint.influence_scope) transmissionNotes.push(`Influence scope: ${saint.influence_scope}`);
   if (transmissionNotes.length > 0) {
     foundations.push({ category: 'Transmission Position', concepts: transmissionNotes });
   }
@@ -253,13 +252,10 @@ export function SaintDetailDrawer({ saint, open, onOpenChange }: SaintDetailDraw
   const crossReferences = getCrossReferences(saint);
 
   const metadataGrid = [
-    saint.region || saint.civilizational_region
-      ? { label: 'Region', value: saint.region || saint.civilizational_region }
+    saint.region
+      ? { label: 'Region', value: saint.region }
       : null,
     era ? { label: 'Era', value: era } : null,
-    saint.civilizational_region
-      ? { label: 'Civilizational Context', value: saint.civilizational_region }
-      : null,
     { label: 'Transmission Role', value: transmissionRole.role },
   ].filter(Boolean) as { label: string; value: string }[];
 

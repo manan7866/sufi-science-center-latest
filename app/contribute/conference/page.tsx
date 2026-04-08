@@ -9,6 +9,8 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, ArrowRight, CircleCheck as CheckCircle2, Upload, User, FileText, Users, Send, ClipboardList, CircleAlert as AlertCircle, Loader as Loader2, X, Plus } from 'lucide-react';
+import { useAuth } from '@/lib/auth-context';
+import FormGuard from '@/components/form-guard';
 
 type Step = 1 | 2 | 3 | 4;
 
@@ -89,7 +91,8 @@ function StepIndicator({ current }: { current: Step }) {
   );
 }
 
-export default function ConferenceSubmissionPage() {
+export function ConferenceSubmissionPage() {
+  const { user } = useAuth();
   const [step, setStep] = useState<Step>(1);
   const [form, setForm] = useState<FormData>({
     submission_type: '',
@@ -143,6 +146,7 @@ export default function ConferenceSubmissionPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          userId: user?.id || null,
           submissionType: form.submission_type,
           title: form.title,
           abstract: form.abstract,
@@ -273,9 +277,10 @@ export default function ConferenceSubmissionPage() {
                 <div>
                   <Label className="text-[#F5F3EE] text-sm mb-1.5 block">Full Name *</Label>
                   <Input
-                    value={form.presenter_name}
+                    value={user?.name || form.presenter_name}
                     onChange={(e) => set('presenter_name', e.target.value)}
-                    className="bg-[#0D1020] border-white/10 text-[#F5F3EE] focus:border-[#C8A75E]"
+                    disabled={!!user}
+                    className={`bg-[#0D1020] border-white/10 text-[#F5F3EE] focus:border-[#C8A75E] ${user ? 'opacity-60 cursor-not-allowed' : ''}`}
                     placeholder="Dr. Jane Smith"
                   />
                 </div>
@@ -283,9 +288,10 @@ export default function ConferenceSubmissionPage() {
                   <Label className="text-[#F5F3EE] text-sm mb-1.5 block">Email Address *</Label>
                   <Input
                     type="email"
-                    value={form.presenter_email}
+                    value={user?.email || form.presenter_email}
                     onChange={(e) => set('presenter_email', e.target.value)}
-                    className="bg-[#0D1020] border-white/10 text-[#F5F3EE] focus:border-[#C8A75E]"
+                    disabled={!!user}
+                    className={`bg-[#0D1020] border-white/10 text-[#F5F3EE] focus:border-[#C8A75E] ${user ? 'opacity-60 cursor-not-allowed' : ''}`}
                     placeholder="jane@university.edu"
                   />
                 </div>
@@ -544,5 +550,24 @@ export default function ConferenceSubmissionPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ConferenceSubmissionPageWithGuard() {
+  return (
+    <FormGuard
+      formType="conference"
+      checkExisting={async (uid) => {
+        const res = await fetch('/api/form-status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: uid, formType: 'conference' }),
+        });
+        const data = await res.json();
+        return data.exists;
+      }}
+    >
+      <ConferenceSubmissionPage />
+    </FormGuard>
   );
 }

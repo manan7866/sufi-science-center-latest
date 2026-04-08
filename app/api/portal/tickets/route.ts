@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
 
   if (ticketId) {
     const ticket = await prisma.supportTicket.findFirst({
-      where: { id: ticketId, sessionId: session.id },
+      where: { sessionToken, id: ticketId },
       include: { replies: { orderBy: { createdAt: 'asc' } } },
     });
     if (!ticket) return NextResponse.json({ error: 'Ticket not found' }, { status: 404 });
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
   }
 
   const tickets = await prisma.supportTicket.findMany({
-    where: { sessionId: session.id },
+    where: { sessionToken },
     orderBy: { updatedAt: 'desc' },
   });
 
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
 
     const ticket = await prisma.supportTicket.create({
       data: {
-        sessionId: session.id,
+        sessionToken,
         ticketNumber: generateTicketNumber(),
         subject: subject.trim(),
         description: description.trim(),
@@ -73,7 +73,7 @@ export async function PATCH(req: NextRequest) {
     const session = await prisma.portalSession.findUnique({ where: { sessionToken } });
     if (!session) return NextResponse.json({ error: 'Session not found' }, { status: 404 });
 
-    const ticket = await prisma.supportTicket.findFirst({ where: { id: ticketId, sessionId: session.id } });
+    const ticket = await prisma.supportTicket.findFirst({ where: { sessionToken, id: ticketId } });
     if (!ticket) return NextResponse.json({ error: 'Ticket not found' }, { status: 404 });
 
     const reply = await prisma.supportTicketReply.create({

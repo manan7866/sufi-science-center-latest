@@ -1,46 +1,13 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { Loader as Loader2, ShieldCheck, Eye, EyeOff } from 'lucide-react';
+import { Suspense, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { ShieldCheck, Eye, EyeOff, Loader2 } from 'lucide-react';
 
-export default function AdminLoginPage() {
-  const router = useRouter();
+function AdminLoginForm() {
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') || '/admin/membership';
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  async function handleLogin(e: React.FormEvent) {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-
-    try {
-      const res = await fetch('/api/admin/session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, redirect }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || 'Authentication failed.');
-        return;
-      }
-
-      router.push(data.redirect || '/admin/membership');
-    } catch {
-      setError('An unexpected error occurred.');
-    } finally {
-      setLoading(false);
-    }
-  }
 
   return (
     <div className="min-h-screen bg-[#080A18] flex items-center justify-center px-4">
@@ -56,14 +23,15 @@ export default function AdminLoginPage() {
           <p className="text-xs text-[#AAB0D6]/40 mt-1">Sufi Science Center — Restricted</p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form action="/api/admin/login-form" method="POST" className="space-y-4">
+          <input type="hidden" name="redirect" value={redirect} />
           <div>
             <label className="block text-xs text-[#AAB0D6]/60 mb-1.5">Email</label>
             <input
               type="email"
+              name="email"
               required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              defaultValue=""
               className="w-full bg-[#0D1020] text-[#F5F3EE] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C8A75E]/50 transition-colors"
               placeholder="admin@sufisciencecenter.org"
               autoComplete="email"
@@ -75,9 +43,9 @@ export default function AdminLoginPage() {
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
+                name="password"
                 required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                defaultValue=""
                 className="w-full bg-[#0D1020] text-[#F5F3EE] border border-white/10 rounded-xl px-4 py-3 pr-11 text-sm focus:outline-none focus:border-[#C8A75E]/50 transition-colors"
                 placeholder="••••••••••"
                 autoComplete="current-password"
@@ -93,19 +61,12 @@ export default function AdminLoginPage() {
             </div>
           </div>
 
-          {error && (
-            <div className="rounded-xl bg-red-500/8 border border-red-500/20 px-4 py-3 text-xs text-red-400">
-              {error}
-            </div>
-          )}
-
           <button
             type="submit"
-            disabled={loading}
-            className="w-full bg-[#C8A75E] text-[#0B0F2A] font-semibold rounded-xl py-3 text-sm hover:bg-[#C8A75E]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+            className="w-full bg-[#C8A75E] text-[#0B0F2A] font-semibold rounded-xl py-3 text-sm hover:bg-[#C8A75E]/90 transition-all flex items-center justify-center gap-2"
           >
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-            {loading ? 'Verifying...' : 'Sign In'}
+            <ShieldCheck className="w-4 h-4" />
+            Sign In
           </button>
         </form>
 
@@ -114,5 +75,17 @@ export default function AdminLoginPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#080A18] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-[#C8A75E]" />
+      </div>
+    }>
+      <AdminLoginForm />
+    </Suspense>
   );
 }

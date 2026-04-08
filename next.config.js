@@ -9,6 +9,7 @@ try {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   env: {
     NEXT_PUBLIC_GIT_HASH: gitHash,
   },

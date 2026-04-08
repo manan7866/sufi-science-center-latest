@@ -91,7 +91,7 @@ export default function UsersAdminPage() {
         const data = await res.json();
         setUsers(data.users ?? []);
       } else if (res.status === 500) {
-        setApiError('Service role key not configured. Add SUPABASE_SERVICE_ROLE_KEY to your environment.');
+        setApiError('Database error. Please check the server logs.');
         setUsers([]);
       } else {
         setUsers([]);

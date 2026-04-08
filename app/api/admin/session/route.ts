@@ -2,11 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { signAdminToken, comparePassword } from '@/lib/auth';
 
-const ALLOWED_REDIRECT_RE = /^\/admin(\/[a-zA-Z0-9\-_/]*)?$/;
+const SAFE_REDIRECT_RE = /^\/admin(\/[a-zA-Z0-9\-_/]*)?$/;
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password, redirect } = await req.json();
+    const body = await req.json();
+    const { email, password, redirect } = body;
 
     if (typeof email !== 'string' || typeof password !== 'string') {
       return NextResponse.json({ error: 'Invalid credentials.' }, { status: 400 });
@@ -14,38 +15,33 @@ export async function POST(req: NextRequest) {
 
     const normalizedEmail = email.trim().toLowerCase();
 
-    const admin = await prisma.adminUser.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email: normalizedEmail },
     });
 
-    if (!admin) {
-      return NextResponse.json({ error: 'Invalid credentials.' }, { status: 401 });
+    if (!user || !user.isAdmin) {
+      return NextResponse.json({ error: 'Invalid credentials or not an admin.' }, { status: 401 });
     }
 
-    const valid = await comparePassword(password, admin.passwordHash);
+    const valid = await comparePassword(password, user.password);
     if (!valid) {
       return NextResponse.json({ error: 'Invalid credentials.' }, { status: 401 });
     }
 
-    const token = signAdminToken({ adminId: admin.id, email: admin.email, role: admin.role });
+    const token = signAdminToken({ adminId: user.id, email: user.email, role: 'admin' });
+    const safeRedirect = SAFE_REDIRECT_RE.test(redirect) ? redirect : '/admin/membership';
 
-    const safeRedirect =
-      typeof redirect === 'string' && ALLOWED_REDIRECT_RE.test(redirect)
-        ? redirect
-        : '/admin';
-
-    const isProduction = process.env.NODE_ENV === 'production';
-    const secure = isProduction ? '; Secure' : '';
-    const res = NextResponse.json({ success: true, redirect: safeRedirect });
-    res.headers.append('Set-Cookie', `admin_token=${token}; Path=/; Max-Age=3600; HttpOnly; SameSite=Strict${secure}`);
-    return res;
+    // Return token in response so client can set cookie
+    return NextResponse.json({ 
+      success: true, 
+      redirect: safeRedirect,
+      token, // Client will set this via document.cookie
+    });
   } catch {
     return NextResponse.json({ error: 'Invalid request.' }, { status: 400 });
   }
 }
 
 export async function DELETE() {
-  const res = NextResponse.json({ success: true });
-  res.headers.append('Set-Cookie', 'admin_token=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict');
-  return res;
+  return NextResponse.json({ success: true });
 }

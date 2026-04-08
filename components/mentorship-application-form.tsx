@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { CircleCheck as CheckCircle2, Loader as Loader2 } from 'lucide-react';
+import { useAuth } from '@/lib/auth-context';
 
 interface MentorshipProgram {
   id: string;
@@ -22,6 +23,7 @@ interface MentorshipApplicationFormProps {
 }
 
 export function MentorshipApplicationForm({ program, onClose, onSuccess }: MentorshipApplicationFormProps) {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
@@ -45,9 +47,10 @@ export function MentorshipApplicationForm({ program, onClose, onSuccess }: Mento
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          userId: user?.id || null,
           programId: program.id,
-          fullName: formData.full_name,
-          email: formData.email,
+          fullName: user?.name || formData.full_name,
+          email: user?.email || formData.email,
           phone: formData.phone || null,
           backgroundSummary: formData.background_summary,
           spiritualGoals: formData.spiritual_goals,
@@ -107,9 +110,10 @@ export function MentorshipApplicationForm({ program, onClose, onSuccess }: Mento
               <Input
                 id="full_name"
                 required
-                value={formData.full_name}
+                value={user?.name || formData.full_name}
                 onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                className="bg-white/5 border-white/10 text-[#F5F3EE] mt-2"
+                disabled={!!user}
+                className={`mt-2 ${user ? 'bg-white/3 border-white/5 text-[#AAB0D6]/50 cursor-not-allowed' : 'bg-white/5 border-white/10 text-[#F5F3EE]'}`}
               />
             </div>
 
@@ -121,9 +125,10 @@ export function MentorshipApplicationForm({ program, onClose, onSuccess }: Mento
                 id="email"
                 type="email"
                 required
-                value={formData.email}
+                value={user?.email || formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="bg-white/5 border-white/10 text-[#F5F3EE] mt-2"
+                disabled={!!user}
+                className={`mt-2 ${user ? 'bg-white/3 border-white/5 text-[#AAB0D6]/50 cursor-not-allowed' : 'bg-white/5 border-white/10 text-[#F5F3EE]'}`}
               />
             </div>
           </div>

@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   if (!session) return NextResponse.json({ events: [] });
 
   const events = await prisma.activityEvent.findMany({
-    where: { sessionId: session.id },
+    where: { sessionToken },
     orderBy: { occurredAt: 'desc' },
     take: 50,
   });
@@ -28,11 +28,11 @@ export async function POST(req: NextRequest) {
     if (!session) return NextResponse.json({ error: 'Session not found' }, { status: 404 });
 
     const event = await prisma.activityEvent.create({
-      data: { sessionId: session.id, eventType, eventLabel },
+      data: { sessionToken, eventType, eventLabel },
     });
 
     await prisma.portalSession.update({
-      where: { id: session.id },
+      where: { sessionToken },
       data: { lastActivityAt: new Date() },
     });
 

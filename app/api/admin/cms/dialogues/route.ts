@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { title, slug, description, videoUrl, durationMins, publishedAt } = body;
+    const { title, slug, description, isPublished, publishedAt } = body;
 
     if (!title || !slug) {
       return NextResponse.json({ error: 'title and slug required.' }, { status: 400 });
@@ -46,8 +46,7 @@ export async function POST(req: NextRequest) {
         title,
         slug,
         description: description ?? null,
-        videoUrl: videoUrl ?? null,
-        durationMins: durationMins ? parseInt(durationMins) : null,
+        isPublished: isPublished ?? false,
         publishedAt: publishedAt ? new Date(publishedAt) : null,
       },
     });
@@ -94,7 +93,7 @@ export async function DELETE(req: NextRequest) {
     const { id } = await req.json();
     if (!id) return NextResponse.json({ error: 'id required.' }, { status: 400 });
 
-    await prisma.dialogue.update({ where: { id }, data: { deletedAt: new Date() } });
+    await prisma.dialogue.delete({ where: { id } });
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error('[cms/dialogues DELETE]', err);

@@ -16,6 +16,7 @@ export async function POST(req: NextRequest) {
 
     await prisma.mentorshipApplication.create({
       data: {
+        userId: body.userId ?? null,
         programId: programId ?? null,
         fullName: fullName.slice(0, 200),
         email: email.toLowerCase().trim(),

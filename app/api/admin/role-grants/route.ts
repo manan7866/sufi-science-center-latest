@@ -1,24 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { verifyAdminToken } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 
-function checkAuth() {
-  const token = cookies().get('admin_token')?.value;
+function checkAuth(req: NextRequest) {
+  const token = req.cookies.get('admin_token')?.value;
   if (!token) return null;
   const payload = verifyAdminToken(token);
   if (!payload || payload.role !== 'admin') return null;
   return payload;
 }
 
-export async function GET() {
-  if (!checkAuth()) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+export async function GET(req: NextRequest) {
+  if (!checkAuth(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const grants = await prisma.userRoleGrant.findMany();
   return NextResponse.json({ grants });
 }
 
 export async function POST(req: NextRequest) {
-  if (!checkAuth()) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!checkAuth(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
     const { email, grantedRole, permissions, notes, isBlocked, blockReason } = await req.json();
     if (!email) return NextResponse.json({ error: 'email required' }, { status: 400 });

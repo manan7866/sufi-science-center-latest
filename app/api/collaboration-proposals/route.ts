@@ -29,6 +29,7 @@ export async function POST(request: Request) {
 
     const proposal = await prisma.collaborationProposal.create({
       data: {
+        userId: body.userId || null,
         organizationType: organizationType.trim(),
         organizationName: organizationName.trim(),
         contactName: contactName.trim(),

@@ -79,8 +79,6 @@ export function SaintsAtlas({ saints, onSaintClick, allRegions }: SaintsAtlasPro
             regionName = region.name;
           }
         }
-      } else if (saint.civilizational_region) {
-        regionName = saint.civilizational_region;
       } else if (saint.region) {
         regionName = saint.region;
       }

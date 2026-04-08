@@ -35,21 +35,21 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { title, slug, abstract, content, publicationDate, citationFormat, pdfUrl } = body;
+    const { title, abstract, publishedYear, journal, doi, url, isFeatured } = body;
 
-    if (!title || !slug) {
-      return NextResponse.json({ error: 'title and slug required.' }, { status: 400 });
+    if (!title) {
+      return NextResponse.json({ error: 'title required.' }, { status: 400 });
     }
 
     const item = await prisma.researchPaper.create({
       data: {
         title,
-        slug,
         abstract: abstract ?? null,
-        content: content ?? null,
-        publicationDate: publicationDate ? new Date(publicationDate) : null,
-        citationFormat: citationFormat ?? null,
-        pdfUrl: pdfUrl ?? null,
+        publishedYear: publishedYear ? parseInt(publishedYear) : null,
+        journal: journal ?? null,
+        doi: doi ?? null,
+        url: url ?? null,
+        isFeatured: isFeatured ?? false,
       },
     });
 
@@ -65,7 +65,7 @@ export async function PATCH(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { id, title, slug, abstract, content, publicationDate, citationFormat, pdfUrl } = body;
+    const { id, title, abstract, publishedYear, journal, doi, url, isFeatured } = body;
 
     if (!id) return NextResponse.json({ error: 'id required.' }, { status: 400 });
 
@@ -73,12 +73,12 @@ export async function PATCH(req: NextRequest) {
       where: { id },
       data: {
         ...(title !== undefined && { title }),
-        ...(slug !== undefined && { slug }),
         ...(abstract !== undefined && { abstract }),
-        ...(content !== undefined && { content }),
-        ...(publicationDate !== undefined && { publicationDate: publicationDate ? new Date(publicationDate) : null }),
-        ...(citationFormat !== undefined && { citationFormat }),
-        ...(pdfUrl !== undefined && { pdfUrl }),
+        ...(publishedYear !== undefined && { publishedYear }),
+        ...(journal !== undefined && { journal }),
+        ...(doi !== undefined && { doi }),
+        ...(url !== undefined && { url }),
+        ...(isFeatured !== undefined && { isFeatured }),
       },
     });
 
@@ -96,7 +96,7 @@ export async function DELETE(req: NextRequest) {
     const { id } = await req.json();
     if (!id) return NextResponse.json({ error: 'id required.' }, { status: 400 });
 
-    await prisma.researchPaper.update({ where: { id }, data: { deletedAt: new Date() } });
+    await prisma.researchPaper.delete({ where: { id } });
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error('[cms/research DELETE]', err);
