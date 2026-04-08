@@ -62,6 +62,10 @@ COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
 COPY --from=builder /app/prisma ./prisma
 
+# Copy Prisma WASM files needed for db push
+COPY --from=builder /app/node_modules/@prisma/prisma-schema-wasm ./node_modules/@prisma/prisma-schema-wasm
+COPY --from=builder /app/node_modules/@prisma/client ./node_modules/@prisma/client
+
 # Switch to non-root user
 USER nextjs
 
