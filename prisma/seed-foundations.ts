@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { hashPassword } from '@/lib/auth';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -1717,7 +1717,7 @@ Thank you. It's been a joy to share this work.
     });
     console.log('✅ Admin user updated');
   } else {
-    const hash = await hashPassword(adminPassword);
+    const hash = await bcrypt.hash(adminPassword, 12);
     await prisma.user.create({
       data: {
         name: 'Admin User',
