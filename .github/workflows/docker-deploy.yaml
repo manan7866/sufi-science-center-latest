@@ -47,8 +47,8 @@ jobs:
             cd /var/www/ssc
             echo "${{ env.DOCKERHUB_TOKEN }}" | docker login -u ${{ env.DOCKERHUB_USERNAME }} --password-stdin
             docker pull ${{ env.IMAGE_NAME }}:latest
-            docker compose down
-            docker compose up -d
+            docker-compose down
+            docker-compose up -d
             docker image prune -f
             docker logout
             echo "✅ Deployment completed!"
