@@ -54,9 +54,8 @@ Dockerfile
 docker-compose.yml
 .dockerignore
 
-# Scripts and seed files (not needed in production)
+# Scripts (not needed in production)
 scripts/
-prisma/seed-*.ts
 
 # Large data/migration files (not needed in standalone build)
 data/
