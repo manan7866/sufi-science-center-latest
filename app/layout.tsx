@@ -2,7 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { ConditionalLayout } from '@/components/conditional-layout';
 import { AuthProvider } from '@/lib/auth-context';
-import RootHeader from '@/components/root-header';
+// import RootHeader from '@/components/root-header';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
@@ -25,7 +25,7 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body className="min-h-screen bg-[#0B0F2A]">
         <AuthProvider>
-          <RootHeader />
+          {/* <RootHeader /> */}
           <main className="flex-1">
             <ConditionalLayout>{children}</ConditionalLayout>
           </main>

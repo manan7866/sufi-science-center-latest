@@ -76,16 +76,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
-      
+
       if (!res.ok) {
         return { success: false, error: data.error || 'Login failed' };
       }
 
       localStorage.setItem('ssc_user_token', data.token);
       localStorage.setItem('ssc_user', JSON.stringify(data.user));
+      
+      // Set cookie for middleware detection
+      document.cookie = `ssc_user_token=${data.token}; path=/; max-age=604800; samesite=lax`;
+      
       setUser(data.user);
       setLoading(false);
-      
+
       return { success: true };
     } catch {
       return { success: false, error: 'Network error. Please try again.' };
@@ -140,6 +144,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(() => {
     localStorage.removeItem('ssc_user_token');
     localStorage.removeItem('ssc_user');
+    
+    // Remove cookie for middleware
+    document.cookie = 'ssc_user_token=; path=/; max-age=0';
+    
     setUser(null);
     router.push('/auth/signin');
   }, [router]);

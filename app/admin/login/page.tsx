@@ -33,7 +33,7 @@ function AdminLoginForm() {
               required
               defaultValue=""
               className="w-full bg-[#0D1020] text-[#F5F3EE] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C8A75E]/50 transition-colors"
-              placeholder="admin@sufisciencecenter.org"
+              placeholder="admin@email.org"
               autoComplete="email"
             />
           </div>

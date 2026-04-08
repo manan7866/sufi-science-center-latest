@@ -54,7 +54,7 @@ function SignInForm() {
   );
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen max-w-7xl mx-auto flex">
       {/* Left Panel - Branding */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-[#1C1F4A] to-[#0B0F2A]">
         <div className="absolute inset-0">

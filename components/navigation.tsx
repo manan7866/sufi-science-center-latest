@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { User, Menu, X, ChevronDown, LayoutDashboard, ShieldCheck } from 'lucide-react';
+import { User, Menu, X, ChevronDown, LayoutDashboard, ShieldCheck, LogIn, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/lib/auth-context';
 
 interface NavLink {
   href: string;
@@ -28,7 +29,7 @@ const navLinks: NavLink[] = [
   { href: '/interfaith-coherence', label: 'Interfaith Coherence', ariaLabel: 'Interfaith Coherence' },
   { href: '/nextgen-sufi-seeker', label: 'NextGEN Program', ariaLabel: 'NextGEN Sufi Seeker Program' },
   { href: '/ecommerce/purple-soul-collective', label: 'PSC By DKC Ecommerce', ariaLabel: 'PSC By DKC Ecommerce' },
-  { href: '/research', label: 'Research', ariaLabel: 'Research' },
+  { href: '/research', label: 'Sufi Research', ariaLabel: 'Sufi Research' },
   { href: '/institute', label: 'Institute Overview', ariaLabel: 'Institute' },
 ];
 
@@ -93,6 +94,7 @@ export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedMobile, setExpandedMobile] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     setIsAdmin(document.cookie.includes('sb-admin=1'));
@@ -120,6 +122,11 @@ export function Navigation() {
 
   const toggleMobileSubmenu = (label: string) => {
     setExpandedMobile(expandedMobile === label ? null : label);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setMobileMenuOpen(false);
   };
 
   return (
@@ -254,15 +261,34 @@ export function Navigation() {
                   </Button>
                 </Link>
               )}
-              <Link href="/portal">
-                <Button variant="ghost" size="sm" className="text-[#AAB0D6] hover:text-[#F5F3EE] gap-1.5 text-xs">
-                  <LayoutDashboard className="w-4 h-4" />
-                  My Portal
-                </Button>
-              </Link>
-              <Button variant="ghost" size="icon" className="text-[#AAB0D6] hover:text-[#F5F3EE]">
-                <User className="w-5 h-5" />
-              </Button>
+              {user ? (
+                <>
+                  <Link href="/portal">
+                    <Button variant="ghost" size="sm" className="text-[#AAB0D6] hover:text-[#F5F3EE] gap-1.5 text-xs">
+                      <LayoutDashboard className="w-4 h-4" />
+                      My Portal
+                    </Button>
+                  </Link>
+                  <Button variant="ghost" size="sm" className="text-[#AAB0D6] hover:text-[#F5F3EE] gap-1.5 text-xs" onClick={handleLogout}>
+                    <LogOut className="w-4 h-4" />
+                    Sign Out
+                  </Button>
+                  {/* <Link href="/portal/account/profile">
+                    <Button variant="ghost" size="icon" className="text-[#AAB0D6] hover:text-[#F5F3EE]">
+                      <User className="w-5 h-5" />
+                    </Button>
+                  </Link> */}
+                </>
+              ) : (
+                <>
+                  <Link href="/auth/signin">
+                    <Button variant="ghost" size="sm" className="text-[#C8A75E] hover:text-[#F5F3EE] gap-1.5 text-xs border border-[#C8A75E]/30 hover:border-[#C8A75E]/60">
+                      <LogIn className="w-4 h-4" />
+                      Sign In
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* Mobile Menu Toggle */}
@@ -365,18 +391,42 @@ export function Navigation() {
                     <span>Admin Dashboard</span>
                   </Link>
                 )}
-                <Link
-                  href="/portal"
-                  className="flex items-center space-x-3 px-4 py-3 text-base text-[#AAB0D6] hover:text-[#F5F3EE] hover:bg-white/5 rounded transition-colors w-full"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <LayoutDashboard className="w-5 h-5" />
-                  <span>My Development Portal</span>
-                </Link>
-                <button className="flex items-center space-x-3 px-4 py-3 text-base text-[#AAB0D6] hover:text-[#F5F3EE] hover:bg-white/5 rounded transition-colors w-full">
-                  <User className="w-5 h-5" />
-                  <span>Profile</span>
-                </button>
+                {user ? (
+                  <>
+                    <Link
+                      href="/portal"
+                      className="flex items-center space-x-3 px-4 py-3 text-base text-[#AAB0D6] hover:text-[#F5F3EE] hover:bg-white/5 rounded transition-colors w-full"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <LayoutDashboard className="w-5 h-5" />
+                      <span>My Portal</span>
+                    </Link>
+                    <Link
+                      href="/portal/account/profile"
+                      className="flex items-center space-x-3 px-4 py-3 text-base text-[#AAB0D6] hover:text-[#F5F3EE] hover:bg-white/5 rounded transition-colors w-full"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <User className="w-5 h-5" />
+                      <span>Profile</span>
+                    </Link>
+                    <button
+                      className="flex items-center space-x-3 px-4 py-3 text-base text-[#AAB0D6] hover:text-[#F5F3EE] hover:bg-white/5 rounded transition-colors w-full"
+                      onClick={handleLogout}
+                    >
+                      <LogOut className="w-5 h-5" />
+                      <span>Sign Out</span>
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    href="/auth/signin"
+                    className="flex items-center space-x-3 px-4 py-3 text-base text-[#C8A75E] hover:text-[#F5F3EE] hover:bg-[#C8A75E]/10 rounded transition-colors w-full border border-[#C8A75E]/20"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <LogIn className="w-5 h-5" />
+                    <span>Sign In</span>
+                  </Link>
+                )}
               </div>
 
               {/* Support Links */}

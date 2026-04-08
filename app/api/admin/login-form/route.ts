@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 
     // Create redirect response with Set-Cookie header
     const res = NextResponse.redirect(new URL(safeRedirect, req.url));
-    res.headers.set('Set-Cookie', `admin_token=${token}; Path=/; Max-Age=3600; HttpOnly; SameSite=Lax`);
+    res.headers.set('Set-Cookie', `admin_token=${token}; Path=/; Max-Age=3600; SameSite=Lax`);
     return res;
   } catch {
     const loginUrl = new URL('/admin/login', req.url);
