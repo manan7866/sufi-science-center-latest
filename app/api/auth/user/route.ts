@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { verifyUserToken } from '@/lib/auth';
+import prisma from '@/lib/prisma';
 
 export async function GET(request: Request) {
   try {
@@ -15,15 +16,22 @@ export async function GET(request: Request) {
       return NextResponse.json({ user: null });
     }
 
-    return NextResponse.json({
-      user: {
-        id: payload.userId,
-        name: payload.name,
-        email: payload.email,
-        avatarUrl: null,
+    const user = await prisma.user.findUnique({
+      where: { id: payload.userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        avatarUrl: true,
         isVerified: true,
       },
     });
+
+    if (!user) {
+      return NextResponse.json({ user: null });
+    }
+
+    return NextResponse.json({ user });
   } catch {
     return NextResponse.json({ user: null });
   }
