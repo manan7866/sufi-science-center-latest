@@ -1,8 +1,9 @@
-let resendInstance: ReturnType<typeof import('resend').Resend> | null = null;
+import { Resend } from 'resend';
+
+let resendInstance: Resend | null = null;
 
 function getResend() {
   if (!resendInstance) {
-    const { Resend } = require('resend');
     resendInstance = new Resend(process.env.RESEND_API_KEY || 're_placeholder');
   }
   return resendInstance;
