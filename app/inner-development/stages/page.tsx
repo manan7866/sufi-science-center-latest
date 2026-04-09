@@ -168,7 +168,7 @@ export default function StagesPage() {
         )}
 
         {selectedStage && (
-          <div className="fixed inset-0 bg-[#0B0F2A]/90 backdrop-blur-sm z-50 flex items-center justify-center p-6 overflow-y-auto">
+          <div className="fixed inset-0  bg-[#0B0F2A]/90 backdrop-blur-sm z-50 flex items-center justify-center p-6 overflow-y-auto">
             <ScrollReveal>
               <Card className="glass-panel border-white/5 p-8 max-w-4xl w-full my-8">
                 <Button
@@ -191,15 +191,16 @@ export default function StagesPage() {
                   </div>
                 </div>
 
-                <div className="space-y-8">
+                <div className="space-y-8 ">
                   <div>
                     <p className="text-[#AAB0D6] leading-relaxed text-lg">
                       {selectedStage.description}
                     </p>
                   </div>
 
-                  {selectedStage.characteristics.length > 0 && (
-                    <div>
+                  <div className='flex gap-8'>
+                    {selectedStage.characteristics.length > 0 && (
+                    <div className=''>
                       <h3 className="text-xl font-semibold text-[#F5F3EE] mb-4 flex items-center gap-2">
                         <MapPin className="w-5 h-5 text-[#C8A75E]" />
                         Characteristics
@@ -231,6 +232,9 @@ export default function StagesPage() {
                       </ul>
                     </div>
                   )}
+                  </div>
+
+                  
 
                   <div className="grid md:grid-cols-2 gap-6">
                     {selectedStage.challenges.length > 0 && (

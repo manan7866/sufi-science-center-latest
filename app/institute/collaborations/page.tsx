@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
 import { ObservatoryHero } from '@/components/observatory-hero';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -50,6 +50,13 @@ function CollaborationsPageContent() {
   const [proposalDetails, setProposalDetails] = useState('');
   const [scope, setScope] = useState('');
   const [timeline, setTimeline] = useState('');
+
+  useEffect(() => {
+  if (user) {
+    setContactName(user.name || "");
+    setContactEmail(user.email || "");
+  }
+}, [user]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -158,7 +165,7 @@ function CollaborationsPageContent() {
                     </div>
                     <div>
                       <Label className="text-[#F5F3EE]">Organization Name *</Label>
-                      <Input type="text" required value={user?.name || organizationName} onChange={(e) => setOrganizationName(e.target.value)} disabled={!!user} className={`mt-2 h-11 ${user ? 'bg-white/3 border-white/5 text-[#AAB0D6]/50 cursor-not-allowed' : 'bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border border-white/10 rounded-xl px-4 text-sm focus:outline-none focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30 shadow-inner shadow-black/20 transition-all'}`} />
+                      <Input type="text" required value={organizationName} onChange={(e) => setOrganizationName(e.target.value)}  className="mt-2 h-11 bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border border-white/10 rounded-xl px-4 text-sm focus:outline-none focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30 shadow-inner shadow-black/20 transition-all" />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>

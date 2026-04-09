@@ -95,7 +95,7 @@ export function ApplyPage() {
     setSubmitting(false);
   };
 
-  const inputClass = 'w-full bg-white/3 border border-white/8 rounded-xl px-4 py-3 text-sm text-[#F5F3EE] placeholder:text-[#AAB0D6]/25 focus:outline-none focus:border-[#C8A75E]/30 transition-all';
+  const inputClass = 'w-full bg-[#0a0f30] border border-white/8 rounded-xl px-4 py-3 text-sm text-[#F5F3EE] placeholder:text-[#AAB0D6]/25 focus:outline-none focus:border-[#C8A75E]/30 transition-all';
   const labelClass = 'block text-xs font-medium text-[#AAB0D6]/60 mb-1.5 tracking-wide';
 
   if (submitted) {

@@ -212,7 +212,7 @@ export default function MentorshipPage() {
         </div>
 
         {selectedProgram && !showApplicationForm && (
-          <div className="fixed inset-0 bg-[#0B0F2A]/90 backdrop-blur-sm z-50 flex items-center justify-center p-6 overflow-y-auto">
+          <div className="fixed inset-0  bg-[#0B0F2A]/90 backdrop-blur-sm z-50 flex  justify-center p-6 overflow-y-auto">
             <ScrollReveal>
               <Card className="glass-panel border-white/5 p-8 max-w-4xl w-full my-8">
                 <Button

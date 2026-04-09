@@ -81,7 +81,7 @@ export default function DialogSeriesPage() {
               placeholder="Search by title, theme, or participant..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-white/3 border border-white/8 rounded-xl pl-9 pr-4 py-2.5 text-sm text-[#F5F3EE] placeholder:text-[#AAB0D6]/25 focus:outline-none focus:border-[#C8A75E]/30 transition-all"
+              className="w-full bg-[#0a0f30] border border-white/8 rounded-xl pl-9 pr-4 py-2.5 text-sm text-[#F5F3EE] placeholder:text-[#AAB0D6]/25 focus:outline-none focus:border-[#C8A75E]/30 transition-all"
             />
           </div>
           <div className="flex items-center gap-2 flex-wrap">
@@ -127,8 +127,8 @@ export default function DialogSeriesPage() {
                 const epCount = series.episodes?.[0]?.count ?? series.total_episodes ?? 0;
                 const date = new Date(series.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
                 return (
-                  <Link key={series.id} href={`/dialogues/series/${series.slug}`}>
-                    <div className="group glass-panel rounded-2xl p-7 border border-white/5 hover:border-[#C8A75E]/20 transition-all cursor-pointer">
+                  <Link  key={series.id} href={`/dialogues/series/${series.slug}`}>
+                    <div className="group glass-panel rounded-2xl my-4 p-7 border border-white/5 hover:border-[#C8A75E]/20 transition-all cursor-pointer">
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-3 flex-wrap">
