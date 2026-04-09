@@ -6,6 +6,24 @@ import { useAuth } from '@/lib/auth-context';
 import { Button } from '@/components/ui/button';
 import { Eye, EyeOff, Loader2, Mail, Lock, UserPlus, Shield, CheckCircle2 } from 'lucide-react';
 
+const InputField = ({ icon: Icon, type, value, onChange, placeholder, label, rightElement, ...props }: any) => (
+  <div>
+    <label className="block text-xs font-medium text-[#AAB0D6]/70 mb-2 tracking-wide uppercase">{label}</label>
+    <div className="relative">
+      <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#AAB0D6]/30" />
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className="w-full h-12 pl-11 pr-12 bg-[#141A3A]/60 border border-white/8 rounded-xl text-sm text-[#F5F3EE] placeholder:text-[#9CA3AF]/40 focus:outline-none focus:border-[#C8A75E]/40 focus:ring-1 focus:ring-[#C8A75E]/20 transition-all"
+        {...props}
+      />
+      {rightElement}
+    </div>
+  </div>
+);
+
 export default function SignUpPage() {
   const { register } = useAuth();
   const [name, setName] = useState('');
@@ -45,24 +63,6 @@ export default function SignUpPage() {
       setError(result.error || 'Registration failed. Please try again.');
     }
   };
-
-  const InputField = ({ icon: Icon, type, value, onChange, placeholder, label, rightElement, ...props }: any) => (
-    <div>
-      <label className="block text-xs font-medium text-[#AAB0D6]/70 mb-2 tracking-wide uppercase">{label}</label>
-      <div className="relative">
-        <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#AAB0D6]/30" />
-        <input
-          type={type}
-          value={value}
-          onChange={onChange}
-          placeholder={placeholder}
-          className="w-full h-12 pl-11 pr-12 bg-[#141A3A]/60 border border-white/8 rounded-xl text-sm text-[#F5F3EE] placeholder:text-[#9CA3AF]/40 focus:outline-none focus:border-[#C8A75E]/40 focus:ring-1 focus:ring-[#C8A75E]/20 transition-all"
-          {...props}
-        />
-        {rightElement}
-      </div>
-    </div>
-  );
 
   return (
     <div className="min-h-screen max-w-7xl mx-auto flex">

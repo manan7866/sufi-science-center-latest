@@ -80,16 +80,21 @@ export default function ProfilePage() {
       const formData = new FormData();
       formData.append('file', file);
 
+      const token = localStorage.getItem('ssc_user_token');
       const res = await fetch('/api/upload-avatar', {
         method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
 
-      if (!res.ok) throw new Error('Upload failed');
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Upload failed');
+      }
 
       const data = await res.json();
 
-      // Save URL to database
+      // Save URL to database (works with Cloudinary URL or base64 data URL)
       await fetch('/api/user-profile', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },

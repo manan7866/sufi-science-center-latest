@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { hashPassword, signUserToken, generateOTP, getOTPExpiry } from '@/lib/auth';
+import { sendOTPVerificationEmail } from '@/lib/email';
 
 const prisma = new PrismaClient();
 
@@ -60,17 +61,17 @@ export async function POST(request: Request) {
       },
     });
 
-    // TODO: Send OTP email here using your email service
-    // For now, we'll return the OTP in the response for development
-    // In production, remove OTP from response and send via email
-    console.log(`OTP for ${user.email}: ${otp}`);
+    // Send OTP verification email via Resend
+    const emailResult = await sendOTPVerificationEmail(user.email, otp);
+
+    if (!emailResult.success) {
+      console.error('Failed to send OTP email:', emailResult.error);
+    }
 
     return NextResponse.json({
       success: true,
       message: 'Account created successfully. Please verify your email with the OTP sent to you.',
       email: user.email,
-      // Remove OTP in production - only for development testing
-      developmentOTP: otp,
     });
   } catch (error) {
     console.error('[REGISTER]', error);

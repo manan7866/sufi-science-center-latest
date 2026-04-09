@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { generateOTP, getOTPExpiry } from '@/lib/auth';
+import { sendOTPVerificationEmail } from '@/lib/email';
 
 const prisma = new PrismaClient();
 
@@ -43,14 +44,20 @@ export async function POST(request: Request) {
       data: { otp, otpExpiry },
     });
 
-    // TODO: Send OTP email here using your email service
-    console.log(`New OTP for ${user.email}: ${otp}`);
+    // Send OTP email via Resend
+    const emailResult = await sendOTPVerificationEmail(user.email, otp);
+
+    if (!emailResult.success) {
+      console.error('Failed to resend OTP email:', emailResult.error);
+      return NextResponse.json(
+        { error: 'Failed to send OTP email. Please try again.' },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
       message: 'New OTP sent successfully.',
-      // Remove OTP in production - only for development testing
-      developmentOTP: otp,
     });
   } catch (error) {
     console.error('[RESEND OTP]', error);
