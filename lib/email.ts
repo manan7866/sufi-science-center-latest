@@ -1,6 +1,13 @@
-import { Resend } from 'resend';
+let resendInstance: ReturnType<typeof import('resend').Resend> | null = null;
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  if (!resendInstance) {
+    const { Resend } = require('resend');
+    resendInstance = new Resend(process.env.RESEND_API_KEY || 're_placeholder');
+  }
+  return resendInstance;
+}
+
 const FROM_EMAIL = process.env.EMAIL_FROM || 'onboarding@resend.dev';
 
 export async function sendOTPVerificationEmail(
@@ -8,6 +15,7 @@ export async function sendOTPVerificationEmail(
   otpCode: string
 ) {
   try {
+    const resend = getResend();
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: [to],
@@ -18,7 +26,6 @@ export async function sendOTPVerificationEmail(
         },
       },
     });
-    
 
     if (error) {
       console.error('[Resend] OTP email error:', error);
