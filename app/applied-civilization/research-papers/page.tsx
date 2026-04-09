@@ -234,7 +234,7 @@ function DomainSection({ domain }: { domain: typeof RESEARCH_DOMAINS[0] }) {
 
 export default function ResearchPapersPage() {
   return (
-    <div className="min-h-screen bg-[#08091A]">
+    <div className="min-h-screen bg-[#0B0F2A]">
       <div className="max-w-6xl mx-auto px-5 py-16 sm:px-8 lg:px-12">
 
         {/* Breadcrumb */}

@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function ImpactPage() {
   return (
-    <div className="min-h-screen bg-[#0A0B14]">
+    <div className="min-h-screen bg-[#0B0F2A]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="mb-12">
           <div className="flex items-center mb-4">

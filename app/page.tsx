@@ -86,7 +86,7 @@ export default function Home() {
               icon={BookOpen}
               title="Epistemology"
               description="Explore the nature of knowledge, belief, and justification through both Western philosophical traditions and Sufi wisdom."
-              href="/foundations/epistemology"
+              href="/knowledge-systems/epistemology"
               tag="Core"
             />
             <GlassResearchCard
