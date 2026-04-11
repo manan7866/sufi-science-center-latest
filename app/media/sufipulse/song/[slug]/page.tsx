@@ -61,8 +61,42 @@ export default function SongDetailPage() {
   }, [slug]);
 
   async function fetchTrack() {
-    setTrack(null);
-    setLoading(false);
+    try {
+      setLoading(true);
+      
+      // Extract YouTube video ID from slug or URL params
+      // For this implementation, we'll use the slug to search videos
+      const searchResponse = await fetch('/api/youtube/videos?limit=50');
+      if (!searchResponse.ok) {
+        setTrack(null);
+        return;
+      }
+      const searchData = await searchResponse.json();
+      
+      // Find the matching video by slug
+      const matchedVideo = (searchData.videos || []).find(
+        (video: any) => video.slug === slug
+      );
+
+      if (!matchedVideo) {
+        setTrack(null);
+        return;
+      }
+
+      // Fetch full details for this specific video
+      const videoResponse = await fetch(`/api/youtube/video?id=${matchedVideo.id}`);
+      if (!videoResponse.ok) {
+        setTrack(null);
+        return;
+      }
+      const videoData = await videoResponse.json();
+      setTrack(videoData.video || null);
+    } catch (error) {
+      console.error('Error fetching track:', error);
+      setTrack(null);
+    } finally {
+      setLoading(false);
+    }
   }
 
   function formatDuration(interval: string | null): string {

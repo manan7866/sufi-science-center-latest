@@ -91,8 +91,22 @@ export default function SufiPulseStudioPage() {
   }, [tracks, selectedLanguage, selectedTheme, selectedFormat, searchQuery, sortBy]);
 
   async function fetchTracks() {
-    setTracks([]);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const response = await fetch('/api/youtube/videos?limit=50');
+      if (!response.ok) {
+        console.error('Failed to fetch tracks');
+        setTracks([]);
+        return;
+      }
+      const data = await response.json();
+      setTracks(data.videos || []);
+    } catch (error) {
+      console.error('Error fetching tracks:', error);
+      setTracks([]);
+    } finally {
+      setLoading(false);
+    }
   }
 
   function formatDuration(interval: string | null): string {
