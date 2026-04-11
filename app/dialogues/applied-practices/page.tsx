@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Clock, ChartBar as BarChart2, Users, Flower2, Heart, Compass, Star, ArrowRight } from 'lucide-react';
+import { ObservatoryHero } from '@/components/observatory-hero';
 
 const ICONS: Record<string, React.ElementType> = {
   dhikr: Flower2,
@@ -75,7 +76,7 @@ export default function AppliedPracticesPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="relative py-16 px-4 border-b border-white/5">
+      {/* <div className="relative py-16 px-4 border-b border-white/5">
         <div className="absolute inset-0 bg-gradient-to-br from-[#27AE60]/4 via-transparent to-transparent pointer-events-none" />
         <div className="max-w-5xl mx-auto relative">
           <p className="text-xs tracking-[0.22em] text-[#C8A75E]/60 uppercase mb-2">Dialogues</p>
@@ -88,7 +89,14 @@ export default function AppliedPracticesPage() {
             generations of practitioners.
           </p>
         </div>
-      </div>
+      </div> */}
+      <ObservatoryHero 
+      subtitle='Dialogues'
+      title='Applied Practices & Wisdom'
+      description='Sophisticated technologies of consciousness developed over centuries. Each practice represents a
+            systematic methodology for transformation, grounded in experiential knowledge refined through
+            generations of practitioners.'
+      />
 
       <div className="py-12 px-4 border-b border-white/5">
         <div className="max-w-5xl mx-auto">

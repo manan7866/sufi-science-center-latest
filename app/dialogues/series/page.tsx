@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { BookOpen, Calendar, Clock, ArrowRight, Search, Filter, FileText, Users } from 'lucide-react';
+import { ObservatoryHero } from '@/components/observatory-hero';
 
 interface Series {
   id: string;
@@ -58,7 +59,7 @@ export default function DialogSeriesPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="relative py-16 px-4 border-b border-white/5">
+      {/* <div className="relative py-16 px-4 border-b border-white/5">
         <div className="absolute inset-0 bg-gradient-to-br from-[#C8A75E]/4 via-transparent to-transparent pointer-events-none" />
         <div className="max-w-5xl mx-auto relative">
           <p className="text-xs tracking-[0.22em] text-[#C8A75E]/60 uppercase mb-2">Dialogues</p>
@@ -70,7 +71,11 @@ export default function DialogSeriesPage() {
             Each series features in-depth engagement across several episodes with full written transcripts.
           </p>
         </div>
-      </div>
+      </div> */}
+      <ObservatoryHero subtitle='Dialogues' title='Dialogic Inquiry Series'
+      description='Collaborative multi-session explorations bridging scientific inquiry and contemplative wisdom.
+            Each series features in-depth engagement across several episodes with full written transcripts.'
+      />
 
       <div className="sticky top-0 z-10 bg-[#0A0C14]/90 backdrop-blur-md border-b border-white/5 px-4 py-4">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row gap-3">

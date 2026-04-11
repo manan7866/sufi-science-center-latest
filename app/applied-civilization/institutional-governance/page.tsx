@@ -145,7 +145,7 @@ function PillarCard({ pillar }: { pillar: typeof GOVERNANCE_PILLARS[0] }) {
 export default function InstitutionalGovernancePage() {
   return (
     <div className="min-h-screen bg-[#0B0F2A]">
-      <div className="max-w-5xl mx-auto px-5 py-16 sm:px-8 lg:px-12">
+      <div className="max-w-7xl mx-auto px-5 py-16 sm:px-8 lg:px-12">
 
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 mb-10 text-xs text-[#AAB0D6]/40">

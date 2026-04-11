@@ -83,7 +83,8 @@ export default function DonatePage() {
     <div className="min-h-screen pt-20 bg-[#0B0F2A]">
       <ObservatoryHero
         subtitle="Support the Mission"
-        title="Support the Continuity of Sufi Scientific Inquiry"
+        title="Support the Continuity of"
+        title2='Sufi Scientific Inquiry'
         description="Your contribution sustains research, dialogue, and knowledge preservation."
       />
 

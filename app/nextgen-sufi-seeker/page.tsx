@@ -76,7 +76,7 @@ export default function NextGenSufiSeekerPage() {
           <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_79px,rgba(255,255,255,0.015)_79px,rgba(255,255,255,0.015)_80px),repeating-linear-gradient(90deg,transparent,transparent_79px,rgba(255,255,255,0.015)_79px,rgba(255,255,255,0.015)_80px)]" />
         </div>
 
-        <div className="max-w-5xl mx-auto relative">
+        <div className="max-w-7xl mx-auto relative">
           <div className="flex items-center gap-2 mb-6">
             <div className="h-px w-8 bg-[#C8A75E]/60" />
             <p className="text-xs tracking-[0.25em] text-[#C8A75E]/70 uppercase font-medium">Sufi Science Center</p>
@@ -115,7 +115,7 @@ export default function NextGenSufiSeekerPage() {
       </section>
 
       <section className="border-y border-white/5 bg-white/1 py-10 px-4">
-        <div className="max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-8">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-8">
           {STAT_ITEMS.map((s) => (
             <div key={s.label} className="text-center">
               <p className="text-3xl font-serif font-bold text-[#C8A75E]">{s.value}</p>
@@ -126,7 +126,7 @@ export default function NextGenSufiSeekerPage() {
       </section>
 
       <section className="py-16 px-4 bg-gradient-to-b from-transparent to-[#0A0C18]/50">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-3 gap-5">
             {[
               {
@@ -161,7 +161,7 @@ export default function NextGenSufiSeekerPage() {
       </section>
 
       <section className="py-8 px-4 border-y border-white/5">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="grid sm:grid-cols-3 gap-3">
             {[
               { role: 'Member', description: 'Join a discipline circle. Save your pathway. Access structured engagement resources.', accent: '#AAB0D6' },
@@ -189,7 +189,7 @@ export default function NextGenSufiSeekerPage() {
       </section>
 
       <section id="disciplines" className="py-16 px-4">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-2 mb-2">
             <div className="h-px w-6 bg-[#C8A75E]/40" />
             <p className="text-xs tracking-[0.2em] text-[#C8A75E]/60 uppercase">Discipline Framework</p>
@@ -281,7 +281,7 @@ export default function NextGenSufiSeekerPage() {
       </section>
 
       <section className="py-16 px-4 border-t border-white/5">
-        <div className="max-w-3xl mx-auto text-center">
+        <div className="max-w-5xl mx-auto text-center">
           <p className="text-xs tracking-[0.25em] text-[#C8A75E]/50 uppercase mb-3">Strategic Objective</p>
           <blockquote className="text-xl md:text-2xl font-serif text-[#F5F3EE] leading-relaxed mb-6">
             &ldquo;Sufi thought engages professionals where they work.

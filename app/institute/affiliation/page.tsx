@@ -7,7 +7,8 @@ export default function AffiliationPage() {
     <div className="min-h-screen pt-20">
       <ObservatoryHero
         subtitle="Governance"
-        title="Institutional Affiliation and Sponsorship"
+        title="Institutional Affiliation"
+        title2='and Sponsorship'
         description="Transparent information about our institutional structure, governance, and support model."
       />
 
