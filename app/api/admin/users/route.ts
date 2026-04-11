@@ -19,33 +19,45 @@ export async function GET(request: NextRequest) {
   const search = searchParams.get('search') ?? '';
   const PAGE_SIZE = 25;
 
-  const where = search
+  // Get registered users from the User table (these have proper email/name)
+  const userWhere = search
     ? {
         OR: [
-          { displayName: { contains: search, mode: 'insensitive' as const } },
-          { profile: { email: { contains: search, mode: 'insensitive' as const } } },
+          { name: { contains: search, mode: 'insensitive' as const } },
+          { email: { contains: search, mode: 'insensitive' as const } },
         ],
       }
     : {};
 
-  const [portalSessions, total] = await Promise.all([
-    prisma.portalSession.findMany({
-      where,
-      include: { profile: true },
+  const [registeredUsers, total] = await Promise.all([
+    prisma.user.findMany({
+      where: userWhere,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        isAdmin: true,
+        isVerified: true,
+        createdAt: true,
+        updatedAt: true,
+      },
       skip: page * PAGE_SIZE,
       take: PAGE_SIZE,
       orderBy: { createdAt: 'desc' },
     }),
-    prisma.portalSession.count({ where }),
+    prisma.user.count({ where: userWhere }),
   ]);
 
-  const users = portalSessions.map((s: (typeof portalSessions)[number]) => ({
-    id: s.id,
-    sessionToken: s.sessionToken,
-    displayName: s.displayName ?? s.profile?.displayName ?? 'Anonymous',
-    email: s.profile?.email ?? '',
-    createdAt: s.createdAt,
-    lastActivityAt: s.lastActivityAt,
+  // Map to consistent format
+  const users = registeredUsers.map((u) => ({
+    id: u.id,
+    displayName: u.name,
+    email: u.email,
+    role: u.isAdmin ? 'admin' : 'user',
+    isVerified: u.isVerified,
+    createdAt: u.createdAt,
+    updatedAt: u.updatedAt,
+    source: 'registered',
   }));
 
   return NextResponse.json({ users, total, page, pageSize: PAGE_SIZE });
