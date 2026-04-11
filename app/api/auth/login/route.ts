@@ -1,23 +1,37 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { comparePassword, signUserToken } from '@/lib/auth';
+import { createRateLimiter, RateLimits } from '@/lib/rate-limit';
+import { loginSchema } from '@/lib/validations';
+import { sanitizeInput } from '@/lib/sanitization';
 
 const prisma = new PrismaClient();
+const rateLimiter = createRateLimiter(RateLimits.AUTH_LOGIN);
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { email, password } = body;
+    // Check rate limiting
+    const rateLimitResult = await rateLimiter(request);
+    if (!rateLimitResult.allowed) {
+      return rateLimitResult.response!;
+    }
 
-    if (!email || !password) {
+    const body = await request.json();
+    
+    // Validate input with Zod
+    const validationResult = loginSchema.safeParse(body);
+    if (!validationResult.success) {
+      const errors = validationResult.error.errors.map(e => e.message).join(', ');
       return NextResponse.json(
-        { error: 'Email and password are required.' },
+        { error: errors },
         { status: 400 }
       );
     }
 
+    const { email, password } = validationResult.data;
+
     const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase().trim() },
+      where: { email },
     });
 
     if (!user) {

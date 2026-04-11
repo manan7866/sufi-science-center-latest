@@ -5,6 +5,8 @@ import { CircleUser as UserCircle, Briefcase, BookOpen, MessageSquare, CircleChe
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth-context';
 import FormGuard from '@/components/form-guard';
+import { interviewApplicationSchema } from '@/lib/validations';
+import { sanitizeInput } from '@/lib/sanitization';
 
 const ELIGIBLE = [
   { icon: FlaskConical, label: 'Researchers & Scientists' },
@@ -66,27 +68,58 @@ export function ApplyPage() {
     setSubmitting(true);
     setError(null);
 
+    // Validate form data with Zod
+    const validationResult = interviewApplicationSchema.safeParse({
+      fullName: form.name,
+      email: form.email,
+      location: form.location,
+      background: form.background,
+      fieldOfWork: form.field_of_work,
+      reflection: form.wisdom,
+      websiteUrl: form.website || undefined,
+      socialMediaUrl: form.publications || undefined,
+    });
+
+    if (!validationResult.success) {
+      const errors = validationResult.error.errors.map(e => e.message).join(', ');
+      setError(errors);
+      setSubmitting(false);
+      return;
+    }
+
+    const sanitizedData = {
+      fullName: sanitizeInput(form.name),
+      email: form.email.trim().toLowerCase(),
+      location: sanitizeInput(form.location),
+      background: sanitizeInput(form.background),
+      fieldOfWork: sanitizeInput(form.field_of_work),
+      reflection: sanitizeInput(form.wisdom),
+      themes: form.themes ? [form.themes] : [],
+      website: form.website ? sanitizeInput(form.website) : null,
+      publications: form.publications ? sanitizeInput(form.publications) : null,
+      availability: form.availability ? sanitizeInput(form.availability) : null,
+    };
+
     const res = await fetch('/api/interview-applications', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         userId: user?.id || null,
-        name: form.name,
-        email: form.email,
-        affiliation: form.affiliation || null,
-        field_of_work: form.field_of_work,
-        summary: `${form.background}\n\n${form.wisdom}`,
-        themes: form.themes ? [form.themes] : [],
-        links: form.website || form.publications
-          ? [form.website, form.publications].filter(Boolean)
-          : [],
-        availability: form.availability || null,
+        name: sanitizedData.fullName,
+        email: sanitizedData.email,
+        affiliation: sanitizedData.location || null,
+        field_of_work: sanitizedData.fieldOfWork,
+        summary: `${sanitizedData.background}\n\n${sanitizedData.reflection}`,
+        themes: sanitizedData.themes,
+        links: [sanitizedData.website, sanitizedData.publications].filter(Boolean) as string[],
+        availability: sanitizedData.availability || null,
         status: 'pending',
       }),
     });
 
     if (!res.ok) {
-      setError('Something went wrong. Please try again.');
+      const data = await res.json();
+      setError(data.error || 'Something went wrong. Please try again.');
       setSubmitting(false);
       return;
     }

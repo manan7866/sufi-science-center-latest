@@ -8,6 +8,7 @@ import { Compass, Clock, Users, BookOpen, ArrowRight } from 'lucide-react';
 import { ScrollReveal } from '@/components/scroll-reveal';
 import { ObservatoryHero } from '@/components/observatory-hero';
 import { PathwayApplicationForm } from '@/components/pathway-application-form';
+import FormGuard from '@/components/form-guard';
 import Link from 'next/link';
 
 interface GuidancePathway {
@@ -190,17 +191,30 @@ export default function GuidancePage() {
       </div>
 
       {showApplicationForm && selectedPathway && (
-        <PathwayApplicationForm
-          pathway={selectedPathway}
-          onClose={() => {
-            setShowApplicationForm(false);
-            setSelectedPathway(null);
+        <FormGuard
+          formType="pathway"
+          checkExisting={async (userId: string) => {
+            const res = await fetch('/api/form-status', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ userId, formType: 'pathway' }),
+            });
+            const data = await res.json();
+            return data.exists === true;
           }}
-          onSuccess={() => {
-            setShowApplicationForm(false);
-            setSelectedPathway(null);
-          }}
-        />
+        >
+          <PathwayApplicationForm
+            pathway={selectedPathway}
+            onClose={() => {
+              setShowApplicationForm(false);
+              setSelectedPathway(null);
+            }}
+            onSuccess={() => {
+              setShowApplicationForm(false);
+              setSelectedPathway(null);
+            }}
+          />
+        </FormGuard>
       )}
     </div>
   );

@@ -6,6 +6,8 @@ import { Check, ChevronRight, ChevronLeft, Upload, X, Loader as Loader2, Graduat
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth-context';
 import FormGuard from '@/components/form-guard';
+import { membershipApplicationSchema } from '@/lib/validations';
+import { sanitizeInput } from '@/lib/sanitization';
 
 const AREAS = [
   'Sufi Metaphysics', 'Contemplative Science', 'Consciousness Studies',
@@ -136,27 +138,51 @@ export function MembershipApplyPage() {
   async function submit() {
     if (!validate()) return;
     setSubmitting(true);
+    
+    // Additional Zod validation
+    const validationResult = membershipApplicationSchema.safeParse({
+      fullName: user?.name || form.full_name.trim(),
+      email: user?.email || form.email.trim().toLowerCase(),
+      location: form.location.trim(),
+      affiliation: form.affiliation.trim(),
+      areasOfStudy: form.areas_of_study,
+      bio: form.bio.trim(),
+      academicFocus: form.academic_focus.trim() || '',
+      researchInterests: form.research_interest.trim() || '',
+      yearsOfEngagement: form.years_of_engagement.trim() || '',
+      statement: form.statement.trim(),
+      publications: form.linked_publications,
+      references: form.reference_contact,
+    });
+
+    if (!validationResult.success) {
+      const errors = validationResult.error.errors.map(err => err.message).join(', ');
+      alert(errors);
+      setSubmitting(false);
+      return;
+    }
+
     try {
       const payload = {
         userId: user?.id || null,
         membership_type: type,
-        full_name: user?.name || form.full_name.trim(),
-        display_name: form.display_name.trim() || (user?.name || form.full_name.trim()),
-        email: user?.email || form.email.trim().toLowerCase(),
-        location: form.location.trim(),
-        affiliation: form.affiliation.trim(),
+        full_name: sanitizeInput(user?.name || form.full_name.trim()),
+        display_name: sanitizeInput(form.display_name.trim() || (user?.name || form.full_name.trim())),
+        email: (user?.email || form.email.trim().toLowerCase()),
+        location: sanitizeInput(form.location.trim()),
+        affiliation: sanitizeInput(form.affiliation.trim()),
         areas_of_study: form.areas_of_study,
-        bio: form.bio.trim(),
-        statement: form.statement.trim(),
+        bio: sanitizeInput(form.bio.trim()),
+        statement: sanitizeInput(form.statement.trim()),
         linked_publications: form.linked_publications
           ? form.linked_publications.split('\n').map((l) => l.trim()).filter(Boolean)
           : [],
-        academic_focus: form.academic_focus.trim() || null,
-        research_interest: form.research_interest.trim() || null,
+        academic_focus: form.academic_focus.trim() ? sanitizeInput(form.academic_focus.trim()) : null,
+        research_interest: form.research_interest.trim() ? sanitizeInput(form.research_interest.trim()) : null,
         years_of_engagement: form.years_of_engagement.trim() || null,
-        leadership_roles: form.leadership_roles.trim() || null,
-        publications_list: form.publications_list.trim() || null,
-        reference_contact: form.reference_contact.trim() || null,
+        leadership_roles: form.leadership_roles.trim() ? sanitizeInput(form.leadership_roles.trim()) : null,
+        publications_list: form.publications_list.trim() ? sanitizeInput(form.publications_list.trim()) : null,
+        reference_contact: form.reference_contact.trim() ? sanitizeInput(form.reference_contact.trim()) : null,
         session_token: typeof window !== 'undefined'
           ? localStorage.getItem('ssc_portal_session_token')
           : null,

@@ -1,8 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { createRateLimiter, RateLimits } from '@/lib/rate-limit';
+
+const rateLimiter = createRateLimiter(RateLimits.FORM_SUBMISSION);
 
 export async function POST(req: NextRequest) {
   try {
+    // Check rate limiting
+    const rateLimitResult = await rateLimiter(req);
+    if (!rateLimitResult.allowed) {
+      return rateLimitResult.response!;
+    }
+
     const body = await req.json();
     const { fullName, email } = body;
 

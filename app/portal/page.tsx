@@ -160,7 +160,13 @@ export default function PortalPage() {
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#C8A75E]/20 to-[#C8A75E]/5 flex items-center justify-center flex-shrink-0 border border-[#C8A75E]/20">
               <LayoutDashboard className="w-6 h-6 text-[#C8A75E]" />
             </div>
-            <div>
+            <div className="flex-1">
+              <div className="flex items-center justify-between mb-2">
+                <Link href="/" className="inline-flex items-center gap-2 text-xs text-[#AAB0D6]/60 hover:text-[#C8A75E] transition-colors">
+                  <ArrowRight className="w-3.5 h-3.5 rotate-180" />
+                  Back to Website
+                </Link>
+              </div>
               <p className="text-xs tracking-[0.2em] text-[#C8A75E]/70 uppercase mb-1">Sufi Science Center</p>
               <h1 className="text-4xl md:text-5xl font-serif font-bold text-[#F5F3EE] leading-tight">
                 My Development Portal

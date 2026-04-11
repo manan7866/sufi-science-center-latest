@@ -180,7 +180,8 @@ export default function CirclesPage() {
                       onClick={() => setSelectedCircle(circle)}
                       disabled={circle.status === 'closed' || circle.status === 'completed'}
                     >
-                      {circle.status === 'open' || circle.status === 'accepting' ? 'Apply Now' : 'View Details'}
+                      { 'View Details'}
+                      {/* circle.status === 'open' || circle.status === 'accepting' ? 'Apply Now' : */}
                     </Button>
                   </Card>
                 </ScrollReveal>
@@ -294,7 +295,7 @@ export default function CirclesPage() {
                   </div>
                 )}
 
-                {(selectedCircle.status === 'open' || selectedCircle.status === 'accepting') && (
+                {/* {(selectedCircle.status === 'open' || selectedCircle.status === 'accepting') && (
                   <div className="pt-6 border-t border-white/10">
                     <Button className="w-full bg-[#C8A75E] text-[#0B0F2A] hover:bg-[#D4B56D] py-6 text-lg">
                       Apply for This Circle
@@ -303,7 +304,7 @@ export default function CirclesPage() {
                       You will receive an email with next steps after submitting your application
                     </p>
                   </div>
-                )}
+                )} */}
               </div>
             </Card>
           </ScrollReveal>

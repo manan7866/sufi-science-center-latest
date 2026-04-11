@@ -2,40 +2,37 @@ import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { hashPassword, signUserToken, generateOTP, getOTPExpiry } from '@/lib/auth';
 import { sendOTPVerificationEmail } from '@/lib/email';
+import { createRateLimiter, RateLimits } from '@/lib/rate-limit';
+import { registerSchema } from '@/lib/validations';
 
 const prisma = new PrismaClient();
+const rateLimiter = createRateLimiter(RateLimits.AUTH_REGISTER);
 
 export async function POST(request: Request) {
   try {
+    // Check rate limiting
+    const rateLimitResult = await rateLimiter(request);
+    if (!rateLimitResult.allowed) {
+      return rateLimitResult.response!;
+    }
+
     const body = await request.json();
-    const { name, email, password } = body;
 
-    // Validation
-    if (!name?.trim() || !email?.trim() || !password) {
+    // Validate input with Zod
+    const validationResult = registerSchema.safeParse(body);
+    if (!validationResult.success) {
+      const errors = validationResult.error.errors.map(e => e.message).join(', ');
       return NextResponse.json(
-        { error: 'Name, email, and password are required.' },
+        { error: errors },
         { status: 400 }
       );
     }
 
-    if (password.length < 6) {
-      return NextResponse.json(
-        { error: 'Password must be at least 6 characters long.' },
-        { status: 400 }
-      );
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: 'Please enter a valid email address.' },
-        { status: 400 }
-      );
-    }
+    const { name, email, password } = validationResult.data;
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
-      where: { email: email.toLowerCase().trim() },
+      where: { email },
     });
 
     if (existingUser) {
@@ -52,8 +49,8 @@ export async function POST(request: Request) {
 
     const user = await prisma.user.create({
       data: {
-        name: name.trim(),
-        email: email.toLowerCase().trim(),
+        name,
+        email,
         password: hashedPassword,
         otp,
         otpExpiry,

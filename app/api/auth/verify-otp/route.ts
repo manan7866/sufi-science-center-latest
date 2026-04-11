@@ -1,23 +1,36 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { isOTPExpired } from '@/lib/auth';
+import { createRateLimiter, RateLimits } from '@/lib/rate-limit';
+import { otpVerifySchema } from '@/lib/validations';
 
 const prisma = new PrismaClient();
+const rateLimiter = createRateLimiter(RateLimits.AUTH_VERIFY_OTP);
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { email, otp } = body;
+    // Check rate limiting
+    const rateLimitResult = await rateLimiter(request);
+    if (!rateLimitResult.allowed) {
+      return rateLimitResult.response!;
+    }
 
-    if (!email || !otp) {
+    const body = await request.json();
+
+    // Validate input with Zod
+    const validationResult = otpVerifySchema.safeParse(body);
+    if (!validationResult.success) {
+      const errors = validationResult.error.errors.map(e => e.message).join(', ');
       return NextResponse.json(
-        { error: 'Email and OTP are required.' },
+        { error: errors },
         { status: 400 }
       );
     }
 
+    const { email, otp } = validationResult.data;
+
     const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase().trim() },
+      where: { email },
     });
 
     if (!user) {

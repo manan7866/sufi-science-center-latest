@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ObservatoryHero } from '@/components/observatory-hero';
-import { Mail, MapPin, Send, CheckCircle2, MessageSquare, Users, Building2 } from 'lucide-react';
+import { Mail, MapPin, Send, CheckCircle2, MessageSquare, Users, Building2, Loader2 } from 'lucide-react';
 
 const ENQUIRY_TYPES = [
   { value: 'general', label: 'General Enquiry' },
@@ -17,16 +17,43 @@ export default function ContactPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [enquiryType, setEnquiryType] = useState('general');
+  const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 800));
-    setSubmitted(true);
-    setLoading(false);
+    setError('');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: name,
+          email,
+          enquiryType,
+          subject,
+          message,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Failed to send message');
+        return;
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -101,6 +128,12 @@ export default function ContactPage() {
                   </div>
 
                   <form onSubmit={handleSubmit} className="space-y-5">
+                    {error && (
+                      <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-sm text-red-400">
+                        {error}
+                      </div>
+                    )}
+                    
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div>
                         <label className="block text-xs font-medium text-[#AAB0D6]/70 mb-2 tracking-wide uppercase">
@@ -149,6 +182,20 @@ export default function ContactPage() {
 
                     <div>
                       <label className="block text-xs font-medium text-[#AAB0D6]/70 mb-2 tracking-wide uppercase">
+                        Subject *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={subject}
+                        onChange={(e) => setSubject(e.target.value)}
+                        className="w-full bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30 shadow-inner shadow-black/20 transition-all"
+                        placeholder="Subject of your message"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium text-[#AAB0D6]/70 mb-2 tracking-wide uppercase">
                         Message *
                       </label>
                       <textarea
@@ -163,11 +210,14 @@ export default function ContactPage() {
 
                     <button
                       type="submit"
-                      disabled={loading || !name || !email || !message}
+                      disabled={loading || !name || !email || !subject || !message}
                       className="flex items-center gap-2 text-sm font-semibold text-[#0B0F2A] bg-[#C8A75E] px-6 py-3 rounded-lg hover:bg-[#C8A75E]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                     >
                       {loading ? (
-                        <>Sending...</>
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Sending...
+                        </>
                       ) : (
                         <>
                           <Send className="w-4 h-4" />

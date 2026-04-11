@@ -14,6 +14,8 @@ import Link from 'next/link';
 import { ArrowLeft, FileText, Send, CircleCheck as CheckCircle2, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import FormGuard from '@/components/form-guard';
+import { generalSubmissionSchema } from '@/lib/validations';
+import { sanitizeInput } from '@/lib/sanitization';
 
 const submissionTypes = {
   research_paper: 'Research Paper',
@@ -53,6 +55,32 @@ function SubmitFormContent() {
       return;
     }
 
+    // Validate form data with Zod
+    const validationResult = generalSubmissionSchema.safeParse({
+      submissionType: formData.submission_type,
+      title: formData.title,
+      abstract: formData.abstract,
+      content: formData.content,
+      contactName: user?.name || '',
+      contactEmail: user?.email || '',
+    });
+
+    if (!validationResult.success) {
+      const errors = validationResult.error.errors.map(err => err.message).join(', ');
+      setError(errors);
+      return;
+    }
+
+    // Sanitize inputs
+    const sanitizedData = {
+      submissionType: formData.submission_type,
+      title: sanitizeInput(formData.title),
+      abstract: sanitizeInput(formData.abstract),
+      content: sanitizeInput(formData.content),
+      contactName: sanitizeInput(user?.name || ''),
+      contactEmail: (user?.email || '').trim().toLowerCase(),
+    };
+
     setIsSubmitting(true);
 
     try {
@@ -61,12 +89,12 @@ function SubmitFormContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId: user?.id || null,
-          submission_type: formData.submission_type,
-          title: formData.title,
-          abstract: formData.abstract,
-          content: formData.content,
-          contact_name: user?.name || '',
-          contact_email: user?.email || '',
+          submission_type: sanitizedData.submissionType,
+          title: sanitizedData.title,
+          abstract: sanitizedData.abstract,
+          content: sanitizedData.content,
+          contact_name: sanitizedData.contactName,
+          contact_email: sanitizedData.contactEmail,
           contact_affiliation: null,
           status: 'submitted',
         }),

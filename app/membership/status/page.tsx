@@ -42,11 +42,18 @@ function MembershipStatusForm() {
     setLoading(true);
     setSearched(false);
     try {
-      const res = await fetch(`/api/portal/membership?email=${encodeURIComponent(email.trim())}`);
-      if (!res.ok) throw new Error('Lookup failed');
+      const res = await fetch('/api/membership-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Lookup failed');
+      }
       const data = await res.json();
-      setApplications((data as Application[]) ?? []);
-    } catch {
+      setApplications(data.applications ?? []);
+    } catch (err: any) {
       setApplications([]);
     } finally {
       setLoading(false);

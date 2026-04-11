@@ -18,6 +18,8 @@ import {
 import { GraduationCap, FlaskConical, Scale, HeartHandshake, Briefcase, CircleCheck as CheckCircle2, Loader as Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import FormGuard from '@/components/form-guard';
+import { collaborationProposalSchema } from '@/lib/validations';
+import { sanitizeInput } from '@/lib/sanitization';
 
 const COLLABORATION_TYPES = [
   { id: 'research', icon: FlaskConical, title: 'Academic Research Partnerships', description: 'Joint research projects, co-authored publications, and scholarly investigations' },
@@ -50,6 +52,7 @@ function CollaborationsPageContent() {
   const [proposalDetails, setProposalDetails] = useState('');
   const [scope, setScope] = useState('');
   const [timeline, setTimeline] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
   if (user) {
@@ -61,30 +64,66 @@ function CollaborationsPageContent() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
+    setError(null);
+
+    // Validate form data with Zod
+    const validationResult = collaborationProposalSchema.safeParse({
+      organizationName,
+      contactName: user?.name || contactName,
+      contactEmail: user?.email || contactEmail,
+      organizationType,
+      collaborationType,
+      proposalSummary,
+      description: proposalDetails,
+      timeline,
+      expectedOutcomes: scope,
+      additionalNotes: '',
+    });
+
+    if (!validationResult.success) {
+      const errors = validationResult.error.errors.map(err => err.message).join(', ');
+      setError(errors);
+      setLoading(false);
+      return;
+    }
+
+    // Sanitize inputs
+    const sanitizedData = {
+      organizationName: sanitizeInput(organizationName),
+      contactName: sanitizeInput(user?.name || contactName),
+      contactEmail: (user?.email || contactEmail).trim().toLowerCase(),
+      organizationType: sanitizeInput(organizationType),
+      collaborationType: sanitizeInput(collaborationType),
+      proposalSummary: sanitizeInput(proposalSummary),
+      proposalDetails: sanitizeInput(proposalDetails),
+      scope: sanitizeInput(scope),
+      timeline: sanitizeInput(timeline),
+    };
+
     try {
       const res = await fetch('/api/collaboration-proposals', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId: user?.id || null,
-          organizationType,
-          organizationName,
-          contactName: user?.name || contactName,
-          contactEmail: user?.email || contactEmail,
-          contactPhone: contactPhone || null,
-          collaborationType,
-          proposalSummary,
-          proposalDetails,
-          scope,
-          timeline,
+          organizationType: sanitizedData.organizationType,
+          organizationName: sanitizedData.organizationName,
+          contactName: sanitizedData.contactName,
+          contactEmail: sanitizedData.contactEmail,
+          contactPhone: contactPhone ? sanitizeInput(contactPhone) : null,
+          collaborationType: sanitizedData.collaborationType,
+          proposalSummary: sanitizedData.proposalSummary,
+          proposalDetails: sanitizedData.proposalDetails,
+          scope: sanitizedData.scope,
+          timeline: sanitizedData.timeline,
         }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Submission failed.');
       setSubmitted(true);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting proposal:', error);
-      alert('There was an error submitting your proposal. Please try again.');
+      setError(error.message || 'There was an error submitting your proposal. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -147,6 +186,12 @@ function CollaborationsPageContent() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
+                {error && (
+                  <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-sm text-red-400">
+                    {error}
+                  </div>
+                )}
+                
                 {step === 1 && (
                   <div className="space-y-6">
                     <h3 className="text-lg font-semibold text-[#F5F3EE]">Organization Information</h3>

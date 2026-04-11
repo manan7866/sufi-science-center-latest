@@ -11,6 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ArrowLeft, ArrowRight, CircleCheck as CheckCircle2, Upload, User, FileText, Users, Send, ClipboardList, CircleAlert as AlertCircle, Loader as Loader2, X, Plus } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import FormGuard from '@/components/form-guard';
+import { conferenceSubmissionSchema } from '@/lib/validations';
+import { sanitizeInput } from '@/lib/sanitization';
 
 type Step = 1 | 2 | 3 | 4;
 
@@ -141,21 +143,60 @@ export function ConferenceSubmissionPage() {
   async function handleSubmit() {
     setError('');
     setIsSubmitting(true);
+    
+    // Validate form data with Zod
+    const validationResult = conferenceSubmissionSchema.safeParse({
+      submissionType: form.submission_type,
+      title: form.title,
+      abstract: form.abstract,
+      presenterName: form.presenter_name,
+      presenterEmail: form.presenter_email,
+      presenterAffiliation: form.presenter_affiliation,
+      coPresenterName: form.co_presenters?.[0]?.name || '',
+      coPresenterEmail: form.co_presenters?.[0]?.email || '',
+      coPresenterAffiliation: form.co_presenters?.[0]?.affiliation || '',
+      keywords: form.keywords,
+    });
+
+    if (!validationResult.success) {
+      const errors = validationResult.error.errors.map(err => err.message).join(', ');
+      setError(errors);
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Sanitize inputs
+    const sanitizedData = {
+      submissionType: form.submission_type,
+      title: sanitizeInput(form.title),
+      abstract: sanitizeInput(form.abstract),
+      keywords: sanitizeInput(form.keywords),
+      presenterName: sanitizeInput(form.presenter_name),
+      presenterEmail: form.presenter_email.trim().toLowerCase(),
+      presenterAffiliation: sanitizeInput(form.presenter_affiliation),
+      presenterBio: form.presenter_bio ? sanitizeInput(form.presenter_bio) : '',
+      coPresenters: form.co_presenters.map(cp => ({
+        name: sanitizeInput(cp.name),
+        email: cp.email.trim().toLowerCase(),
+        affiliation: sanitizeInput(cp.affiliation),
+      })),
+    };
+    
     try {
       const res = await fetch('/api/conference-submissions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId: user?.id || null,
-          submissionType: form.submission_type,
-          title: form.title,
-          abstract: form.abstract,
-          keywords: form.keywords,
-          presenterName: form.presenter_name,
-          presenterEmail: form.presenter_email,
-          presenterAffiliation: form.presenter_affiliation,
-          presenterBio: form.presenter_bio,
-          coPresenters: form.co_presenters,
+          submissionType: sanitizedData.submissionType,
+          title: sanitizedData.title,
+          abstract: sanitizedData.abstract,
+          keywords: sanitizedData.keywords,
+          presenterName: sanitizedData.presenterName,
+          presenterEmail: sanitizedData.presenterEmail,
+          presenterAffiliation: sanitizedData.presenterAffiliation,
+          presenterBio: sanitizedData.presenterBio,
+          coPresenters: sanitizedData.coPresenters,
           fileName: form.file?.name ?? null,
           fileSizeBytes: form.file?.size ?? null,
           status: 'submitted',
