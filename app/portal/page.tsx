@@ -157,13 +157,13 @@ export default function PortalPage() {
         <div className="absolute inset-0 bg-gradient-to-br from-[#C8A75E]/5 via-transparent to-[#6B9BD1]/5 pointer-events-none" />
         <div className="max-w-5xl mx-auto relative">
           <div className="flex items-start gap-5">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#C8A75E]/20 to-[#C8A75E]/5 flex items-center justify-center flex-shrink-0 border border-[#C8A75E]/20">
-              <LayoutDashboard className="w-6 h-6 text-[#C8A75E]" />
+            <div className="w-14 h-14 mt-12 rounded-2xl bg-gradient-to-br from-[#C8A75E]/20 to-[#C8A75E]/5 flex items-center justify-center flex-shrink-0 border border-[#C8A75E]/20">
+              <LayoutDashboard className="w-6 h-6  text-[#C8A75E]" />
             </div>
-            <div className="flex-1">
-              <div className="flex items-center justify-between mb-2">
-                <Link href="/" className="inline-flex items-center gap-2 text-xs text-[#AAB0D6]/60 hover:text-[#C8A75E] transition-colors">
-                  <ArrowRight className="w-3.5 h-3.5 rotate-180" />
+            <div className="flex-1 ">
+              <div className="flex items-center justify-end pr-4 mb-2">
+                <Link href="/" className="inline-flex mb-2 items-center  gap-2 text-xs text-[#AAB0D6]/60 hover:text-[#C8A75E] transition-colors">
+                  <ArrowRight className="w-3.5 h-3.5 text-lg rotate-180" />
                   Back to Website
                 </Link>
               </div>

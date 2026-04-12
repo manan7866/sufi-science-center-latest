@@ -138,7 +138,7 @@ export function Navigation() {
         }`}
       >
         <div className="max-w-[1400px] mx-auto px-8">
-          <div className="py-5 ">
+          <div className="py-5 hidden xl:block  lg:block">
             <Link href="/" className="flex items-center space-x-5 group">
               <div className="w-14 h-14 rounded-full overflow-hidden shadow-lg group-hover:shadow-[#C8A75E]/20 transition-shadow duration-300 flex-shrink-0 bg-[#0B0F2A]">
                 <Image
@@ -152,7 +152,7 @@ export function Navigation() {
               </div>
               <div className="flex flex-col">
                 <h1 className="text-2xl font-serif font-semibold text-[#F5F3EE] tracking-wide leading-tight">
-                  Sufi Science Center USA
+                  Sufi Science Center USA 
                 </h1>
                 <p className="text-sm text-[#AAB0D6]/90 tracking-wider mt-1 font-light">
                   Center for Consciousness & Transformative Studies
