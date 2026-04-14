@@ -89,7 +89,7 @@ export default function AppliedConceptsPage() {
 
       <section className="py-24 px-4 bg-gradient-to-b from-transparent to-[#1C1F4A]/30">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-16 text-center">
+          <div className="mb-16 xl:text-center lg:text-center md:text-center sm:text-center">
             <p className="text-lg text-[#AAB0D6] leading-relaxed max-w-3xl mx-auto">
               Each Applied Concept provides structured understanding of a single term—not inspirational quotes
               but institutional clarity. These are building blocks for a coherent contemplative framework.
@@ -143,7 +143,7 @@ export default function AppliedConceptsPage() {
             ))}
           </div>
 
-          <div className="mt-20 glass-panel rounded-2xl p-12 text-center">
+          <div className="mt-20 glass-panel rounded-2xl p-12 xl:text-center lg:text-center md:text-center sm:text-center">
             <BookOpen className="w-16 h-16 text-[#C8A75E] mx-auto mb-6 opacity-60" />
             <h3 className="text-3xl font-serif font-bold text-[#F5F3EE] mb-4">
               Expanding Conceptual Library
@@ -154,26 +154,26 @@ export default function AppliedConceptsPage() {
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
               <div className="p-4 bg-[#1a1f3a]/30 rounded-lg border border-[#C8A75E]/10">
-                <p className="text-3xl font-bold text-[#C8A75E] mb-1">50+</p>
+                <p className="text-2xl font-bold text-[#C8A75E] mb-1">50+</p>
                 <p className="text-sm text-[#AAB0D6]">Core Concepts</p>
               </div>
               <div className="p-4 bg-[#1a1f3a]/30 rounded-lg border border-[#C8A75E]/10">
-                <p className="text-3xl font-bold text-[#C8A75E] mb-1">300-500</p>
+                <p className="text-2xl font-bold text-[#C8A75E] mb-1">300-500</p>
                 <p className="text-sm text-[#AAB0D6]">Words Each</p>
               </div>
               <div className="p-4 bg-[#1a1f3a]/30 rounded-lg border border-[#C8A75E]/10">
-                <p className="text-3xl font-bold text-[#C8A75E] mb-1">Cross-Linked</p>
+                <p className="text-2xl font-bold text-[#C8A75E] mb-1">Cross-Linked</p>
                 <p className="text-sm text-[#AAB0D6]">Related Terms</p>
               </div>
               <div className="p-4 bg-[#1a1f3a]/30 rounded-lg border border-[#C8A75E]/10">
-                <p className="text-3xl font-bold text-[#C8A75E] mb-1">Practical</p>
+                <p className="text-2xl font-bold text-[#C8A75E] mb-1">Practical</p>
                 <p className="text-sm text-[#AAB0D6]">Application Focus</p>
               </div>
             </div>
           </div>
 
           <Card className="mt-12 bg-gradient-to-br from-[#C8A75E]/10 to-[#0B0F2A]/60 border-[#C8A75E]/30">
-            <CardContent className="pt-8 text-center">
+            <CardContent className="pt-8 xl:text-center lg:text-center md:text-center sm:text-center">
               <p className="text-[#F5F3EE] text-lg font-semibold">
                 This is not Instagram spirituality.<br />
                 <span className="text-[#AAB0D6] text-base font-normal">

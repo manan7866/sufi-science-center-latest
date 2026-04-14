@@ -139,7 +139,7 @@ export default function InterfaithCoherencePage() {
           {/* III. Comparative Abrahamic Studies */}
           <ScrollReveal>
             <section>
-              <div className="text-center mb-10">
+              <div className="xl:text-center lg:text-center md:text-center sm:text-center mb-10">
                 <p className="text-[10px] uppercase tracking-[0.35em] text-[#C8A75E]/60 font-semibold mb-3">
                   Civilizational Research
                 </p>

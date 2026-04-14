@@ -118,7 +118,7 @@ export default function InstitutePage() {
             </KnowledgeGrid>
           </div>
 
-          <div className="glass-panel rounded-2xl p-8 md:p-12 text-center">
+          <div className="glass-panel rounded-2xl p-8 md:p-12 xl:text-center lg:text-center md:text-center sm:text-center">
             <h3 className="text-2xl font-bold text-[#F5F3EE] mb-4">
               Positioning Statement
             </h3>

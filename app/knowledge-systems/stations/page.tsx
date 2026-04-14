@@ -48,7 +48,7 @@ export default function StationsOfThePathPage() {
     <div className="min-h-screen bg-gradient-to-b from-[#0B0F2A] via-[#1a1f3a] to-[#0B0F2A]">
       <div className="max-w-6xl mx-auto px-6 py-20">
         {/* Hero Section */}
-        <div className="text-center mb-16">
+        <div className="xl:text-center lg:text-center md:text-center sm:text-center mb-16">
           <div className="inline-flex items-center space-x-2 mb-6">
             <Compass className="w-8 h-8 text-[#C8A75E]" />
             <Badge variant="outline" className="text-[#C8A75E] border-[#C8A75E]/30">
@@ -132,7 +132,7 @@ export default function StationsOfThePathPage() {
 
         {/* Layer 2: Core Developmental Map */}
         <div className="mb-12">
-          <div className="text-center mb-8">
+          <div className="xl:text-center lg:text-center md:text-center sm:text-center mb-8">
             <h2 className="text-3xl font-serif font-bold text-[#F5F3EE] mb-3">
               Developmental Phases
             </h2>

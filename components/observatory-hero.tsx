@@ -105,9 +105,9 @@ export function ObservatoryHero({ title, title2, subtitle, description , subDesc
 
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0B0F2A]/20 to-[#0B0F2A]" />
 
-      <div className="relative z-10 h-full flex flex-col items-center justify-center px-6 text-center">
+      <div className="relative z-10 h-full  flex flex-col items-start xl:items-center lg:items-center sm:items-center justify-center px-6 md:text-center sm:text-center lg:text-center xl:text-center">
         {subtitle && (
-          <p className="text-[#C8A75E] text-sm font-mono uppercase tracking-[0.2em] mb-4 animate-in fade-in duration-700">
+          <p className="text-[#C8A75E]  text-sm font-mono uppercase tracking-[0.2em] mb-4 animate-in fade-in duration-700">
             {subtitle}
           </p>
         )}

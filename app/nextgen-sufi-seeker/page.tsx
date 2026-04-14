@@ -281,7 +281,7 @@ export default function NextGenSufiSeekerPage() {
       </section>
 
       <section className="py-16 px-4 border-t border-white/5">
-        <div className="max-w-5xl mx-auto text-center">
+        <div className="max-w-5xl mx-auto xl:text-center lg:text-center md:text-center sm:text-center">
           <p className="text-xs tracking-[0.25em] text-[#C8A75E]/50 uppercase mb-3">Strategic Objective</p>
           <blockquote className="text-xl md:text-2xl font-serif text-[#F5F3EE] leading-relaxed mb-6">
             &ldquo;Sufi thought engages professionals where they work.

@@ -15,7 +15,7 @@ export default function EpistemologyPage() {
       <section className="py-24 px-4 bg-gradient-to-b from-transparent to-[#1C1F4A]/30">
         <div className="max-w-6xl mx-auto">
           <div className="mb-12">
-            <p className="text-lg text-[#AAB0D6] leading-relaxed max-w-3xl mx-auto text-center">
+            <p className="text-lg text-[#AAB0D6] leading-relaxed max-w-3xl mx-auto xl:text-center lg:text-center md:text-center sm:text-center">
               Not all subjective experience constitutes knowledge. Not all inspiration is valid guidance.
               Sufi epistemology provides rigorous criteria for distinguishing authentic insight from
               psychological projection, fantasy, or self-deception.

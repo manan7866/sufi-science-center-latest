@@ -14,7 +14,7 @@ export default function KnowledgeSystemsPage() {
 
       <section className="py-24 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-16 text-center">
+          <div className="mb-16 xl:text-center lg:text-center md:text-center sm:text-center">
             <p className="text-lg text-[#AAB0D6] max-w-3xl mx-auto leading-relaxed">
               Knowledge Systems provides the theoretical foundation and developmental architecture
               for understanding consciousness refinement. This module integrates epistemology,

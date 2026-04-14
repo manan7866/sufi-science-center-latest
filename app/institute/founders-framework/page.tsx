@@ -256,7 +256,7 @@ export default function FoundersFrameworkPage() {
           </Card>
 
           {/* Closing Statement */}
-          <div className="text-center py-8">
+          <div className="xl:text-center lg:text-center md:text-center sm:text-center py-8">
             <div className="text-[#C8A75E] text-7xl leading-none font-serif mb-6 opacity-60">"</div>
             <blockquote className="max-w-3xl mx-auto space-y-4 text-[#F5F3EE]/90 text-lg md:text-xl leading-relaxed italic mb-10">
               <p>

@@ -18,7 +18,7 @@ export default function SufiKnowledgeArchitecturePage() {
         {/* Core Definition */}
         <Card className="mb-12 bg-gradient-to-br from-[#C8A75E]/10 to-[#0B0F2A]/60 border-[#C8A75E]/30 backdrop-blur-sm">
           <CardContent className="pt-8">
-            <div className="text-center space-y-4">
+            <div className="xl:text-center lg:text-center md:text-center sm:text-center space-y-4">
               <p className="text-lg text-[#F5F3EE] leading-relaxed max-w-3xl mx-auto">
                 Within the framework of Sufi Science Center USA, Sufi knowledge is defined as:
               </p>
@@ -106,7 +106,7 @@ export default function SufiKnowledgeArchitecturePage() {
                   <span>How does action align with higher consciousness?</span>
                 </li>
               </ul>
-              <p className="text-[#C8A75E] font-semibold mt-4 text-center">
+              <p className="text-[#C8A75E] font-semibold mt-4 xl:text-center lg:text-center md:text-center sm:text-center">
                 Knowledge is verified through character transformation.<br />
                 <span className="text-[#AAB0D6] text-sm font-normal">If conduct does not change, knowledge has not yet matured.</span>
               </p>
@@ -349,7 +349,7 @@ export default function SufiKnowledgeArchitecturePage() {
                 </div>
               </div>
 
-              <div className="p-6 bg-[#1a1f3a]/50 rounded-lg border border-[#C8A75E]/20 text-center">
+              <div className="p-6 bg-[#1a1f3a]/50 rounded-lg border border-[#C8A75E]/20 xl:text-center lg:text-center md:text-center sm:text-center">
                 <p className="text-[#C8A75E] font-semibold">
                   Absorption is measured through sustained behavioral transformation,<br />
                   not emotional intensity.
@@ -463,7 +463,7 @@ export default function SufiKnowledgeArchitecturePage() {
               </TabsContent>
             </Tabs>
 
-            <div className="mt-6 p-6 bg-[#1a1f3a]/50 rounded-lg border border-[#C8A75E]/20 text-center">
+            <div className="mt-6 p-6 bg-[#1a1f3a]/50 rounded-lg border border-[#C8A75E]/20 xl:text-center lg:text-center md:text-center sm:text-center">
               <p className="text-[#C8A75E] font-semibold">
                 Sufi knowledge implemented appears ordinary.<br />
                 Its mark is reliability, not spectacle.

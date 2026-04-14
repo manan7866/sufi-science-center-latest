@@ -16,7 +16,7 @@ export default function SufiPsychologyPage() {
       <section className="py-24 px-4 bg-gradient-to-b from-transparent to-[#1C1F4A]/30">
         <div className="max-w-6xl mx-auto">
           <div className="mb-12">
-            <p className="text-lg text-[#AAB0D6] leading-relaxed max-w-3xl mx-auto text-center">
+            <p className="text-lg text-[#AAB0D6] leading-relaxed max-w-3xl mx-auto xl:text-center lg:text-center md:text-center sm:text-center">
               Sufi psychology offers a multi-layered model of human consciousness, integrating cognitive,
               emotional, volitional, and spiritual dimensions. This framework is not mystical speculation
               but systematic observation refined over centuries.

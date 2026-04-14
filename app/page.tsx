@@ -28,7 +28,7 @@ export default function Home() {
 
       <section className="py-24 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="xl:text-center lg:text-center md:text-center sm:text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-[#F5F3EE] mb-4">
               Dual Axis of Transformation
             </h2>
@@ -303,7 +303,7 @@ export default function Home() {
       </section>
 
       <section className="py-32 px-4 bg-gradient-to-b from-[#1C1F4A]/30 to-[#0B0F2A]">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-4xl mx-auto xl:text-center lg:text-center md:text-center sm:text-center">
           <h2 className="text-4xl md:text-6xl font-bold text-[#F5F3EE] mb-6">
             Begin Your Journey
           </h2>
