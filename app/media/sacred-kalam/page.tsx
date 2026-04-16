@@ -146,7 +146,7 @@ export default function SacredKalamPage() {
         <div className="max-w-7xl mx-auto">
 
           <div className="flex flex-col items-center mb-[60px]">
-            <div className="relative w-full max-w-4xl">
+            {/* <div className="relative w-full max-w-4xl">
               <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-[#C8A75E]/10 via-transparent to-[#C8A75E]/5 pointer-events-none" />
               <div className="relative rounded-2xl border border-[#C8A75E]/20 shadow-[0_0_40px_0_rgba(200,167,94,0.06)] bg-gradient-to-br from-[#0d0e1a] to-[#0a0b14] overflow-hidden">
                 <div
@@ -166,6 +166,29 @@ export default function SacredKalamPage() {
                   <p className="text-[10px] text-[#AAB0D6]/35 tracking-widest uppercase">
                     Sacred Kalam Library&nbsp;&nbsp;|&nbsp;&nbsp;A Literary Archive of Contemplative Civilizations
                   </p>
+                </div>
+              </div>
+              
+            </div> */}
+
+            <div className="relative w-full my-14 max-w-4xl">
+              <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-[#C8A75E]/10 via-transparent to-[#C8A75E]/5 pointer-events-none" />
+              <div className="relative rounded-2xl overflow-hidden border border-[#C8A75E]/20 shadow-[0_0_40px_0_rgba(200,167,94,0.06)]">
+                <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#C8A75E]/15 border border-[#C8A75E]/25 backdrop-blur-sm">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#C8A75E] inline-block" />
+                  <span className="text-[10px] uppercase tracking-widest text-[#C8A75E] font-semibold leading-none">Premiere</span>
+                  <span className="text-[10px] text-[#C8A75E]/60 leading-none ml-0.5">Launch Release</span>
+                </div>
+                <div className="aspect-video bg-[#0A0B14]">
+                
+                  <iframe
+                    className="absolute inset-0 w-full h-full"
+                    src="https://www.youtube.com/embed/kX2g8o2uEGw"
+                    title="SufiPulse USA Pre-Launch Video"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
                 </div>
               </div>
             </div>

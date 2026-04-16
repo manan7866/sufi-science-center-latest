@@ -46,10 +46,10 @@ export default function StationsOfThePathPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0B0F2A] via-[#1a1f3a] to-[#0B0F2A]">
-      <div className="max-w-6xl mx-auto px-6 py-20">
+      <div className="max-w-6xl mx-auto my-28 px-6 py-20">
         {/* Hero Section */}
-        <div className="xl:text-center lg:text-center md:text-center sm:text-center mb-16">
-          <div className="inline-flex items-center space-x-2 mb-6">
+        <div className="xl:text-center  lg:text-center md:text-center sm:text-center mb-36">
+          <div className="inline-flex items-center mb-6 space-x-2 ">
             <Compass className="w-8 h-8 text-[#C8A75E]" />
             <Badge variant="outline" className="text-[#C8A75E] border-[#C8A75E]/30">
               Developmental Cartography

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { FlaskConical, Building2, FileText, Users, BookOpen, Award, ArrowRight, ExternalLink } from 'lucide-react';
-
+import { ObservatoryHero } from '@/components/observatory-hero';
 const metrics = [
   { value: '12+', label: 'Active Projects' },
   { value: '40+', label: 'Published Papers' },
@@ -111,19 +111,11 @@ export default function ResearchPage() {
   return (
     <div className="min-h-screen observatory-gradient pt-20">
 
-      <section className="px-4 pt-16 pb-14 border-b border-[#2A2F4F]/30">
-        <div className="max-w-5xl mx-auto text-center">
-          <p className="text-[10px] uppercase tracking-[0.35em] text-[#C8A75E]/60 font-semibold mb-5">
-            Academic Excellence
-          </p>
-          <h1 className="text-4xl md:text-5xl font-light text-white mb-6 leading-tight tracking-tight">
-            Research
-          </h1>
-          <p className="text-base md:text-lg text-[#AAB0D6]/70 leading-relaxed max-w-3xl mx-auto">
-            Advancing rigorous inquiry into consciousness, contemplative science, and civilizational knowledge systems through peer-reviewed scholarship, institutional projects, and interdisciplinary collaboration.
-          </p>
-        </div>
-      </section>
+      <ObservatoryHero 
+      subtitle='Academic Excellence'
+      title='Research'
+      description=' Advancing rigorous inquiry into consciousness, contemplative science, and civilizational knowledge systems through peer-reviewed scholarship, institutional projects, and interdisciplinary collaboration.'
+      />
 
       <section className="px-4 py-12 border-b border-[#2A2F4F]/20">
         <div className="max-w-5xl mx-auto">
