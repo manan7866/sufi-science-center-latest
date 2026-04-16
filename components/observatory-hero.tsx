@@ -112,7 +112,7 @@ export function ObservatoryHero({ title, title2, subtitle, description , subDesc
           </p>
         )}
 
-        <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-[#F5F3EE] mb-6 leading-[1.1] tracking-tight animate-in fade-in duration-700 delay-100">
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold text-[#F5F3EE] mb-6 leading-[1.1] tracking-tight animate-in fade-in duration-700 delay-100">
           {title}
         </h1>
 

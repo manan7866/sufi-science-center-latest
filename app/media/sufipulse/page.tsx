@@ -191,14 +191,22 @@ export default function SufiPulseStudioPage() {
                   <span className="text-[10px] text-[#C8A75E]/60 leading-none ml-0.5">Launch Release</span>
                 </div>
                 <div className="aspect-video bg-[#0A0B14]">
-                  <video
+                  {/* <video
                     className="w-full h-full object-cover"
                     controls
                     preload="metadata"
                     playsInline
                   >
-                    <source src="https://dkf.sufisciencecenter.info/sufi-video.mp4" type="video/mp4" />
-                  </video>
+                    <source src="https://www.youtube.com/embed/kX2g8o2uEGw" type="video/mp4" />
+                  </video> */}
+                  <iframe
+                    className="absolute inset-0 w-full h-full"
+                    src="https://www.youtube.com/embed/kX2g8o2uEGw"
+                    title="SufiPulse USA Pre-Launch Video"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
                 </div>
               </div>
             </div>

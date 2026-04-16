@@ -300,7 +300,7 @@ export function Navigation() {
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6 -mr-16" />}
             </Button>
           </div>
         </div>
