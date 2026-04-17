@@ -2,7 +2,7 @@ import { ObservatoryHero } from '@/components/observatory-hero';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
-import { Wind, Focus, Volume2, BookOpen, Heart, AlertTriangle } from 'lucide-react';
+import { Wind, Focus, Volume2, BookOpen, Heart, AlertTriangle  } from 'lucide-react';
 
 export default function ContemplativePracticesPage() {
   return (

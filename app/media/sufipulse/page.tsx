@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ObservatoryHero } from '@/components/observatory-hero';
 import { MediaTrackCard } from '@/components/media-track-card';
-import { Search, Music, Filter as FilterIcon, ExternalLink, PenLine, Mic, FileSliders as Sliders, Globe, Youtube, Building2 } from 'lucide-react';
+import { Search, Music, Filter as FilterIcon, ExternalLink, PenLine, Mic, FileSliders as Sliders, Globe, Youtube, Building2 ,ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -73,6 +73,9 @@ type SortOption = 'all' | 'popular' | 'old' | 'new';
 
 export default function SufiPulseStudioPage() {
   const [tracks, setTracks] = useState<MediaTrack[]>([]);
+  const [allVideos, setAllVideos] = useState<MediaTrack[]>([]);
+  const [showVideos , setShowVideos] = useState<MediaTrack[]>([]);
+  const [isSeeAllV , setSeeAllV] = useState(false);
   const [filteredTracks, setFilteredTracks] = useState<MediaTrack[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -81,6 +84,7 @@ export default function SufiPulseStudioPage() {
   const [selectedLanguage, setSelectedLanguage] = useState('All Languages');
   const [selectedTheme, setSelectedTheme] = useState('All Themes');
   const [selectedFormat, setSelectedFormat] = useState('all');
+  
 
   useEffect(() => {
     fetchTracks();
@@ -100,13 +104,28 @@ export default function SufiPulseStudioPage() {
         return;
       }
       const data = await response.json();
-      setTracks(data.videos || []);
+      setAllVideos(data.videos || [])
+      setShowVideos(data.videos.slice(0, 6) || [])
+      setTracks(data.videos.slice(0, 6) || []);
     } catch (error) {
       console.error('Error fetching tracks:', error);
       setTracks([]);
     } finally {
       setLoading(false);
     }
+  }
+
+  useEffect(() => {
+  if (isSeeAllV) {
+    setTracks(allVideos);
+  } else {
+    setTracks(showVideos);
+  }
+}, [isSeeAllV, allVideos, showVideos]);
+
+  const handleSeeAllV = ()=> {
+    setSeeAllV(prev => !prev);
+    
   }
 
   function formatDuration(interval: string | null): string {
@@ -339,6 +358,7 @@ export default function SufiPulseStudioPage() {
                       ))}
                     </SelectContent>
                   </Select>
+                  
                 </div>
 
                 <div>
@@ -400,8 +420,12 @@ export default function SufiPulseStudioPage() {
               ))}
             </div>
           )}
-
+         <div className=' flex justify-center'>
+          <button onClick={handleSeeAllV} className='flex gap-1   my-6 px-6 py-4 rounded-lg bg-[#C8A75E] hover:bg-[#C8A75E]/90 text-[#0A0B14]' > See all Videos <ChevronDown className={`w-6 h-6 ${isSeeAllV ? "rotate-180" : ""} transection-all duration-75`} /></button>
         </div>
+        </div>
+        
+        
       </section>
 
       <section className="observatory-gradient px-4 pb-20">
