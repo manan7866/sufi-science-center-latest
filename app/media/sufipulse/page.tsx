@@ -421,7 +421,7 @@ export default function SufiPulseStudioPage() {
             </div>
           )}
          <div className=' flex justify-center'>
-          <button onClick={handleSeeAllV} className='flex gap-1   my-6 px-6 py-4 rounded-lg bg-[#C8A75E] hover:bg-[#C8A75E]/90 text-[#0A0B14]' > See all Videos <ChevronDown className={`w-6 h-6 ${isSeeAllV ? "rotate-180" : ""} transection-all duration-75`} /></button>
+          <button onClick={handleSeeAllV} className='flex gap-1   my-6 px-6 py-4 rounded-lg bg-[#C8A75E] hover:bg-[#C8A75E]/90 text-[#0A0B14]' > {!isSeeAllV ? "See More" : "See Less"} <ChevronDown className={`w-6 h-6 ${isSeeAllV ? "rotate-180" : ""} transection-all duration-75`} /></button>
         </div>
         </div>
         
