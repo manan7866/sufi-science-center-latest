@@ -208,7 +208,7 @@ export default function AssessmentPage() {
 
               <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                 <Link href="/assessment/take?type=teaching">
-                  <Button size="lg" className="bg-[#C8A75E] hover:bg-[#D4B56D] text-[#0B0F2A] font-semibold px-8">
+                  <Button size="lg" className="bg-[#C8A75E] hover:bg-[#D4B56D] text-[#0B0F2A] font-semibold  px-4 sm:px-8">
                     Begin Teaching Assessment
                     <ArrowRight className="ml-2 w-4 h-4" />
                   </Button>

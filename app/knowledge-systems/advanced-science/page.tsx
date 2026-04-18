@@ -810,8 +810,8 @@ export default function AdvancedSciencePage() {
     <div className="min-h-screen bg-[#08091A]">
       <ObservatoryHero
         subtitle="Knowledge Systems"
-        title="Advanced Science in Dialogue"
-        title2='with Sufi Thought'
+        title="Advanced Science"
+        title2='Dialogue with Sufi Thought'
         description="Exploring Ontological and Epistemological Boundaries Across the Sciences"
       />
 

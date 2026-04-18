@@ -77,7 +77,7 @@ export default function NextGenSufiSeekerPage() {
         </div>
 
         <div className="max-w-7xl mx-auto relative">
-          <div className="flex items-center gap-2 mb-6">
+          <div className="flex my-20 items-center gap-2 mb-6">
             <div className="h-px w-8 bg-[#C8A75E]/60" />
             <p className="text-xs tracking-[0.25em] text-[#C8A75E]/70 uppercase font-medium">Sufi Science Center</p>
           </div>

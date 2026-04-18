@@ -291,41 +291,22 @@ export default function SacredProfessionsPage() {
     <div className="min-h-screen bg-[#0B0F2A]">
 
       {/* Sticky Nav Bar */}
-      <div className="sticky top-0 z-30 border-b border-white/8 bg-[#0B0F2A]/95 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-between gap-4">
+      <div className="sticky top-0 z-30 border-b  border-white/8 bg-[#0B0F2A]/95 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-4 my-4 sm:px-6 lg:px-8 h-12 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-xs text-[#AAB0D6]/40 flex-shrink-0">
             <Link href="/applied-civilization" className="hover:text-[#AAB0D6] transition-colors">Applied Civilization</Link>
             <ChevronRight className="h-3 w-3" />
             <span className="text-[#AAB0D6]/70">Sacred Professions</span>
           </div>
 
-          <div className="flex items-center gap-1">
-            {VIEW_MODES.map(vm => {
-              const Icon = vm.icon;
-              return (
-                <button
-                  key={vm.id}
-                  onClick={() => setViewMode(vm.id)}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-colors"
-                  style={{
-                    color: viewMode === vm.id ? '#C8A75E' : 'rgba(170,176,214,0.4)',
-                    backgroundColor: viewMode === vm.id ? 'rgba(200,167,94,0.1)' : 'transparent',
-                    borderBottom: viewMode === vm.id ? '1px solid rgba(200,167,94,0.4)' : '1px solid transparent',
-                  }}
-                >
-                  <Icon className="h-3 w-3" />
-                  <span className="hidden sm:inline">{vm.label}</span>
-                </button>
-              );
-            })}
-          </div>
+          
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Hero */}
-        <section className="pt-14 pb-10">
+        <section className="pt-14 my-32 pb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#C8A75E]/20 bg-[#C8A75E]/[0.06] mb-6">
             <Compass className="h-3.5 w-3.5 text-[#C8A75E]" />
             <span className="text-[10px] font-bold text-[#C8A75E] uppercase tracking-widest">Applied Civilization</span>
@@ -368,7 +349,26 @@ export default function SacredProfessionsPage() {
             ))}
           </div>
         </section>
-
+         <div className="flex items-center bg-transparent border border-white/8 rounded-xl my-6 p-2 max-w-max gap-0.5 sm:gap-1">
+            {VIEW_MODES.map(vm => {
+              const Icon = vm.icon;
+              return (
+                <button
+                  key={vm.id}
+                  onClick={() => setViewMode(vm.id)}
+                  className="inline-flex items-center   px-1.5 sm:px-2.5 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-colors"
+                  style={{
+                    color: viewMode === vm.id ? '#C8A75E' : 'rgba(170,176,214,0.4)',
+                    backgroundColor: viewMode === vm.id ? 'rgba(200,167,94,0.1)' : 'transparent',
+                    borderBottom: viewMode === vm.id ? '1px solid rgba(200,167,94,0.4)' : '1px solid transparent',
+                  }}
+                >
+                  <Icon className="h-3 w-3" />
+                  <span className="hidden sm:inline">{vm.label}</span>
+                </button>
+              );
+            })}
+          </div>
         {/* Filter + Search Bar */}
         <div className="border border-white/7 rounded-2xl bg-white/[0.012] mb-6">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 p-3">

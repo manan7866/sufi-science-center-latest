@@ -194,7 +194,7 @@ export default function AppliedProfessionalEthicsPage() {
         </div>
 
         {/* Hero */}
-        <div className="mb-14">
+        <div className="my-32">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#C8A75E]/25 bg-[#C8A75E]/8 mb-6">
             <span className="text-[10px] font-bold text-[#C8A75E] uppercase tracking-widest">
               Structural Framework

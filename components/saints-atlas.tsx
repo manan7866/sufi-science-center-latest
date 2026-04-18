@@ -130,7 +130,7 @@ export function SaintsAtlas({ saints, onSaintClick, allRegions }: SaintsAtlasPro
           {regionGroups.map(({ regionName, saints: regionSaints }) => {
             const color = REGION_COLOR_MAP[regionName] ?? '#AAB0D6';
             const maxCount = Math.max(...regionGroups.map((g) => g.saints.length));
-            const size = Math.max(60, Math.round((regionSaints.length / maxCount) * 140));
+            const size = Math.max(80, Math.round((regionSaints.length / maxCount) * 140));
             const isExpanded = expandedRegion === regionName;
 
             return (

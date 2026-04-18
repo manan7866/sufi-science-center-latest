@@ -59,7 +59,7 @@ export default function MastersOfThePathPage({
   const [eras, setEras] = useState<HistoricalPeriod[]>([]);
   const [allRegions, setAllRegions] = useState<RegionWithHierarchy[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLineage, setSelectedLineage] = useState<string | null>(null);
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
@@ -68,6 +68,7 @@ export default function MastersOfThePathPage({
   const [view, setView] = useState<'grid' | 'timeline' | 'atlas'>('grid');
   const [selectedSaint, setSelectedSaint] = useState<SaintWithRelations | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const limit = 9;
 
   useEffect(() => {
     fetchData();
@@ -245,6 +246,11 @@ export default function MastersOfThePathPage({
     setView('grid');
   }
 
+  const startIndex = (page - 1) * limit;
+  const currentData = filteredSaints.slice(startIndex, startIndex + limit);
+
+  const totalPages = Math.ceil(filteredSaints.length / limit);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0B0F2A]">
@@ -348,8 +354,9 @@ export default function MastersOfThePathPage({
           ) : (
             <>
               {view === 'grid' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredSaints.map((saint) => (
+                <div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">  
+                  {currentData.map((saint) => (
                     <SaintCard
                       key={saint.id}
                       saint={saint}
@@ -357,7 +364,34 @@ export default function MastersOfThePathPage({
                       allRegions={allRegions}
                     />
                   ))}
+                  
                 </div>
+                <div className='my-4 w-full flex justify-between'>
+                    <p className='text-lg text-[#AAB0D6]'> pages : {page}/{totalPages}</p>
+                    <div className='flex gap-4'>
+                    <button 
+                    className={`px-4 py-2 rounded-lg border bg-[#C8A75E]/30 border-[#C8A75E]
+    ${page === 1 ? "opacity-50 cursor-not-allowed" : ""}
+  `}
+                     disabled={page === 1}
+                      onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                    >
+                      Previous
+                    </button>
+                      <button 
+                      className={`bg-[#C8A75E] px-4 py-2 text-black rounded-lg hover:bg-[#E6D5A8]
+    ${page === totalPages ? "opacity-50 cursor-not-allowed" : ""}
+  `}
+                      disabled={page === totalPages}
+                        onClick={() =>
+                            setPage((prev) => Math.min(prev + 1, totalPages)) }>
+                             Next Page
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+                
               )}
 
               {view === 'timeline' && (
