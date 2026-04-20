@@ -45,6 +45,7 @@ export interface SurahView {
 }
 
 export interface ReflectionEntry {
+  userId: string;
   surahNumber: number;
   reflectionText: string;
   updatedAt: string;
@@ -238,25 +239,25 @@ export function usePortalSession() {
     ]);
   }, []);
 
-  const saveReflection = useCallback(async (surahNumber: number, text: string) => {
+  const saveReflection = useCallback(async (surahNumber: number, text: string , userId: string) => {
     const token = localStorage.getItem(SESSION_KEY);
     if (!token) return;
+    if (!userId) return;
 
     await apiFetch('/api/portal/reflections', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sessionToken: token, surahNumber, reflectionText: text }),
+      body: JSON.stringify({ sessionToken: token, surahNumber, reflectionText: text, userId }),
     });
 
-    const now = new Date().toISOString();
     setReflections((prev) => {
-      const existing = prev.findIndex((r) => r.surahNumber === surahNumber);
-      if (existing >= 0) {
-        const updated = [...prev];
-        updated[existing] = { surahNumber, reflectionText: text, updatedAt: now };
-        return updated;
+      const existing = prev.find((r) => r.surahNumber === surahNumber);
+      if (existing) {
+        return prev.map((r) =>
+          r.surahNumber === surahNumber ? { ...r, reflectionText: text, updatedAt: new Date().toISOString() } : r
+        );
       }
-      return [...prev, { surahNumber, reflectionText: text, updatedAt: now }];
+      return [{ surahNumber, reflectionText: text, updatedAt: new Date().toISOString(), userId }, ...prev];
     });
   }, []);
 

@@ -61,10 +61,10 @@ export const registerSchema = z.object({
       (val) => /[a-z]/.test(val) && /[A-Z]/.test(val) && /\d/.test(val),
       'Password must contain uppercase, lowercase, and number'
     ),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: 'Passwords do not match',
-  path: ['confirmPassword'],
+//   confirmPassword: z.string(),
+// }).refine((data) => data.password === data.confirmPassword, {
+//   message: 'Passwords do not match',
+//   path: ['confirmPassword'],
 });
 
 /**

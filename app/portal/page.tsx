@@ -460,6 +460,7 @@ export default function PortalPage() {
       </div>
 
       <ReflectionJournalModal
+       userId=''
         surahNumber={journalOpen}
         surahName={journalSurahName}
         existingReflection={reflections.find((r) => r.surahNumber === journalOpen)}

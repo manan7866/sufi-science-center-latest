@@ -15,12 +15,14 @@ const ASSESSMENT_DIMENSIONS = [
     title: 'Personal Alignment',
     description: 'The degree to which your internal state, expressed values, and actual behaviors form a coherent, integrated whole.',
     indicators: [
+      
       { label: 'Value-action coherence', question: 'Do you act consistently with what you say you value, including when it is costly to do so?' },
       { label: 'Motivation transparency', question: 'Can you honestly identify and articulate your actual motivations in professional decisions — not your stated ones?' },
       { label: 'Ego-awareness', question: 'Can you identify when ego inflation, defensiveness, or attachment to outcome is distorting your judgment?' },
       { label: 'Inner development practice', question: 'Do you have a systematic inner practice that supports self-examination and correction?' },
       { label: 'Error acknowledgment', question: 'When you are wrong, do you acknowledge it promptly and without minimization?' },
     ],
+
     sufiDimension: 'This dimension maps to the Sufi stages of Nafs: from Nafs al-Ammara (the commanding, unexamined self) toward Nafs al-Lawwama (the self capable of moral scrutiny) and Nafs al-Mutmainna (the integrated, principled self).',
   },
   {

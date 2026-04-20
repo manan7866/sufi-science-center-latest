@@ -6,7 +6,8 @@ import { useParams } from 'next/navigation';
 import { usePortalSession } from '@/hooks/use-portal-session';
 import { ReflectionJournalModal } from '@/components/portal/reflection-journal-modal';
 import { ScrollReveal } from '@/components/scroll-reveal';
-import { ChevronLeft, ChevronRight, BookOpen, Compass, Lightbulb, Users, CircleAlert as AlertCircle, PenLine, LayoutDashboard, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, BookOpen, Compass, Lightbulb, Users, CircleAlert as AlertCircle, PenLine, LayoutDashboard, Loader2 ,UserRound  } from 'lucide-react';
+import Image from 'next/image';
 
 interface SurahData {
   id: string;
@@ -29,6 +30,7 @@ export default function SurahDetailPage() {
   const [prev, setPrev] = useState<SurahData | null>(null);
   const [next, setNext] = useState<SurahData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [approvedReflections, setApprovedReflections] = useState<any[]>([]);
 
   const [journalOpen, setJournalOpen] = useState(false);
   const { recordSurahView, saveReflection, reflections } = usePortalSession();
@@ -74,6 +76,24 @@ export default function SurahDetailPage() {
       recordSurahView(number, surah.arabic_name);
     }
   }, [surah, number, recordSurahView]);
+
+  useEffect(() => {
+  async function fetchApprovedReflections() {
+    try {
+      const res = await fetch(
+        `/api/interfaith-coherence/scripture-commentary/reflections?surahNumber=${number}`
+      );
+
+      const data = await res.json();
+
+      setApprovedReflections(data.reflections || []);
+    } catch (error) {
+      console.error("Failed to fetch reflections:", error);
+    }
+  }
+
+  fetchApprovedReflections();
+}, [number]);
 
   if (loading) {
     return (
@@ -191,6 +211,58 @@ export default function SurahDetailPage() {
                   </div>
                 </div>
               )}
+              {approvedReflections.length > 0 && (
+  <div className="mt-8">
+
+    <div className="flex items-center gap-2.5 mb-4">
+      <PenLine className="w-4 h-4 text-[#C8A75E]" />
+      <h2 className="text-xs tracking-[0.15em] text-[#C8A75E] uppercase font-semibold">
+        Community Reflections
+      </h2>
+    </div>
+
+    <div className="space-y-4">
+      {approvedReflections.map((r) => (
+        <div
+          key={r.id}
+          className="p-4 rounded-xl bg-white/3 border border-white/8"
+        >
+
+          {/* USER INFO */}
+          <div className="flex items-center gap-3 mb-2">
+            { r.user?.avatarUrl ? (
+              <Image
+              width={100}
+              height={100}
+
+                src={r.user.avatarUrl}
+                alt={r.user?.name || "User"}
+                className="w-6 h-6 rounded-full object-cover border border-white/10"
+              />
+            ) : (
+              <UserRound className="w-6 h-6 text-[#C8A75E]" />
+            )}
+            
+
+            <span className="text-sm text-[#F5F3EE] font-medium">
+              {r.user?.name || "Anonymous"}
+            </span>
+          </div>
+
+          {/* TEXT */}
+          <p className="text-sm text-[#AAB0D6] leading-relaxed">
+            {r.reflectionText}
+          </p>
+
+          
+
+        </div>
+      ))}
+    </div>
+
+  </div>
+)}
+              
 
             </div>
           </div>
@@ -257,6 +329,7 @@ export default function SurahDetailPage() {
       </div>
 
       <ReflectionJournalModal
+        userId=''
         surahNumber={journalOpen ? number : null}
         surahName={surah.arabic_name}
         existingReflection={reflections.find((r) => r.surahNumber === number)}

@@ -33,6 +33,7 @@ model User {
   otpExpiry  DateTime? @map("otp_expiry")
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime  @updatedAt @map("updated_at")
+  reflections ReflectionEntry[]
 
   @@index([email])
   @@index([isVerified])
@@ -116,17 +117,27 @@ model SurahView {
 }
 
 model ReflectionEntry {
-  id             String        @id @default(uuid())
-  sessionToken   String        @map("session_token")
-  surahNumber    Int           @map("surah_number")
-  reflectionText String        @map("reflection_text")
-  createdAt      DateTime      @default(now()) @map("created_at")
-  updatedAt      DateTime      @updatedAt @map("updated_at")
-  session        PortalSession @relation(fields: [sessionToken], references: [sessionToken], onDelete: Cascade)
+  id             String   @id @default(uuid())
+  sessionToken   String?  @map("session_token")
+  userId         String?  @map("user_id")
 
-  @@unique([sessionToken, surahNumber])
+  surahNumber    Int      @map("surah_number")
+  reflectionText String   @map("reflection_text")
+
+  isApproved     Boolean  @default(false) @map("is_approved")
+  approvedAt     DateTime? @map("approved_at")
+  isRejected     Boolean  @default(false)
+
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  session        PortalSession? @relation(fields: [sessionToken], references: [sessionToken], onDelete: Cascade)
+  user           User?          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([sessionToken])
+  @@index([userId])
   @@index([surahNumber])
+
   @@map("reflection_journal")
 }
 

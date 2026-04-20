@@ -1,0 +1,14 @@
+model ReflectionEntry {
+  id             String        @id @default(uuid())
+  sessionToken   String        @map("session_token")
+  surahNumber    Int           @map("surah_number")
+  reflectionText String        @map("reflection_text")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+  session        PortalSession @relation(fields: [sessionToken], references: [sessionToken], onDelete: Cascade)
+
+  @@unique([sessionToken, surahNumber])
+  @@index([sessionToken])
+  @@index([surahNumber])
+  @@map("reflection_journal")
+}
