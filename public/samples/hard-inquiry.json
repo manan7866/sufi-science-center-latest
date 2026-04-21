@@ -1,0 +1,28 @@
+[
+  {
+    "title": "Hard Inquiry Dialogues - Consciousness & Subjectivity",
+    "slug": "hard-inquiry-consciousness",
+    "description": "Can consciousness be measured? Is subjective experience reducible to neural processes? A rigorous examination of the 'hard problem' of consciousness.",
+    "transcript": "Full dialogue transcript would go here...",
+    "participants": ["Dr. James Fox", "Shaykh Ali"],
+    "video_url": "",
+    "audio_url": "",
+    "controversial_points": ["Is consciousness fundamental?", "Does the soul exist?", "Can meditation produce data?"],
+    "citations": ["Chalmers (1995)", "Tononi (2004)", "Wilber (2000)"],
+    "themes": ["consciousness", "neuroscience", "spirituality"],
+    "featured": true
+  },
+  {
+    "title": "Hard Inquiry Dialogues - Can Science Study Enlightenment?",
+    "slug": "hard-inquiry-enlightenment",
+    "description": "Can 'enlightenment' be studied scientifically? What would count as evidence? A critical examination of contemplative science.",
+    "transcript": "Full dialogue transcript would go here...",
+    "participants": ["Dr. Richard Davidson", "Shaykh Ali"],
+    "video_url": "",
+    "audio_url": "",
+    "controversial_points": ["Is enlightenment measurable?", "Western bias in research?", "Intragerebral"],
+    "citations": ["Davidson (2000)", "Goleman (2018)", "Wilber (2000)"],
+    "themes": ["meditation", "enlightenment", "research methodology"],
+    "featured": false
+  }
+]

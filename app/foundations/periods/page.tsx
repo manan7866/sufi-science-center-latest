@@ -14,6 +14,7 @@ interface HistoricalPeriod {
   end_year: number | null;
   display_order: number;
   description?: string | null;
+  keywords?: string[] | null;
 }
 
 const ERA_DETAILS: Record<string, { description: string; keywords: string[] }> = {
@@ -140,11 +141,11 @@ export default function PeriodsPage() {
                           <ArrowRight className="h-4 w-4 text-[#AAB0D6]/30 group-hover:text-[#C8A75E] group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" />
                         </div>
 
-                        {detail && (
+                        {era.keywords && (
                           <>
-                            <p className="text-sm text-[#AAB0D6] leading-relaxed mb-3">{detail.description}</p>
+                            <p className="text-sm text-[#AAB0D6] leading-relaxed mb-3">{era.description}</p>
                             <div className="flex flex-wrap gap-1.5">
-                              {detail.keywords.map((kw) => (
+                              {era.keywords.map((kw) => (
                                 <span
                                   key={kw}
                                   className="text-xs text-[#AAB0D6]/60 border border-white/8 rounded-full px-2.5 py-0.5"

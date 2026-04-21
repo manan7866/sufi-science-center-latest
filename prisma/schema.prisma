@@ -620,17 +620,18 @@ model Lineage {
 }
 
 model Theme {
-  id           String       @id @default(uuid())
-  slug         String       @unique
-  name         String
-  description  String?
-  category     String       @default("interdisciplinary")
-  displayOrder Int          @default(0) @map("display_order")
-  deletedAt    DateTime?    @map("deleted_at")
-  createdAt    DateTime     @default(now()) @map("created_at")
-  updatedAt    DateTime     @updatedAt @map("updated_at")
-  paperThemes  PaperTheme[]
-  saintThemes  SaintTheme[]
+  id                 String       @id @default(uuid())
+  slug               String       @unique
+  name               String
+  description        String?
+  category           String       @default("interdisciplinary")
+  conceptualClusters String[]     @default([]) @map("conceptual_clusters")
+  displayOrder      Int          @default(0) @map("display_order")
+  deletedAt         DateTime?    @map("deleted_at")
+  createdAt         DateTime     @default(now()) @map("created_at")
+  updatedAt         DateTime     @updatedAt @map("updated_at")
+  paperThemes       PaperTheme[]
+  saintThemes       SaintTheme[]
 
   @@index([slug])
   @@index([category])
@@ -666,8 +667,9 @@ model HistoricalPeriod {
   islamicCalendarEnd   String?   @map("islamic_calendar_end")
   description          String?
   significance         String?
+  keywords            String[]  @default([]) @map("keywords")
   displayOrder         Int       @default(0) @map("display_order")
-  deletedAt            DateTime? @map("deleted_at")
+  deletedAt            DateTime?  @map("deleted_at")
   createdAt            DateTime  @default(now()) @map("created_at")
   updatedAt            DateTime  @updatedAt @map("updated_at")
 

@@ -17,6 +17,7 @@ export async function GET() {
         displayOrder: true,
         description: true,
         significance: true,
+        keywords : true,
       },
     });
 
@@ -30,6 +31,7 @@ export async function GET() {
       display_order: e.displayOrder,
       description: e.description,
       significance: e.significance,
+      keywords: e.keywords,
     }));
 
     return NextResponse.json({ eras: mappedEras });

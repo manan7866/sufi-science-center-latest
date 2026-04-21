@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { title, slug, description, isPublished, publishedAt } = body;
+    const { title, subtitle, slug, description, type, host, isPublished, publishedAt, difficultyLevel, difficulty_level, totalEpisodes, total_episodes, totalDurationMinutes, total_duration_minutes, participants, isFeatured } = body;
 
     if (!title || !slug) {
       return NextResponse.json({ error: 'title and slug required.' }, { status: 400 });
@@ -45,9 +45,17 @@ export async function POST(req: NextRequest) {
       data: {
         title,
         slug,
+        subtitle: subtitle ?? null,
         description: description ?? null,
+        type: type ?? null,
+        host: host ?? null,
         isPublished: isPublished ?? false,
         publishedAt: publishedAt ? new Date(publishedAt) : null,
+        difficultyLevel: difficultyLevel ?? difficulty_level ?? null,
+        totalEpisodes: totalEpisodes ?? total_episodes ?? 0,
+        totalDurationMinutes: totalDurationMinutes ?? total_duration_minutes ?? 0,
+        participants: participants ?? [],
+        isFeatured: isFeatured ?? false,
       },
     });
 
@@ -63,7 +71,7 @@ export async function PATCH(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { id, title, slug, description, videoUrl, durationMins, publishedAt } = body;
+    const { id, title, subtitle, slug, description, type, host, isPublished, publishedAt, difficultyLevel, difficulty_level, totalEpisodes, total_episodes, totalDurationMinutes, total_duration_minutes, participants, isFeatured } = body;
 
     if (!id) return NextResponse.json({ error: 'id required.' }, { status: 400 });
 
@@ -71,11 +79,21 @@ export async function PATCH(req: NextRequest) {
       where: { id },
       data: {
         ...(title !== undefined && { title }),
+        ...(subtitle !== undefined && { subtitle }),
         ...(slug !== undefined && { slug }),
         ...(description !== undefined && { description }),
-        ...(videoUrl !== undefined && { videoUrl }),
-        ...(durationMins !== undefined && { durationMins: durationMins ? parseInt(durationMins) : null }),
+        ...(type !== undefined && { type }),
+        ...(host !== undefined && { host }),
+        ...(isPublished !== undefined && { isPublished }),
         ...(publishedAt !== undefined && { publishedAt: publishedAt ? new Date(publishedAt) : null }),
+        ...(difficultyLevel !== undefined && { difficultyLevel }) ||
+        (difficulty_level !== undefined && { difficultyLevel: difficulty_level }),
+        ...(totalEpisodes !== undefined && { totalEpisodes }) ||
+        (total_episodes !== undefined && { totalEpisodes: total_episodes }),
+        ...(totalDurationMinutes !== undefined && { totalDurationMinutes }) ||
+        (total_duration_minutes !== undefined && { totalDurationMinutes: total_duration_minutes }),
+        ...(participants !== undefined && { participants }),
+        ...(isFeatured !== undefined && { isFeatured }),
       },
     });
 

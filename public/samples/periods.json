@@ -1,0 +1,64 @@
+[
+  {
+    "name": "Prophetic & Foundational Transmission (570-750 CE)",
+    "slug": "prophetic-foundational-transmission",
+    "description": "The Prophetic era and the generation of the Companions. The foundational transmission of interior knowledge through direct proximity to the Prophet Muhammad.",
+    "significance": "This period establishes the spiritual roots from which all Sufi lineages claim descent.",
+    "startYear": 570,
+    "endYear": 750,
+    "displayOrder": 1
+  },
+  {
+    "name": "Early Ascetic & Ethical Formation (750-900 CE)",
+    "slug": "early-ascetic-ethical-formation",
+    "description": "The emergence of the first generation of named Sufi figures. Characterized by intense asceticism, ethical rigor, and the development of the vocabulary of the interior life.",
+    "significance": "Key centers: Basra and Kufa. Key figures: Hasan al-Basri, Rabia al-Adawiyya.",
+    "startYear": 750,
+    "endYear": 900,
+    "displayOrder": 2
+  },
+  {
+    "name": "Classical Theoretical Consolidation (900-1100 CE)",
+    "slug": "classical-theoretical-consolidation",
+    "description": "The systematic articulation of Sufi doctrine. Production of the great classical manuals, theoretical frameworks for maqamat and ahwal.",
+    "significance": "Key figures: Junayd of Baghdad, Hallaj. Production of classical manuals.",
+    "startYear": 900,
+    "endYear": 1100,
+    "displayOrder": 3
+  },
+  {
+    "name": "Institutional Tariqa Formation (1100-1300 CE)",
+    "slug": "institutional-tariqa-formation",
+    "description": "The crystallization of individual masters' teaching styles into formal orders with distinct methodologies, initiation systems, and silsilas.",
+    "significance": "Foundation of the classical tariqa system. Key founders: Abdul Qadir Gilani, Ahmad Yasawi.",
+    "startYear": 1100,
+    "endYear": 1300,
+    "displayOrder": 4
+  },
+  {
+    "name": "Metaphysical & Philosophical Expansion (1300-1500 CE)",
+    "slug": "metaphysical-philosophical-expansion",
+    "description": "The era of Ibn Arabi and the elaboration of Wahdat al-Wujud. Philosophical Sufism reaches its greatest systematic expression.",
+    "significance": "Ibn Arabi's formation and writings. Rumi and the Mevleviyya.",
+    "startYear": 1300,
+    "endYear": 1500,
+    "displayOrder": 5
+  },
+  {
+    "name": "Imperial & Global Expansion (1500-1800 CE)",
+    "slug": "imperial-global-expansion",
+    "description": "The spread of Sufi orders across the Ottoman, Safavid, and Mughal empires. Sufi culture becomes embedded in imperial court life.",
+    "significance": "Sufi culture becomes embedded in imperial court life, urban governance, and rural missionary activity.",
+    "startYear": 1500,
+    "endYear": 1800,
+    "displayOrder": 6
+  },
+  {
+    "name": "Reform, Renewal & Modern Rearticulation (1800-Present)",
+    "slug": "reform-renewal-modern-rearticulation",
+    "description": "Responses to European colonialism, modernism, and internal theological critique. Reform movements seek to purify practice.",
+    "significance": "Emergence of diaspora Sufi communities in the West. Key movements: Sanusiyya, Tijaniyya.",
+    "startYear": 1800,
+    "displayOrder": 7
+  }
+]

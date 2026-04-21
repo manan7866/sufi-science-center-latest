@@ -144,17 +144,34 @@ export const pathwayApplicationSchema = z.object({
     .regex(emailRegex, 'Invalid email format')
     .max(254, 'Email is too long')
     .transform((val) => val.trim().toLowerCase()),
+  phone: z
+    .string()
+    .optional(),
   location: z
     .string()
-    .min(1, 'Location is required')
-    .max(200, 'Location must be less than 200 characters')
-    .transform(stripHtmlAndScripts),
+    .optional(),
   motivation: z
     .string()
     .min(1, 'Motivation is required')
     .max(3000, 'Motivation must be less than 3000 characters')
     .transform(stripHtmlAndScripts)
     .refine((val) => val.length >= 50, 'Motivation must be at least 50 characters'),
+  spiritualExperience: z
+    .string()
+    .optional()
+    .transform((val) => val ? stripHtmlAndScripts(val) : ''),
+  currentPractices: z
+    .string()
+    .optional()
+    .transform((val) => val ? stripHtmlAndScripts(val) : ''),
+  availableTimeWeekly: z
+    .string()
+    .min(1, 'Weekly time commitment is required')
+    .max(100, 'Time commitment must be less than 100 characters')
+    .transform(stripHtmlAndScripts),
+  preferredStartDate: z
+    .string()
+    .optional(),
   pathwayId: z
     .string()
     .min(1, 'Pathway is required'),

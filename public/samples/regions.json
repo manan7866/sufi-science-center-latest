@@ -1,0 +1,18 @@
+[
+  { "name": "Early Islamic World", "slug": "early-islamic-world", "description": "The Arabian Peninsula and the first centers of Islamic civilization.", "level": 0, "displayOrder": 1 },
+  { "name": "Arabian Peninsula", "slug": "arabian-peninsula", "description": "The Arabian Peninsula - birthplace of Islam.", "level": 1, "displayOrder": 1 },
+  { "name": "Persia / Iran", "slug": "persia-iran", "description": "Persia and Greater Iran - heartland of Sufi literary culture.", "level": 0, "displayOrder": 2 },
+  { "name": "Central Asia", "slug": "central-asia", "description": "Transoxiana and the Steppes - cradle of the Naqshbandiyya.", "level": 0, "displayOrder": 3 },
+  { "name": "South Asia", "slug": "south-asia", "description": "The Indian Subcontinent - the largest Sufi sphere by population.", "level": 0, "displayOrder": 4 },
+  { "name": "Anatolia", "slug": "anatolia", "description": "Anatolia and the Anatolian plateau.", "level": 0, "displayOrder": 5 },
+  { "name": "Ottoman World", "slug": "ottoman-world", "description": "The Ottoman Empire - where Sufi orders achieved state integration.", "level": 0, "displayOrder": 6 },
+  { "name": "North Africa", "slug": "north-africa", "description": "The Maghreb and Egypt - centers of Shadhiliyya.", "level": 0, "displayOrder": 7 },
+  { "name": "Al-Andalus", "slug": "al-andalus", "description": "Islamic Iberia - the western pole of Islamic civilization.", "level": 0, "displayOrder": 8 },
+  { "name": "Levant", "slug": "levant", "description": "Syria, Palestine, and Lebanon - Damascus a major center.", "level": 0, "displayOrder": 9 },
+  { "name": "Sub-Saharan Africa", "slug": "sub-saharan-africa", "description": "West and East Africa - where Sufi orders served as primary vehicles for Islamization.", "level": 0, "displayOrder": 10 },
+  { "name": "Balkans", "slug": "balkans", "description": "Southeast Europe under Ottoman influence.", "level": 0, "displayOrder": 11 },
+  { "name": "Caucasus", "slug": "caucasus", "description": "The Caucasus - stronghold of the Naqshbandiyya-Khalidiyya.", "level": 0, "displayOrder": 12 },
+  { "name": "Southeast Asia", "slug": "southeast-asia", "description": "Maritime Southeast Asia - Malaysia, Indonesia, Brunei.", "level": 0, "displayOrder": 13 },
+  { "name": "China", "slug": "china", "description": "China and Central Asian Chinese territories.", "level": 0, "displayOrder": 14 },
+  { "name": "Global Diaspora", "slug": "global-diaspora", "description": "Sufi communities in the modern West.", "level": 0, "displayOrder": 15 }
+]

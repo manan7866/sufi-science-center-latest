@@ -36,6 +36,9 @@ export async function POST(request: Request) {
       case 'mentorship':
         exists = !!(await prisma.mentorshipApplication.findFirst({ where: { email: (await prisma.user.findUnique({ where: { id: userId } }))?.email } }));
         break;
+      case 'pathway':
+        exists = !!(await prisma.pathwayApplication.findFirst({ where: { email: (await prisma.user.findUnique({ where: { id: userId } }))?.email } }));
+        break;
       case 'assessment':
         // Assessment results are anonymous, no way to check by user
         exists = false;

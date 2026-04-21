@@ -1,0 +1,62 @@
+[
+  {
+    "title": "Love",
+    "slug": "love",
+    "focus_area": "love",
+    "description": "The heart's natural capacity for love - the Sufi path is fundamentally a way of love ( Tariqat al-Mahabba).",
+    "sufi_approach": "Love is the essence of the path - the Prophet Muhammad taught that Allah is ash-Shafi (the Healer) and His attribute is Love. The practice involves opening the heart to Divine Love through dhikr, contemplation of beauty, and surrender. The master teaches that the heart is like a mirror - when polished through remembrance, it reflects the Divine.",
+    "modern_psychology": "Attachment theory and affective neuroscience confirm that love and belonging are fundamental human needs. Oxytocin and dopamine create pair-bonding and reward circuits. Secure attachment in childhood creates capacity for adult love. Therapeutic approaches emphasize emotional attunement and self-compassion.",
+    "practices": ["Remember those who loved you", "Practice self-compassion", "Contemplate Divine beauty", "Allow tears of gratitude"],
+    "reflection_questions": ["Who has loved me unconditionally?", "How do I show love to others?", "What prevents me from loving fully?", "How would I live if love were my only guide?"]
+  },
+  {
+    "title": "Fear",
+    "slug": "fear",
+    "focus_area": "fear",
+    "description": "Fear can be a guide or a prison - understanding fear's roots and transforming it.",
+    "sufi_approach": "The Sufi masters teach that fear of punishment is the lowest station of faith - fear of God brings wisdom but must transform into fear of wasting the gift of life. The Shaykh works with disciples to uncover fears that bind the heart. True fear is fear of heedlessness itself.",
+    "modern_psychology": "Fear responses are evolved protections. The amygdala triggers freeze-fight-flight. Chronic fear produces cortisol damage. Exposure therapy and cognitive reappraisal transform fear. Anxiety disorders respond to understanding their function.",
+    "practices": ["Identify the fear", "Journal about its origin", "Contemplate mortality", "Practice courage in small steps"],
+    "reflection_questions": ["What do I fear most?", "When did this fear begin?", "Is this fear protective or limiting?", "What would I do if I were not afraid?"]
+  },
+  {
+    "title": "Grief",
+    "slug": "grief",
+    "focus_area": "grief",
+    "description": "Grief is love's weight - honoring loss while opening to healing.",
+    "sufi_approach": "The Sufi tradition incorporates grief as part of spiritual depth. The master Junayd said, 'Weep for your separation and you will find the path.' Tears of longing become transformative. Rumi's poetry is saturated with grief for the Beloved. The tradition validates tears and does not pathologize mourning.",
+    "modern_psychology": " Elisabeth Kubler-Ross identified grief stages. Continuing bonds theory shows relationship continues after loss. Complex grief requires honoring the loss fully. Body-based grief work uses movement to complete frozen responses.",
+    "practices": ["Allow tears", "Write letters to what was lost", "Create rituals of remembrance"],
+    "reflection_questions": ["What have I lost that I have not grieved?", "What would I want to say to those gone?", "How has loss changed me?", "What remains of what was lost?"]
+  },
+  {
+    "title": "Anger",
+    "slug": "anger",
+    "focus_area": "anger",
+    "description": "Anger as spiritual fuel - understanding its clean and dirty forms.",
+    "sufi_approach": "The Sufi masters distinguish between honorable anger (at injustice, for God) and base anger (ego, pride). The Prophet showed anger at wrongdoing but not at personal offense. The work is to clean anger - transform rage at systemic injustice into action while releasing ego-anger.",
+    "modern_psychology": "Anger is a secondary emotion covering hurt or fear. James Gross's emotion regulation model shows reappraisal works. Aggression is anger + perceived powerlessness. Clean anger contains its own wisdom - it signals values.",
+    "practices": ["Pause before reacting", "Ask: is this my anger or borrowed?", "Journal the anger", "Transform to action or release"],
+    "reflection_questions": ["Who makes me angry and why?", "When has my anger been righteous?", "What hurts underneath the anger?", "How could I act on this differently?"]
+  },
+  {
+    "title": "Compassion",
+    "slug": "compassion",
+    "focus_area": "compassion",
+    "description": "Compassion as the highest spiritual practice - for self and other.",
+    "sufi_approach": "The Prophet Muhammad was sent as mercy (rahmat) to the worlds. The station of compassion (rahma) is near to God. The Sufi master must develop compassion to serve. But compassion begins with self-compassion - the golden rule is: treat yourself as you would treat a beloved friend.",
+    "modern_psychology": "Paul Gilbert developed compassion-focused therapy. Kristin Neff defined self-compassion. Brain studies show compassion activates care circuits. Self-compassion correlates with resilience. Giving to others activates reward circuits - the circle of care.",
+    "practices": ["Loving-kindness meditation", "Self-compassion break", "Give as if you are giving to a friend"],
+    "reflection_questions": ["How do I speak to myself?", "Who needs my compassion most?", "What would I tell a friend in my situation?", "How does it feel to receive compassion?"]
+  },
+  {
+    "title": "Joy",
+    "slug": "joy",
+    "focus_area": "joy",
+    "description": "Joy as a spiritual state - the heart's natural condition.",
+    "sufi_approach": "The tradition celebrates joy - sama (spiritual concert) expresses divine joy. The heart's nature is beauty, joy is its expression. The Sufi is called to be a bringer of joy - to bring smiles, not tears. The Prophet said that serving others brings joy.",
+    "modern_psychology": " Barbara Fredrickson's broaden-and-build shows positive emotions expand capacity. Sonja Lyubomirsky shows happiness is 50% genetics, 10% circumstances, 40% intentional activities. Joy builds resources.",
+    "practices": ["Notice joy when it arises", "Practice gratitude daily", "Share joy with others"],
+    "reflection_questions": ["What brings me joy?", "When was I most joyful?", "How do I block my own joy?", "Who helps me feel joy?"]
+  }
+]

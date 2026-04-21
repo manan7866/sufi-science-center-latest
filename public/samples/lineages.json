@@ -1,0 +1,102 @@
+[
+  {
+    "name": "Qadiriyya",
+    "slug": "qadiriyya",
+    "description": "Founded by Abdul Qadir Gilani of Baghdad (1077–1166). The oldest and most geographically widespread Sufi order, spanning the Arab world, Africa, South Asia, and beyond.",
+    "level": 0,
+    "displayOrder": 1
+  },
+  {
+    "name": "Naqshbandiyya",
+    "slug": "naqshbandiyya",
+    "description": "Traced to Baha-ud-Din Naqshband of Bukhara (1318–1389). Emphasis on silent dhikr, sobriety, and maintenance of spiritual awareness in ordinary life.",
+    "level": 0,
+    "displayOrder": 2
+  },
+  {
+    "name": "Chishtiyya",
+    "slug": "chishtiyya",
+    "description": "Founded by Moinuddin Chishti of Ajmer (1141–1230). Known for openness, love, and the transformative use of sama.",
+    "level": 0,
+    "displayOrder": 3
+  },
+  {
+    "name": "Shadhiliyya",
+    "slug": "shadhiliyya",
+    "description": "Founded by Abu al-Hasan al-Shadhili of North Africa (1196–1258). Characterized by intellectual mysticism and integration of Sufi practice with ordinary life.",
+    "level": 0,
+    "displayOrder": 4
+  },
+  {
+    "name": "Suhrawardiyya",
+    "slug": "suhrawardiyya",
+    "description": "Transmitted through Abu Hafs Umar al-Suhrawardi (1145–1234). Significant in Persia, Iraq, and South Asia.",
+    "level": 0,
+    "displayOrder": 5
+  },
+  {
+    "name": "Rifaiyya",
+    "slug": "rifaiyya",
+    "description": "Founded by Ahmad al-Rifa'i of Iraq (1118–1182). Known for intense devotional practice.",
+    "level": 0,
+    "displayOrder": 6
+  },
+  {
+    "name": "Kubrawiyya",
+    "slug": "kubrawiyya",
+    "description": "Founded by Najmuddin Kubra of Khwarazm (1145–1221). Emphasis on visionary experiences and light phenomena.",
+    "level": 0,
+    "displayOrder": 7
+  },
+  {
+    "name": "Mevleviyya",
+    "slug": "mevleviyya",
+    "description": "The order of the Whirling Dervishes, institutionalized around the legacy of Jalaluddin Rumi (1207–1273).",
+    "level": 0,
+    "displayOrder": 8
+  },
+  {
+    "name": "Yasawiyya",
+    "slug": "yasawiyya",
+    "description": "Founded by Ahmad Yasawi of Turkestan (c. 1093–1166). The earliest Turkic Sufi order.",
+    "level": 0,
+    "displayOrder": 9
+  },
+  {
+    "name": "Bektashiyya",
+    "slug": "bektashiyya",
+    "description": "Associated with Haji Bektash Veli of Anatolia (1209–1271). Syncretic order with esoteric tendencies.",
+    "level": 0,
+    "displayOrder": 10
+  },
+  {
+    "name": "Tijaniyya",
+    "slug": "tijaniyya",
+    "description": "Founded by Ahmad al-Tijani of Algeria (1737–1815). Claims direct prophetic authorization.",
+    "level": 0,
+    "displayOrder": 11
+  },
+  {
+    "name": "Sanusiyya",
+    "slug": "sanusiyya",
+    "description": "Founded by Muhammad ibn Ali al-Sanusi (1787–1859). A reformist order emphasizing Quran and Sunnah.",
+    "level": 0,
+    "displayOrder": 12
+  },
+  {
+    "name": "Mujaddidiyya",
+    "slug": "mujaddidiyya",
+    "description": "Branches from Naqshbandiyya, founded by Shah Waliullah's sons in 18th century India.",
+    "level": 1,
+    "parentLineageId": null,
+    "displayOrder": 1
+  },
+  {
+    "name": "Khalidiyya",
+    "slug": "khalidiyya",
+    "description": "Branch of Naqshbandiyya founded by Omar al-Khalidi in 18th century.",
+    "level": 1,
+    "parentLineageId": null,
+    "displayOrder": 2
+  }
+]

@@ -1,0 +1,86 @@
+[
+  {
+    "name": "Tawhid (Divine Unity)",
+    "slug": "tawhid-divine-unity",
+    "description": "The fundamental doctrine of Islamic monotheism - the oneness of God - elaborated in Sufi metaphysics as the Unity of Being (Wahdat al-Wujud).",
+    "category": "metaphysical",
+    "displayOrder": 101
+  },
+  {
+    "name": "Wahdat al-Wujud (Unity of Being)",
+    "slug": "wahdat-al-wujud",
+    "description": "The ontological doctrine that all existence is one reality - the Divine Essence manifesting through all forms.",
+    "category": "metaphysical",
+    "displayOrder": 102
+  },
+  {
+    "name": "Wilaya (Sainthood)",
+    "slug": "wilaya-sainthood",
+    "description": "The station of spiritual authority and saintly proximity to God - the completion of prophecy.",
+    "category": "metaphysical",
+    "displayOrder": 103
+  },
+  {
+    "name": "Maqamat (Stations)",
+    "slug": "maqamat-stations",
+    "description": "The fixed stations of spiritual progression - states of being attained through divine grace and human effort.",
+    "category": "psychology",
+    "displayOrder": 201
+  },
+  {
+    "name": "Ahwal (States)",
+    "slug": "ahwal-states",
+    "description": "The transient states of spiritual experience - divine gifts that descend upon the heart.",
+    "category": "psychology",
+    "displayOrder": 202
+  },
+  {
+    "name": "Nafs (Soul)",
+    "slug": "nafs-soul",
+    "description": "The psyche or soul - the locus of spiritual transformation - divided into commanding, reproving, and tranquil.",
+    "category": "psychology",
+    "displayOrder": 203
+  },
+  {
+    "name": "Dhikr (Remembrance)",
+    "slug": "dhikr-remembrance",
+    "description": "The practice of repetitive divine remembrance - the central Sufi devotional method.",
+    "category": "devotional",
+    "displayOrder": 301
+  },
+  {
+    "name": "Sama (Spiritual Concert)",
+    "slug": "sama-spiritual-concert",
+    "description": "The mystical concert - spiritual music and poetry inducing ecstatic states - particularly associated with the Mevleviyya.",
+    "category": "devotional",
+    "displayOrder": 302
+  },
+  {
+    "name": "Adab (Spiritual Etiquette)",
+    "slug": "adab-spiritual-etiquette",
+    "description": "The refined manners and sacred protocols governing Sufi conduct and relationships.",
+    "category": "devotional",
+    "displayOrder": 303
+  },
+  {
+    "name": "Silsila (Chain of Transmission)",
+    "slug": "silsila-chain-transmission",
+    "description": "The spiritual lineage connecting master to disciple - the chain of authorization.",
+    "category": "transmission",
+    "displayOrder": 401
+  },
+  {
+    "name": "Bayah (Initiation)",
+    "slug": "bayah-initiation",
+    "description": "The oath of allegiance - the contractual commitment between master and disciple.",
+    "category": "transmission",
+    "displayOrder": 402
+  },
+  {
+    "name": "Tariqa (Path)",
+    "slug": "tariqa-path",
+    "description": "The spiritual method or order - the institutionalized path of practice.",
+    "category": "transmission",
+    "displayOrder": 403
+  }
+]

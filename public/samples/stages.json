@@ -1,0 +1,93 @@
+[
+  {
+    "title": "Repentance (Tawbah)",
+    "slug": "tawbah",
+    "arabic_name": "توبة",
+    "stage_number": 1,
+    "category": "maqam",
+    "description": "The first station on the path - turning away from heedlessness toward God. The heart awakens to its own poverty before the Divine Richness.",
+    "characteristics": ["Feeling of regret for past sins", "Sincere intention to change", "Turning of the heart toward God", "Awareness of one's own nothingness"],
+    "practices_associated": ["Istighfar (repentance prayers)", "Muhasaba (self-accounting)", "Muraqaba (vigil)"],
+    "classical_references": ["Al-Maqasid al-Hasanah by Imam Ghazali", "Al-Munqidh min al-Dalal by Ibn Arabi"],
+    "challenges": ["Discouragement", "Returning to old habits", "False piety"],
+    "signs_of_progress": ["Natural aversion to sin", "Joy in worship", "Increasing awareness"]
+  },
+  {
+    "title": "Renunciation (Zuhd)",
+    "slug": "zuhd",
+    "arabic_name": "زهد",
+    "stage_number": 2,
+    "category": "maqam",
+    "description": "The station of detachment from worldly goods - not hatred of them, but prioritization of the Eternal over the temporal.",
+    "characteristics": ["Contentment with little", "Simplicity in living", "Freedom from attachment", "Inner independence"],
+    "practices_associated": ["Fasting", "Vigil (tahajjud)", "Silence"],
+    "classical_references": ["Al-Zuhd by Imam Ahmad ibn Hanbal", "Risala al-Zuhd by Junayd"],
+    "challenges": ["Austerity without wisdom", "Ascetic pride"],
+    "signs_of_progress": ["Ease in difficulty", "Gratefulness in poverty"]
+  },
+  {
+    "title": "Patience (Sabr)",
+    "slug": "sabr",
+    "arabic_name": "صبر",
+    "stage_number": 3,
+    "category": "maqam",
+    "description": "The steadfast heart in the face of difficulty - waiting upon God's command with tranquility.",
+    "characteristics": ["Serenity in hardship", "Trust in Divine timing", "Endurance without complaint"],
+    "practices_associated": ["Silent dhikr", "Contemplation of fate"],
+    "classical_references": ["Al-Iman by Ibn al-Mubarak", "Fusus al-Hikam"],
+    "challenges": ["Impatience", "Discouragement"],
+    "signs_of_progress": ["Tranquility in difficulty", "Decreasing desire for change"]
+  },
+  {
+    "title": "Gratitude (Shukr)",
+    "slug": "shukr",
+    "arabic_name": "شكر",
+    "stage_number": 4,
+    "category": "maqam",
+    "description": "The constant recognition of blessings - the reciprocal of patience - active appreciation of Divine gifts.",
+    "characteristics": ["Continuous thankfulness", "Recognition of blessings", "Humility"],
+    "practices_associated": ["Dhikr of gratitude", "Tafakkur (contemplation)"],
+    "classical_references": ["Al-Shukr li-Llah by Ghazali"],
+    "challenges": ["Ingratitude becomes habitual"],
+    "signs_of_progress": ["Overflowing gratitude", "Increased wonder"]
+  },
+  {
+    "title": "Fear and Hope (Khashya wa Aml)",
+    "slug": "khashya-wa-amal",
+    "arabic_name": "خشية والأمل",
+    "stage_number": 5,
+    "category": "hal",
+    "description": "The state of balanced fear of God and hope in His Mercy - the moving forces of the heart.",
+    "characteristics": ["Fear of Divine displeasure", "Hope in Divine mercy", "Balanced state"],
+    "practices_associated": ["Contemplation of death", "Contemplation of Divine attributes"],
+    "classical_references": ["Al-Futuhat al-Makkiyya"],
+    "challenges": ["Excessive fear", "Excessive hope"],
+    "signs_of_progress": ["Mature spiritual balance"]
+  },
+  {
+    "title": "Longing (Shawq)",
+    "slug": "shawq",
+    "arabic_name": "شوق",
+    "stage_number": 6,
+    "category": "hal",
+    "description": "The burning desire to perceive the Divine Presence - the fire of love kindled in the heart.",
+    "characteristics": ["Intense longing", "Restlessness for God", "Ecstatic yearning"],
+    "practices_associated": ["Sama (spiritual concert)", "Poetry of longing"],
+    "classical_references": ["Diwan al-Shawq by Rumi", "Kalimat al-Qudsiyyah"],
+    "challenges": ["Despair of fulfillment"],
+    "signs_of_progress": ["Ecstasy", "Transformative longing"]
+  },
+  {
+    "title": "Union (Wijdān)",
+    "slug": "wijdan",
+    "arabic_name": "وجدان",
+    "stage_number": 7,
+    "category": "hal",
+    "description": "The station of presence with the Divine - the fana (annihilation) in the Beloved.",
+    "characteristics": ["Absence of self", "Presence of God", "Ecstatic union"],
+    "practices_associated": ["Fana dhikr", "Muraqaba", "Sama"],
+    "classical_references": ["Fusus al-Hikam", "Al-Futuhat"],
+    "challenges": ["Attachment to the state"],
+    "signs_of_progress": ["Stabilization in presence"]
+  }
+]

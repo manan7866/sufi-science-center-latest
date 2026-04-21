@@ -1,0 +1,62 @@
+[
+  {
+    "title": "Dhikr al-Jahr (Audible Remembrance)",
+    "slug": "dhikr-al-jahr",
+    "category": "dhikr",
+    "difficulty_level": "beginner",
+    "duration_minutes": 15,
+    "description": "The audible practice of repeating Divine Names - the foundational Sufi devotional method that awakens the heart through sound.",
+    "instructions": "1. Find a quiet space.\n2. Sit in a dignified posture.\n3. Begin with praising Allah (SubhanAllah).\n4. Repeat the Greatest Name (La ilaha illa Allah) softly.\n5. Gradually increase volume.\n6. Maintain presence of heart.\n7. End with silence and gratitude.",
+    "benefits": ["Heart awakening", "Removal of heedlessness", "Divine connection"],
+    "prerequisites": ["Basic intention (niyyah)"],
+    "tradition_source": "All Sufi orders"
+  },
+  {
+    "title": "Muraqaba (Vigil meditation)",
+    "slug": "muraqaba",
+    "category": "meditation",
+    "difficulty_level": "intermediate",
+    "duration_minutes": 30,
+    "description": "The seated practice of self-watchfulness - presence with the Divine through stillness and inner observation.",
+    "instructions": "1. Sit comfortably with spine straight.\n2. Close eyes gently.\n3. Observe breath without control.\n4. Notice thoughts arise and fall.\n5. Return to stillness.\n6. Open to inner presence.\n7. Maintain for duration.\n8. Exit gradually.",
+    "benefits": ["Self-knowledge", "Inner peace", "Discernment"],
+    "prerequisites": ["Basic dhikr practice", "Ability to sit still"],
+    "tradition_source": "All Sufi orders"
+  },
+  {
+    "title": "Contemplation of Death",
+    "slug": "contemplation-of-death",
+    "category": "contemplation",
+    "difficulty_level": "intermediate",
+    "duration_minutes": 20,
+    "description": "The practice of remembering mortality - preparing the heart for the ultimate meeting.",
+    "instructions": "1. Sit peacefully.\n2. Visualize your own death.\n3. Consider the moment.\n4. Reflect on what remains.\n5. Understand attachment.\n6. Feel release.\n7. Return to living meaningfully.",
+    "benefits": ["Detachment", "Presence", "Prioritization"],
+    "prerequisites": ["Emotional stability"],
+    "tradition_source": "Classical Sufi manual"
+  },
+  {
+    "title": "Breath-work (Pranayama)",
+    "slug": "breath-work-sufi",
+    "category": "breath_work",
+    "difficulty_level": "beginner",
+    "duration_minutes": 10,
+    "description": "Conscious breathing to direct subtle energy and calm the nervous system.",
+    "instructions": "1. Sit comfortably.\n2. Inhale deeply for 4 counts.\n3. Hold for 4 counts.\n4. Exhale for 4 counts.\n5. Hold empty for 4 counts.\n6. Repeat 10-20 times.\n7. Notice宁静.",
+    "benefits": ["Calm nervous system", "Energy direction", "Focus"],
+    "prerequisites": ["None"],
+    "tradition_source": "Integrated from yoga traditions"
+  },
+  {
+    "title": "Visualization of Light",
+    "slug": "visualization-light",
+    "category": "visualization",
+    "difficulty_level": "beginner",
+    "duration_minutes": 15,
+    "description": "Guided visualization of Divine Light penetrating and illuminating the interior.",
+    "instructions": "1. Close eyes.\n2. Imagine Divine Light above.\n3. Feel it descending.\n4. It enters the crown.\n5. Flows through the body.\n6. Illuminates the heart.\n7. Fill with light.\n8. Become the light.",
+    "benefits": ["Inner illumination", "Heart opening"],
+    "prerequisites": ["Basic meditation ability"],
+    "tradition_source": "Kubrawiyya tradition"
+  }
+]
