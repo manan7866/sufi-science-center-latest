@@ -14,6 +14,9 @@ export const metadata: Metadata = {
     description: 'A harmony of advanced scientific knowledge and Sufi inner peace',
     type: 'website',
   },
+  icons: {
+    icon: '/SSC_LOGO_M.png',
+  },
 };
 
 export default function RootLayout({
