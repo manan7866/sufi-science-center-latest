@@ -82,7 +82,7 @@ export default function FounderPage() {
       />
 
       <section className="py-20 px-4 observatory-gradient">
-        <div className="max-w-5xl mx-auto space-y-20">
+        <div className="max-w-6xl mx-auto space-y-20">
 
           {/* Founder's Vision */}
           <div>

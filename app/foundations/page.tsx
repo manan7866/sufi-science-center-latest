@@ -102,17 +102,17 @@ export default function FoundationsOverviewPage() {
 
           {/* Introductory Summary */}
           <ScrollReveal>
-            <div className="mb-20">
+            <div className="sm:flex flex-col items-center gap-4  mb-20">
               <div className="flex items-center gap-3 mb-6">
                 <Library className="h-5 w-5 text-[#C8A75E]" />
                 <span className="text-xs font-semibold uppercase tracking-widest text-[#C8A75E]">
                   Archive Scope
                 </span>
               </div>
-              <p className="text-lg text-[#D4CFC6] leading-relaxed mb-4 max-w-3xl">
+              <p className="text-lg text-[#D4CFC6] sm:text-center leading-relaxed mb-4 max-w-3xl">
                 Foundational Studies documents the lives, lineages, and intellectual contributions of Sufi masters across fourteen centuries of Islamic civilization. The archive spans the Arabian Peninsula, Persia, Central Asia, South Asia, Anatolia, North Africa, Al-Andalus, and beyond.
               </p>
-              <p className="text-base text-[#AAB0D6] leading-relaxed max-w-3xl">
+              <p className="text-base text-[#AAB0D6] sm:text-center leading-relaxed max-w-3xl">
                 Every entry is classified across four orthogonal dimensions — lineage, region, era, and theme — enabling precise cross-referential navigation. The archive is designed for scholars, researchers, and serious students of Islamic intellectual history.
               </p>
             </div>
@@ -122,10 +122,10 @@ export default function FoundationsOverviewPage() {
           <ScrollReveal>
             <div className="mb-20">
               <div className="mb-8">
-                <h2 className="text-2xl font-serif font-semibold text-[#F5F3EE] mb-2">
+                <h2 className="text-2xl sm:text-center font-serif font-semibold text-[#F5F3EE] mb-2">
                   Classification Dimensions
                 </h2>
-                <p className="text-sm text-[#AAB0D6]">
+                <p className="text-sm sm:text-center text-[#AAB0D6]">
                   Four orthogonal axes used to organize every master in the archive
                 </p>
               </div>

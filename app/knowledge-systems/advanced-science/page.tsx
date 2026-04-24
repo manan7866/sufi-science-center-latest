@@ -818,14 +818,14 @@ export default function AdvancedSciencePage() {
       <section className="py-20 px-4 observatory-gradient">
         <div className="max-w-5xl mx-auto">
 
-          <ScrollReveal>
-            <div className="mb-14">
-              <p className="text-[15px] text-[#AAB0D6]/80 leading-relaxed max-w-3xl mb-4">
+          <ScrollReveal >
+            <div className="mb-14  flex flex-col items-center gap-6">
+              <p className="text-[15px] sm:text-center text-[#AAB0D6]/80 leading-relaxed max-w-3xl mb-4">
                 This page maps core scientific domains defining 21st-century knowledge production.
                 Each domain is organized by research field with structured information on current breakthroughs,
                 open questions, ethical implications, and anticipated trajectories.
               </p>
-              <p className="text-[13px] text-[#AAB0D6]/55 leading-relaxed max-w-3xl mb-4">
+              <p className="text-[13px] sm:text-center text-[#AAB0D6]/55 leading-relaxed max-w-3xl mb-4">
                 Within each domain, we introduce epistemological and ontological reflections drawn from Sufi thought.
                 These are presented as analytical frameworks and philosophical context — not as empirical claims
                 or as evidence that mystical tradition validates scientific findings.
