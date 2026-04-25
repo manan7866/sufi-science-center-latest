@@ -37,7 +37,7 @@ async function processPaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent
       stripeEventId: paymentIntent.id,
       eventType: 'payment_intent.succeeded',
       objectId: paymentIntent.id,
-      payload: paymentIntent as unknown as object,
+      payload: JSON.stringify({ id: paymentIntent.id, status: paymentIntent.status }),
       processed: true,
     },
   });
@@ -61,20 +61,20 @@ async function processPaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
       stripeEventId: paymentIntent.id,
       eventType: 'payment_intent.payment_failed',
       objectId: paymentIntent.id,
-      payload: paymentIntent as unknown as object,
+      payload: JSON.stringify({ id: paymentIntent.id, status: paymentIntent.status }),
       processed: true,
     },
   });
 }
 
 async function processInvoicePaid(invoice: Stripe.Invoice) {
-  const subscriptionId = invoice.subscription as string | undefined;
-  const customerId = invoice.customer as string | undefined;
+  const subscriptionId = (invoice as unknown as { subscription?: string }).subscription;
+  const customerId = (invoice as unknown as { customer?: string }).customer;
   const amountPaid = invoice.amount_paid / 100;
 
   if (subscriptionId) {
     const donation = await prisma.donation.findFirst({
-      where: { stripePaymentIntentId: invoice.payment_intent as string },
+      where: { stripePaymentIntentId: (invoice as unknown as { payment_intent?: string }).payment_intent },
     });
 
     if (donation) {
@@ -104,14 +104,14 @@ async function processInvoicePaid(invoice: Stripe.Invoice) {
       stripeEventId: invoice.id,
       eventType: 'invoice.payment_succeeded',
       objectId: invoice.id,
-      payload: invoice as unknown as object,
+      payload: JSON.stringify({ id: invoice.id, customer: invoice.customer, subscription: (invoice as unknown as { subscription?: string }).subscription, amount_paid: invoice.amount_paid }),
       processed: true,
     },
   });
 }
 
 async function processInvoicePaymentFailed(invoice: Stripe.Invoice) {
-  const subscriptionId = invoice.subscription as string | undefined;
+  const subscriptionId = (invoice as unknown as { subscription?: string }).subscription;
 
   if (subscriptionId) {
     await prisma.donationSubscription.updateMany({
@@ -125,7 +125,7 @@ async function processInvoicePaymentFailed(invoice: Stripe.Invoice) {
       stripeEventId: invoice.id,
       eventType: 'invoice.payment_failed',
       objectId: invoice.id,
-      payload: invoice as unknown as object,
+      payload: JSON.stringify({ id: invoice.id, customer: invoice.customer, subscription: (invoice as unknown as { subscription?: string }).subscription, amount_paid: invoice.amount_paid }),
       processed: true,
     },
   });
@@ -142,7 +142,7 @@ async function processSubscriptionCreated(subscription: Stripe.Subscription) {
       stripeEventId: subscription.id,
       eventType: 'customer.subscription.created',
       objectId: subscription.id,
-      payload: subscription as unknown as object,
+      payload: JSON.stringify({ id: subscription.id, status: subscription.status, customer: subscription.customer }),
       processed: true,
     },
   });
@@ -174,7 +174,7 @@ async function processSubscriptionUpdated(subscription: Stripe.Subscription) {
       stripeEventId: subscription.id,
       eventType: 'customer.subscription.updated',
       objectId: subscription.id,
-      payload: subscription as unknown as object,
+      payload: JSON.stringify({ id: subscription.id, status: subscription.status, customer: subscription.customer }),
       processed: true,
     },
   });
@@ -191,7 +191,7 @@ async function processSubscriptionDeleted(subscription: Stripe.Subscription) {
       stripeEventId: subscription.id,
       eventType: 'customer.subscription.deleted',
       objectId: subscription.id,
-      payload: subscription as unknown as object,
+      payload: JSON.stringify({ id: subscription.id, status: subscription.status, customer: subscription.customer }),
       processed: true,
     },
   });
@@ -214,7 +214,7 @@ async function processChargeRefunded(charge: Stripe.Charge) {
       stripeEventId: charge.id,
       eventType: 'charge.refunded',
       objectId: charge.id,
-      payload: charge as unknown as object,
+      payload: JSON.stringify({ id: charge.id, amount: charge.amount, status: charge.status }),
       processed: true,
     },
   });
@@ -229,7 +229,7 @@ export async function POST(req: NextRequest) {
   let event: Stripe.Event;
 
   try {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2025-04-30.basil' as const });
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-02-25.clover' as const });
     const rawBody = await req.text();
     event = stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET!);
   } catch (err) {

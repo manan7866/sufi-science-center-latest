@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     const receiptRef = `SSC-${crypto.randomUUID().replace(/-/g, '').slice(0, 12).toUpperCase()}`;
     const msg = typeof message === 'string' ? message.trim().slice(0, 500) : null;
 
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2025-04-30.basil' as const });
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-02-25.clover' as const });
 
     let donor = await prisma.donor.findUnique({ where: { email: emailStr } });
     
@@ -91,8 +91,8 @@ export async function POST(req: NextRequest) {
       : `${PLATFORM} Annual Support`;
     const productDescription = `Recurring ${interval} contribution — processed by ${BILLING_ENTITY}`;
 
-    const products = await stripe.products.list({ limit: 1, active: true, metadata: { product_type: 'donation' } });
-    let product = products.data.find(p => p.metadata?.product_name === productName);
+    const products = await stripe.products.list({ limit: 10, active: true });
+    let product = products.data.find(p => p.name === productName);
     
     if (!product) {
       product = await stripe.products.create({
@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const prices = await stripe.prices.list({ limit: 10, active: true, product: product.id, currency: currency.toLowerCase() });
+    const prices = await stripe.prices.list({ limit: 10, active: true, product: product.id });
     let price = prices.data.find(p => 
       p.unit_amount === amountCents && 
       p.recurring?.interval === interval
@@ -143,8 +143,8 @@ export async function POST(req: NextRequest) {
       expand: ['latest_invoice.payment_intent'],
     });
 
-    const latestInvoice = subscription.latest_invoice as Stripe.Invoice | undefined;
-    const paymentIntent = latestInvoice?.payment_intent as Stripe.PaymentIntent | undefined;
+    const latestInvoice = subscription.latest_invoice as unknown;
+    const paymentIntent = latestInvoice && typeof latestInvoice === 'object' ? (latestInvoice as { payment_intent?: unknown }).payment_intent : undefined;
 
     await prisma.donationSubscription.create({
       data: {
@@ -170,13 +170,13 @@ export async function POST(req: NextRequest) {
         processor: 'stripe',
         processingEntity: BILLING_ENTITY,
         transactionId: receiptRef,
-        stripePaymentIntentId: paymentIntent?.id || null,
+        stripePaymentIntentId: paymentIntent && typeof paymentIntent === 'object' && 'id' in paymentIntent ? (paymentIntent as { id: string }).id : null,
         message: msg,
       },
     });
 
     return NextResponse.json({
-      clientSecret: paymentIntent?.client_secret || null,
+      clientSecret: paymentIntent && typeof paymentIntent === 'object' && 'client_secret' in paymentIntent ? (paymentIntent as { client_secret: string }).client_secret : null,
       subscriptionId: subscription.id,
       donationSubscriptionId: receiptRef,
     });

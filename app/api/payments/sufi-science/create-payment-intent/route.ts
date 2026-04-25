@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     const receiptRef = `SSC-${crypto.randomUUID().replace(/-/g, '').slice(0, 12).toUpperCase()}`;
     const msg = typeof message === 'string' ? message.trim().slice(0, 500) : null;
 
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2025-04-30.basil' as const });
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-02-25.clover' as const });
 
     let donor = await prisma.donor.findUnique({ where: { email: emailStr } });
     
