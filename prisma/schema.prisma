@@ -188,6 +188,7 @@ model SupportTicketReply {
 
 model Donation {
   id                    String    @id @default(uuid())
+  donorId               String?   @map("donor_id")
   donorName             String    @map("donor_name")
   donorEmail            String    @map("donor_email")
   amount                Float
@@ -204,11 +205,73 @@ model Donation {
   completedAt           DateTime? @map("completed_at")
   createdAt             DateTime  @default(now()) @map("created_at")
   updatedAt             DateTime  @updatedAt @map("updated_at")
+  donor                 Donor?    @relation(fields: [donorId], references: [id])
 
+  @@index([donorId])
   @@index([donorEmail])
   @@index([status])
   @@index([createdAt(sort: Desc)])
   @@map("donations")
+}
+
+model Donor {
+  id                String    @id @default(uuid())
+  fullName           String    @map("full_name")
+  email             String    @map("email")
+  phone             String?
+  country           String?
+  addressLine1       String?   @map("address_line1")
+  city              String?
+  state             String?
+  postalCode         String?   @map("postal_code")
+  anonymous         Boolean   @default(false) @map("anonymous")
+  stripeCustomerId   String?   @map("stripe_customer_id")
+  createdAt         DateTime   @default(now()) @map("created_at")
+  updatedAt         DateTime   @updatedAt @map("updated_at")
+  donations         Donation[]
+  subscriptions     DonationSubscription[]
+
+  @@unique([email])
+  @@index([stripeCustomerId])
+  @@map("donors")
+}
+
+model DonationSubscription {
+  id                   String    @id @default(uuid())
+  donorId              String    @map("donor_id")
+  amountCents          Int       @map("amount_cents")
+  currency             String    @default("usd") @map("currency")
+  interval             String    @default("month") @map("interval")
+  status              String    @default("pending") @map("status")
+  stripeSubscriptionId String?   @map("stripe_subscription_id")
+  stripeCustomerId     String?   @map("stripe_customer_id")
+  stripePriceId        String?   @map("stripe_price_id")
+  currentPeriodStart   DateTime?  @map("current_period_start") @db.Date
+  currentPeriodEnd    DateTime?  @map("current_period_end") @db.Date
+  cancelAtPeriodEnd    Boolean   @default(false) @map("cancel_at_period_end")
+  canceledAt         DateTime?  @map("canceled_at") @db.Date
+  createdAt          DateTime   @default(now()) @map("created_at")
+  updatedAt          DateTime   @updatedAt @map("updated_at")
+  donor              Donor     @relation(fields: [donorId], references: [id])
+
+  @@index([donorId])
+  @@index([stripeSubscriptionId])
+  @@index([status])
+  @@map("donation_subscriptions")
+}
+
+model PaymentEvent {
+  id          String   @id @default(uuid())
+  stripeEventId String   @unique @map("stripe_event_id")
+  eventType   String   @map("event_type")
+  objectId   String?  @map("object_id")
+  payload    Json?    @default("{}") @map("payload")
+  processed  Boolean  @default(false) @map("processed")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([eventType])
+  @@index([processed])
+  @@map("payment_events")
 }
 
 model MembershipApplication {

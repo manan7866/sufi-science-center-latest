@@ -2,26 +2,110 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { ObservatoryHero } from '@/components/observatory-hero';
 import { Card } from '@/components/ui/card';
 import { BookOpen, Users, MessageSquare, Database, ShieldCheck, ArrowLeft } from 'lucide-react';
 
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
+
 const CHIPS = [25, 50, 100, 250];
+const MONTHLY_CHIPS = [5, 10, 25, 50];
+
+function PaymentForm() {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (!stripe || !elements) return;
+
+    setIsProcessing(true);
+    setError('');
+
+    const { error: submitError } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: `${window.location.origin}/support/thank-you`,
+      },
+      redirect: 'if_required',
+    });
+
+    if (submitError) {
+      setError(submitError.message || 'Payment failed');
+      setIsProcessing(false);
+      return;
+    }
+
+    setSuccess(true);
+    setIsProcessing(false);
+  }
+
+  if (success) {
+    return (
+      <div className="text-center py-8">
+        <div className="text-[#C8A75E] text-lg mb-2">Thank you!</div>
+        <p className="text-[#AAB0D6] text-sm">Your donation has been processed.</p>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="mb-5">
+        <PaymentElement />
+      </div>
+
+      {error && (
+        <div className="mb-4 p-3 rounded-lg text-sm" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#f87171' }}>
+          {error}
+        </div>
+      )}
+
+      <button
+        type="submit"
+        disabled={!stripe || isProcessing}
+        className="w-full py-3 px-4 rounded-xl font-bold text-sm tracking-wide transition-all"
+        style={{
+          background: !stripe || isProcessing ? 'rgba(200,167,94,0.5)' : '#C8A75E',
+          color: '#0B0F2A',
+          border: 'none',
+          cursor: !stripe || isProcessing ? 'not-allowed' : 'pointer',
+        }}
+      >
+        {isProcessing ? 'Processing...' : 'Donate Securely'}
+      </button>
+    </form>
+  );
+}
 
 export default function DonatePage() {
   const [frequency, setFrequency] = useState<'one_time' | 'monthly'>('one_time');
   const [amountInput, setAmountInput] = useState('100');
   const [activeChip, setActiveChip] = useState<number | 'custom'>(100);
+  const [monthlyChip, setMonthlyChip] = useState<number>(25);
   const [donorName, setDonorName] = useState('');
   const [donorEmail, setDonorEmail] = useState('');
   const [note, setNote] = useState('');
   const [anonymous, setAnonymous] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [clientSecret, setClientSecret] = useState('');
 
   function selectChip(val: number | 'custom') {
     setActiveChip(val);
     if (val !== 'custom') setAmountInput(String(val));
+  }
+
+  function selectMonthlyChip(val: number) {
+    setMonthlyChip(val);
+    setAmountInput(String(val));
   }
 
   function handleAmountChange(v: string) {
@@ -29,38 +113,51 @@ export default function DonatePage() {
     const n = parseFloat(v);
     if (CHIPS.includes(n)) {
       setActiveChip(n);
-    } else {
+    } else if (!MONTHLY_CHIPS.includes(n)) {
       setActiveChip('custom');
     }
   }
 
   const numericAmount = parseFloat(amountInput) || 0;
-  const amountValid = numericAmount >= 5 && numericAmount <= 25000;
+  const amountValid = frequency === 'one_time' 
+    ? numericAmount >= 5 && numericAmount <= 5000
+    : numericAmount >= 3 && numericAmount <= 5000;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
 
     if (!amountValid) {
-      setError('Please enter an amount between $5 and $25,000.');
+      setError(frequency === 'one_time' ? 'Minimum $5, maximum $5,000.' : 'Minimum $3, maximum $5,000.');
       return;
     }
     if (!donorEmail.trim()) {
-      setError('An email address is required to process your donation.');
+      setError('An email address is required.');
+      return;
+    }
+    if (!termsAccepted) {
+      setError('Please accept the terms and conditions.');
       return;
     }
 
     setLoading(true);
     try {
-      const res = await fetch('/api/create-checkout-session', {
+      const endpoint = frequency === 'one_time' 
+        ? '/api/payments/sufi-science/create-payment-intent'
+        : '/api/payments/sufi-science/create-subscription';
+
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           amount: numericAmount,
           frequency,
+          interval: frequency === 'monthly' ? 'month' : 'one_time',
           donorName: anonymous ? 'Anonymous' : (donorName.trim() || 'Anonymous'),
           donorEmail: donorEmail.trim(),
           message: note.trim() || undefined,
+          anonymous,
+          sourcePage: '/support/donate',
         }),
       });
 
@@ -71,12 +168,35 @@ export default function DonatePage() {
         return;
       }
 
-      window.location.href = data.url;
+      setClientSecret(data.clientSecret);
     } catch {
-      setError('Unable to reach payment processor. Please try again.');
+      setError('Unable to reach payment processor.');
     } finally {
       setLoading(false);
     }
+  }
+
+  if (clientSecret) {
+    return (
+      <div className="min-h-screen pt-20 bg-[#0B0F2A]">
+        <ObservatoryHero
+          subtitle="Secure Payment"
+          title="Complete Your"
+          title2='Contribution'
+          description="Enter your payment details below."
+        />
+
+        <section className="py-16 px-4 observatory-gradient">
+          <div className="max-w-lg mx-auto">
+            <Card className="p-6 glass-panel border-[rgba(255,255,255,0.08)]">
+              <Elements stripe={stripePromise} options={{ clientSecret }}>
+                <PaymentForm />
+              </Elements>
+            </Card>
+          </div>
+        </section>
+      </div>
+    );
   }
 
   return (
@@ -201,8 +321,8 @@ export default function DonatePage() {
                         type="number"
                         value={amountInput}
                         onChange={(e) => handleAmountChange(e.target.value)}
-                        min={5}
-                        max={25000}
+                        min={frequency === 'one_time' ? 5 : 3}
+                        max={5000}
                         step="1"
                         required
                         style={{
@@ -225,25 +345,25 @@ export default function DonatePage() {
                     </div>
 
                     <div className="flex gap-2 mt-3">
-                      {CHIPS.map((chip) => (
+                      {(frequency === 'one_time' ? CHIPS : MONTHLY_CHIPS).map((chip) => (
                         <button
                           key={chip}
                           type="button"
-                          onClick={() => selectChip(chip)}
+                          onClick={() => frequency === 'one_time' ? selectChip(chip) : selectMonthlyChip(chip)}
                           style={{
                             flex: 1,
                             padding: '7px 0',
                             borderRadius: '8px',
                             fontSize: '12px',
                             fontWeight: 600,
-                            border: activeChip === chip ? 'none' : '1.5px solid rgba(200,167,94,0.2)',
-                            background: activeChip === chip ? '#C8A75E' : 'transparent',
-                            color: activeChip === chip ? '#0B0F2A' : '#AAB0D6',
+                            border: (frequency === 'one_time' ? activeChip : monthlyChip) === chip ? 'none' : '1.5px solid rgba(200,167,94,0.2)',
+                            background: (frequency === 'one_time' ? activeChip : monthlyChip) === chip ? '#C8A75E' : 'transparent',
+                            color: (frequency === 'one_time' ? activeChip : monthlyChip) === chip ? '#0B0F2A' : '#AAB0D6',
                             cursor: 'pointer',
                             transition: 'all 0.15s ease',
                           }}
                         >
-                          ${chip}
+                          ${chip}{frequency === 'monthly' && '/mo'}
                         </button>
                       ))}
                       <button
@@ -278,7 +398,14 @@ export default function DonatePage() {
                           <button
                             key={f}
                             type="button"
-                            onClick={() => setFrequency(f)}
+                            onClick={() => {
+                              setFrequency(f);
+                              if (f === 'monthly') {
+                                setAmountInput(String(monthlyChip));
+                              } else {
+                                setAmountInput(String(activeChip === 'custom' ? 100 : activeChip));
+                              }
+                            }}
                             style={{
                               flex: 1,
                               display: 'flex',
@@ -382,7 +509,7 @@ export default function DonatePage() {
 
                     <div>
                       <textarea
-                        placeholder="Note (optional)"
+                        placeholder="Message (optional)"
                         value={note}
                         onChange={(e) => setNote(e.target.value)}
                         rows={2}
@@ -404,15 +531,7 @@ export default function DonatePage() {
                       />
                     </div>
 
-                    <label
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '10px',
-                        cursor: 'pointer',
-                        userSelect: 'none',
-                      }}
-                    >
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
                       <span
                         onClick={() => setAnonymous((v) => !v)}
                         style={{
@@ -439,13 +558,7 @@ export default function DonatePage() {
                     </label>
                   </div>
 
-                  <div
-                    style={{
-                      height: '1px',
-                      background: 'rgba(255,255,255,0.06)',
-                      margin: '0 0 16px',
-                    }}
-                  />
+                  <div style={{ height: '1px', background: 'rgba(255,255,255,0.06)', margin: '0 0 16px' }} />
 
                   <div className="mb-5 space-y-2">
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -465,20 +578,57 @@ export default function DonatePage() {
                         Secure
                       </span>
                     </div>
-                    <div
-                      style={{
-                        height: '1px',
-                        background: 'rgba(255,255,255,0.06)',
-                        margin: '4px 0',
-                      }}
-                    />
+                    <div style={{ height: '1px', background: 'rgba(255,255,255,0.06)', margin: '4px 0' }} />
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ fontSize: '13px', fontWeight: 700, color: '#F5F3EE' }}>Total</span>
                       <span style={{ fontSize: '15px', fontWeight: 700, color: '#C8A75E' }}>
-                        ${amountValid ? numericAmount.toLocaleString('en-US', { minimumFractionDigits: 2 }) : '—'}
+                        ${amountValid ? numericAmount.toLocaleString('en-US', { minimumFractionDigits: 2 }) : '—'}{frequency === 'monthly' && <span style={{ fontSize: '11px', fontWeight: 400 }}>/mo</span>}
                       </span>
                     </div>
                   </div>
+
+                  <div
+                    style={{
+                      background: 'rgba(255,255,255,0.03)',
+                      border: '1px solid rgba(200,167,94,0.1)',
+                      borderRadius: '10px',
+                      padding: '12px',
+                      marginBottom: '14px',
+                    }}
+                  >
+                    <p style={{ fontSize: '11px', color: '#AAB0D6', lineHeight: 1.5 }}>
+                      Payments are securely processed by Prime Logic Solutions LLC, the registered billing and payment operations entity for Sufi Science Center.
+                    </p>
+                  </div>
+
+                  <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', cursor: 'pointer', marginBottom: '16px' }}>
+                    <span
+                      onClick={() => setTermsAccepted((v) => !v)}
+                      style={{
+                        width: '18px',
+                        height: '18px',
+                        borderRadius: '5px',
+                        border: termsAccepted ? 'none' : '1.5px solid rgba(200,167,94,0.3)',
+                        background: termsAccepted ? '#C8A75E' : 'transparent',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        marginTop: '2px',
+                        transition: 'all 0.15s',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {termsAccepted && (
+                        <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                          <path d="M1 4L3.5 6.5L9 1" stroke="#0B0F2A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      )}
+                    </span>
+                    <span style={{ fontSize: '11px', color: '#AAB0D6', lineHeight: 1.5 }}>
+                      I agree to the Terms, Privacy Policy, and Refund/Cancellation Policy.
+                    </span>
+                  </label>
 
                   {error && (
                     <div
@@ -499,10 +649,10 @@ export default function DonatePage() {
 
                   <button
                     type="submit"
-                    disabled={loading || !amountValid}
+                    disabled={loading || !amountValid || !termsAccepted}
                     style={{
                       width: '100%',
-                      background: loading || !amountValid ? 'rgba(200,167,94,0.5)' : '#C8A75E',
+                      background: loading || !amountValid || !termsAccepted ? 'rgba(200,167,94,0.5)' : '#C8A75E',
                       color: '#0B0F2A',
                       border: 'none',
                       borderRadius: '12px',
@@ -510,14 +660,12 @@ export default function DonatePage() {
                       fontSize: '14px',
                       fontWeight: 700,
                       letterSpacing: '0.04em',
-                      cursor: loading || !amountValid ? 'not-allowed' : 'pointer',
+                      cursor: loading || !amountValid || !termsAccepted ? 'not-allowed' : 'pointer',
                       transition: 'all 0.2s ease',
                       fontFamily: 'inherit',
-                      position: 'relative',
-                      overflow: 'hidden',
                     }}
                   >
-                    {loading ? 'Securing your donation…' : 'Donate Securely'}
+                    {loading ? 'Processing...' : frequency === 'one_time' ? 'Donate Securely' : 'Start Monthly Support'}
                   </button>
 
                   <p
