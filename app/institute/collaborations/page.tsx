@@ -152,7 +152,7 @@ function CollaborationsPageContent() {
 
   return (
     <div className="min-h-screen pt-20 bg-[#0B0F2A]">
-      <ObservatoryHero subtitle="Institutional Engagement" title="Institutional and Project Collaborations" description="We collaborate with academic institutions, research groups, policy organizations, and aligned initiatives advancing the integration of scientific inquiry and inner development." />
+      <ObservatoryHero subtitle="Institutional Engagement" title="Institutional and" title2='Project Collaborations' description="We collaborate with academic institutions, research groups, policy organizations, and aligned initiatives advancing the integration of scientific inquiry and inner development." />
       <section className="py-16 px-4 observatory-gradient">
         <div className="max-w-6xl mx-auto space-y-12">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
