@@ -8,7 +8,7 @@ export function middleware(req: NextRequest) {
     const token = req.cookies.get('ssc_user_token')?.value;
 
     if (!token) {
-      const signinUrl = new URL('/auth/signin', req.url);
+      const signinUrl = new URL('/auth/signin', "https://sufisciencecenter.info");
       signinUrl.searchParams.set('callbackUrl', pathname);
       return NextResponse.redirect(signinUrl);
     }
