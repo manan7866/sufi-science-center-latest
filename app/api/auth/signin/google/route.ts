@@ -41,16 +41,11 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
   try {
-    // Always prefer env URL (important for Docker / production)
     const baseUrl =
       process.env.NEXTAUTH_URL || 'http://localhost:3010';
 
-    // Where user should land after login
-    const callbackUrl = `${baseUrl}/auth/google/callback`;
-
-    // NextAuth Google sign-in endpoint
     const signInUrl = `${baseUrl}/api/auth/signin/google?callbackUrl=${encodeURIComponent(
-      callbackUrl
+      baseUrl
     )}`;
 
     return NextResponse.redirect(signInUrl);
