@@ -37,6 +37,7 @@ jobs:
           target: runner
           build-args: |
             NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
+            GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
 
       - name: Deploy to server
         uses: appleboy/ssh-action@master
