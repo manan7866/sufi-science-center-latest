@@ -4,8 +4,10 @@ import { signUserToken } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
   try {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    
     // Get session directly from NextAuth session endpoint
-    const sessionRes = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/auth/session?json=1`, {
+    const sessionRes = await fetch(`${appUrl}/api/auth/session?json=1`, {
       headers: {
         cookie: req.headers.get('cookie') || '',
       },

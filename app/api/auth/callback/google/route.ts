@@ -2,11 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { signUserToken } from '@/lib/auth';
 
+function getAppUrl(req: NextRequest): string {
+  return process.env.NEXT_PUBLIC_APP_URL || req.nextUrl.origin;
+}
+
 export async function GET(req: NextRequest) {
   try {
     const code = req.nextUrl.searchParams.get('code');
     const error = req.nextUrl.searchParams.get('error');
-    const origin = req.nextUrl.origin;
+    const appUrl = getAppUrl(req);
 
     if (error) {
       console.error('Google OAuth error:', error);
@@ -25,7 +29,7 @@ export async function GET(req: NextRequest) {
         code,
         client_id: process.env.GOOGLE_CLIENT_ID || '',
         client_secret: process.env.GOOGLE_CLIENT_SECRET || '',
-        redirect_uri: `${origin}/api/auth/callback/google`,
+        redirect_uri: `${appUrl}/api/auth/callback/google`,
         grant_type: 'authorization_code',
       }),
     });
@@ -80,7 +84,7 @@ export async function GET(req: NextRequest) {
     const token = signUserToken({ userId: user.id, email: user.email });
 
     // Redirect to callback page with token and user data
-    const callbackUrl = new URL('/auth/google/callback', origin);
+    const callbackUrl = new URL('/auth/google/callback', appUrl);
     callbackUrl.searchParams.set('token', token);
     callbackUrl.searchParams.set('user', JSON.stringify({
       id: user.id,
