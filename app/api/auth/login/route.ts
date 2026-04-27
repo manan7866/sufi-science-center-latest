@@ -41,7 +41,7 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!user.isVerified) {
+    if (!user.isVerified || !user.password) {
       return NextResponse.json(
         { error: 'Please verify your email before signing in.', unverified: true, email: user.email },
         { status: 403 }

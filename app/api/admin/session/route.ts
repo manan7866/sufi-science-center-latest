@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid credentials or not an admin.' }, { status: 401 });
     }
 
-    const valid = await comparePassword(password, user.password);
+    const valid = user.password && await comparePassword(password, user.password);
     if (!valid) {
       return NextResponse.json({ error: 'Invalid credentials.' }, { status: 401 });
     }

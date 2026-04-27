@@ -16,6 +16,7 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   register: (name: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  signInWithGoogle: () => Promise<void>;
   verifyOTP: (email: string, otp: string) => Promise<{ success: boolean; error?: string }>;
   resendOTP: (email: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
@@ -112,6 +113,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const signInWithGoogle = useCallback(async () => {
+    const searchParams = new URLSearchParams({
+      redirect: '/portal',
+    });
+    window.location.href = `/api/auth/signin/google?${searchParams.toString()}`;
+  }, []);
+
   const verifyOTP = useCallback(async (email: string, otp: string) => {
     try {
       const res = await fetch('/api/auth/verify-otp', {
@@ -154,7 +162,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [router]);
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, verifyOTP, resendOTP, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, signInWithGoogle, verifyOTP, resendOTP, logout }}>
       {children}
     </AuthContext.Provider>
   );

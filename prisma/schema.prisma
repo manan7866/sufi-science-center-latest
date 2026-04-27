@@ -22,7 +22,8 @@ model User {
   id         String    @id @default(uuid())
   name       String
   email      String    @unique
-  password   String
+  password   String?
+  googleId   String?   @unique @map("google_id")
   avatarUrl  String?   @map("avatar_url")
   bio        String?
   location   String?
@@ -38,6 +39,7 @@ model User {
   @@index([email])
   @@index([isVerified])
   @@index([isAdmin])
+  @@index([googleId])
   @@map("users")
 }
 

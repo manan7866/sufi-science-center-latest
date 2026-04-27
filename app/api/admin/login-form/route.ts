@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
 
     const user = await prisma.user.findUnique({ where: { email } });
 
-    if (!user || !user.isAdmin || !(await comparePassword(password, user.password))) {
+    if (!user || !user.isAdmin || !user.password || !(await comparePassword(password, user.password))) {
       const loginUrl = new URL('/admin/login', req.url);
       loginUrl.searchParams.set('error', 'Invalid email or password.');
       return NextResponse.redirect(loginUrl);
