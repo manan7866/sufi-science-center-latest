@@ -60,3 +60,50 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('userId');
+    const email = searchParams.get('email');
+    
+    if (!userId && !email) {
+      return NextResponse.json(
+        { error: 'User ID or email is required.' },
+        { status: 400 }
+      );
+    }
+
+    const where = userId ? { userId } : { email: email?.toLowerCase() };
+
+    const applications = await prisma.interviewApplication.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        affiliation: true,
+        fieldOfWork: true,
+        summary: true,
+        themes: true,
+        links: true,
+        availability: true,
+        status: true,
+        adminNotes: true,
+        scheduledAt: true,
+        scheduledTime: true,
+        videoLink: true,
+        createdAt: true,
+      },
+    });
+
+    return NextResponse.json({ applications });
+  } catch (error) {
+    console.error('[interview-applications GET]', error);
+    return NextResponse.json(
+      { error: 'Internal server error.' },
+      { status: 500 }
+    );
+  }
+}

@@ -397,6 +397,7 @@ model CollaborationProposal {
 model ConferenceSubmission {
   id                   String    @id @default(uuid())
   userId               String?   @map("user_id")
+  conferenceId         String?   @map("conference_id")
   trackingCode         String    @unique @map("tracking_code")
   submissionType       String    @map("submission_type")
   title                String
@@ -413,15 +414,17 @@ model ConferenceSubmission {
   adminNotes           String?   @map("admin_notes")
   reviewerDecision     String?   @map("reviewer_decision")
   reviewedBy           String?   @map("reviewed_by")
-  reviewedAt           DateTime? @map("reviewed_at")
-  submittedAt          DateTime  @default(now()) @map("submitted_at")
+  reviewedAt           DateTime?  @map("reviewed_at")
+  submittedAt         DateTime  @default(now()) @map("submitted_at")
   createdAt            DateTime  @default(now()) @map("created_at")
   updatedAt            DateTime  @updatedAt @map("updated_at")
+  conference           ConferenceEvent? @relation(fields: [conferenceId], references: [id], onDelete: SetNull)
 
   @@index([status])
   @@index([presenterEmail])
   @@index([trackingCode])
   @@index([userId])
+  @@index([conferenceId])
   @@map("conference_submissions")
 }
 
@@ -581,20 +584,23 @@ model InspiringInterview {
 }
 
 model InterviewApplication {
-  id           String   @id @default(uuid())
-  userId       String?  @map("user_id")
+  id           String    @id @default(uuid())
+  userId       String?   @map("user_id")
   name         String
   email        String
   affiliation  String?
-  fieldOfWork  String   @map("field_of_work")
+  fieldOfWork  String    @map("field_of_work")
   summary      String
-  themes       String[] @default([])
-  links        Json     @default("[]")
-  availability Json     @default("{}")
-  status       String   @default("pending")
-  adminNotes   String?  @map("admin_notes")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  themes       String[]  @default([])
+  links        Json      @default("[]")
+  availability Json      @default("{}")
+  status       String    @default("pending")
+  adminNotes   String?   @map("admin_notes")
+  scheduledAt  DateTime? @map("scheduled_at")
+  scheduledTime String?  @map("scheduled_time")
+  videoLink   String?   @map("video_link")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
 
   @@index([status])
   @@index([email])
@@ -1089,6 +1095,7 @@ model ConferenceEvent {
   status                String    @default("draft")
   createdAt             DateTime  @default(now()) @map("created_at")
   updatedAt             DateTime  @updatedAt @map("updated_at")
+  submissions          ConferenceSubmission[]
 
   @@map("conference_events")
 }

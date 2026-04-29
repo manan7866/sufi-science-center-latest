@@ -1,12 +1,51 @@
 'use client';
 
-import { useState } from 'react';
-import { CircleUser as UserCircle, Briefcase, BookOpen, MessageSquare, CircleCheck as CheckCircle, Users, FlaskConical, Heart, Building, ArrowLeft, ArrowRight, ChevronRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { CircleUser as UserCircle, Briefcase, BookOpen, MessageSquare, CircleCheck as CheckCircle, Users, FlaskConical, Heart, Building, ArrowLeft, ArrowRight, ChevronRight, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth-context';
 import FormGuard from '@/components/form-guard';
 import { interviewApplicationSchema } from '@/lib/validations';
 import { sanitizeInput } from '@/lib/sanitization';
+
+const stepValidationRules: Record<number, (form: FormData) => Record<string, string>> = {
+  1: (form) => {
+    const errors: Record<string, string> = {};
+    if (!form.name || form.name.trim().length < 2) {
+      errors.name = 'Name must be at least 2 characters';
+    }
+    if (!form.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      errors.email = 'Valid email is required';
+    }
+    if (!form.location || form.location.trim().length < 2) {
+      errors.location = 'Location is required';
+    }
+    return errors;
+  },
+  2: (form) => {
+    const errors: Record<string, string> = {};
+    if (!form.field_of_work || form.field_of_work.trim().length < 2) {
+      errors.field_of_work = 'Field of work is required';
+    }
+    if (!form.experience || form.experience.trim().length === 0) {
+      errors.experience = 'Years of experience is required';
+    }
+    if (!form.background || form.background.trim().length < 50) {
+      errors.background = 'Background must be at least 50 characters';
+    }
+    return errors;
+  },
+  3: (form) => {
+    const errors: Record<string, string> = {};
+    if (!form.wisdom || form.wisdom.trim().length < 100) {
+      errors.wisdom = 'Reflection must be at least 100 characters';
+    }
+    if (!form.themes || form.themes.trim().length < 10) {
+      errors.themes = 'Themes are required';
+    }
+    return errors;
+  },
+};
 
 const ELIGIBLE = [
   { icon: FlaskConical, label: 'Researchers & Scientists' },
@@ -59,6 +98,42 @@ export function ApplyPage() {
     field_of_work: '', experience: '', background: '',
     wisdom: '', themes: '', website: '', publications: '', availability: '',
   });
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    if (user) {
+      if (user.name && !form.name) {
+        setForm(f => ({ ...f, name: user.name }));
+      }
+      if (user.email && !form.email) {
+        setForm(f => ({ ...f, email: user.email }));
+      }
+    }
+  }, [user, form.name, form.email]);
+
+  const validateStep = (currentStep: number): boolean => {
+    setFieldErrors({});
+    
+    const validateFn = stepValidationRules[currentStep];
+    if (validateFn) {
+      const errors = validateFn(form);
+      if (Object.keys(errors).length > 0) {
+        setFieldErrors(errors);
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const handleNextStep = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (validateStep(step)) {
+      setStep(step + 1);
+    }
+  };
 
   const set = (key: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [key]: e.target.value }));
@@ -215,9 +290,9 @@ export function ApplyPage() {
 
       <div className="max-w-3xl mx-auto px-4 py-14">
         <div className="mb-10">
-          <div className="flex items-center gap-0 mb-3">
+          <div className="flex items-center  gap-0 mb-3">
             {STEPS.map((s, i) => (
-              <div key={i} className="flex items-center flex-1">
+              <div key={i} className="flex items-center   flex-1">
                 <div className={`w-9 h-9 rounded-full flex items-center justify-center border transition-all flex-shrink-0 ${
                   step > i + 1 ? 'border-[#C8A75E] bg-[#C8A75E]/20 text-[#C8A75E]' :
                   step === i + 1 ? 'border-[#C8A75E] bg-[#C8A75E]/12 text-[#C8A75E]' :
@@ -225,13 +300,14 @@ export function ApplyPage() {
                 }`}>
                   <s.icon className="w-4 h-4" />
                 </div>
+                
                 {i < STEPS.length - 1 && (
-                  <div className={`flex-1 h-px transition-all ${step > i + 1 ? 'bg-[#C8A75E]/40' : 'bg-white/5'}`} />
+                  <div className={`flex-1 h-px  transition-all ${step > i + 1 ? 'bg-[#C8A75E]/40' : 'bg-white/5'}`} />
                 )}
               </div>
             ))}
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between w-[79%]">
             {STEPS.map((s, i) => (
               <span key={i} className={`text-[10px] transition-colors ${step === i + 1 ? 'text-[#C8A75E]/70' : 'text-[#AAB0D6]/25'}`}>{s.label}</span>
             ))}
@@ -261,11 +337,13 @@ export function ApplyPage() {
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label className={labelClass}>Full Name *</label>
-                      <input required value={form.name} onChange={set('name')} className={inputClass} placeholder="Your full name" />
+                      <input value={form.name} onChange={set('name')} className={`${inputClass} ${fieldErrors.name ? 'border-red-500/50' : ''}`} placeholder="Your full name" />
+                      {fieldErrors.name && <p className="text-xs text-red-400/70 mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{fieldErrors.name}</p>}
                     </div>
                     <div>
                       <label className={labelClass}>Email *</label>
-                      <input required type="email" value={form.email} onChange={set('email')} className={inputClass} placeholder="your@email.com" />
+                      <input type="email" value={form.email} onChange={set('email')} className={`${inputClass} ${fieldErrors.email ? 'border-red-500/50' : ''}`} placeholder="your@email.com" />
+                      {fieldErrors.email && <p className="text-xs text-red-400/70 mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{fieldErrors.email}</p>}
                     </div>
                   </div>
                   <div className="grid md:grid-cols-2 gap-4">
@@ -275,7 +353,8 @@ export function ApplyPage() {
                     </div>
                     <div>
                       <label className={labelClass}>Location</label>
-                      <input value={form.location} onChange={set('location')} className={inputClass} placeholder="City, Country" />
+                      <input value={form.location} onChange={set('location')} className={`${inputClass} ${fieldErrors.location ? 'border-red-500/50' : ''}`} placeholder="City, Country" />
+                      {fieldErrors.location && <p className="text-xs text-red-400/70 mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{fieldErrors.location}</p>}
                     </div>
                   </div>
                 </>
@@ -285,15 +364,17 @@ export function ApplyPage() {
                 <>
                   <div>
                     <label className={labelClass}>Field of Work *</label>
-                    <input required value={form.field_of_work} onChange={set('field_of_work')} className={inputClass} placeholder="e.g., Neuroscience, Psychology, Education, Social Work" />
+                    <input value={form.field_of_work} onChange={set('field_of_work')} className={`${inputClass} ${fieldErrors.field_of_work ? 'border-red-500/50' : ''}`} placeholder="e.g., Neuroscience, Psychology, Education, Social Work" />
+                    {fieldErrors.field_of_work && <p className="text-xs text-red-400/70 mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{fieldErrors.field_of_work}</p>}
                   </div>
                   <div>
                     <label className={labelClass}>Years of Experience *</label>
-                    <input required type="number" value={form.experience} onChange={set('experience')} className={inputClass} placeholder="e.g., 10" />
+                    <input type="number" value={form.experience} onChange={set('experience')} className={inputClass} placeholder="e.g., 10" />
                   </div>
                   <div>
                     <label className={labelClass}>Relevant Research or Practice *</label>
-                    <textarea required rows={4} value={form.background} onChange={set('background')} className={inputClass} placeholder="Briefly describe your relevant work, research, or practice..." />
+                    <textarea rows={4} value={form.background} onChange={set('background')} className={`${inputClass} ${fieldErrors.background ? 'border-red-500/50' : ''}`} placeholder="Briefly describe your relevant work, research, or practice..." />
+                    {fieldErrors.background && <p className="text-xs text-red-400/70 mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{fieldErrors.background}</p>}
                   </div>
                 </>
               )}
@@ -302,11 +383,12 @@ export function ApplyPage() {
                 <>
                   <div>
                     <label className={labelClass}>How does Sufi wisdom shape your work? *</label>
-                    <textarea required rows={5} value={form.wisdom} onChange={set('wisdom')} className={inputClass} placeholder="Share specific examples of how Sufi practice or principles inform your professional work..." />
+                    <textarea rows={5} value={form.wisdom} onChange={set('wisdom')} className={`${inputClass} ${fieldErrors.wisdom ? 'border-red-500/50' : ''}`} placeholder="Share specific examples of how Sufi practice or principles inform your professional work..." />
+                    {fieldErrors.wisdom && <p className="text-xs text-red-400/70 mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{fieldErrors.wisdom}</p>}
                   </div>
                   <div>
                     <label className={labelClass}>What themes would you like to discuss? *</label>
-                    <textarea required rows={4} value={form.themes} onChange={set('themes')} className={inputClass} placeholder="What specific topics, questions, or insights would you like to explore in the interview?" />
+                    <textarea rows={4} value={form.themes} onChange={set('themes')} className={inputClass} placeholder="What specific topics, questions, or insights would you like to explore in the interview?" />
                   </div>
                 </>
               )}
@@ -344,7 +426,7 @@ export function ApplyPage() {
               ) : <div />}
 
               {step < 4 ? (
-                <button type="button" onClick={() => setStep(step + 1)} className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-[#C8A75E]/12 border border-[#C8A75E]/25 text-[#C8A75E] hover:bg-[#C8A75E]/18 hover:border-[#C8A75E]/40 transition-all">
+                <button type="button" onClick={handleNextStep} className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-[#C8A75E]/12 border border-[#C8A75E]/25 text-[#C8A75E] hover:bg-[#C8A75E]/18 hover:border-[#C8A75E]/40 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
                   Next Step
                   <ArrowRight className="w-4 h-4" />
                 </button>

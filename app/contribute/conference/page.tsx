@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,6 +13,20 @@ import { useAuth } from '@/lib/auth-context';
 import FormGuard from '@/components/form-guard';
 import { conferenceSubmissionSchema } from '@/lib/validations';
 import { sanitizeInput } from '@/lib/sanitization';
+
+interface ConferenceEvent {
+  id: string;
+  title: string;
+  subtitle: string | null;
+  theme: string | null;
+  description: string | null;
+  start_date: string | null;
+  end_date: string | null;
+  location: string | null;
+  location_detail: string | null;
+  submission_deadline: string | null;
+  is_open_for_submissions: boolean;
+}
 
 type Step = 1 | 2 | 3 | 4;
 
@@ -96,6 +110,7 @@ function StepIndicator({ current }: { current: Step }) {
 export function ConferenceSubmissionPage() {
   const { user } = useAuth();
   const [step, setStep] = useState<Step>(1);
+  const [conference, setConference] = useState<ConferenceEvent | null>(null);
   const [form, setForm] = useState<FormData>({
     submission_type: '',
     title: '',
@@ -112,6 +127,32 @@ export function ConferenceSubmissionPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [trackingCode, setTrackingCode] = useState('');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    async function fetchConference() {
+      try {
+        const res = await fetch('/api/conference');
+        const data = await res.json();
+        if (data.conference) {
+          setConference(data.conference);
+        }
+      } catch (err) {
+        console.error('Failed to fetch conference:', err);
+      }
+    }
+    fetchConference();
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      if (user.name && !form.presenter_name) {
+        setForm(prev => ({ ...prev, presenter_name: user.name }));
+      }
+      if (user.email && !form.presenter_email) {
+        setForm(prev => ({ ...prev, presenter_email: user.email }));
+      }
+    }
+  }, [user]);
 
   function set(field: keyof FormData, value: unknown) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -134,8 +175,11 @@ export function ConferenceSubmissionPage() {
 
   function canAdvance(): boolean {
     if (step === 1) return !!form.submission_type;
-    if (step === 2)
-      return !!form.presenter_name && !!form.presenter_email && !!form.presenter_affiliation && !!form.presenter_bio;
+    if (step === 2) {
+      const name = user?.name || form.presenter_name;
+      const email = user?.email || form.presenter_email;
+      return !!name && !!email && !!form.presenter_affiliation && !!form.presenter_bio;
+    }
     if (step === 3) return !!form.title && !!form.abstract;
     return form.terms_accepted;
   }
@@ -188,6 +232,7 @@ export function ConferenceSubmissionPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId: user?.id || null,
+          conferenceId: conference?.id || null,
           submissionType: sanitizedData.submissionType,
           title: sanitizedData.title,
           abstract: sanitizedData.abstract,
@@ -258,7 +303,7 @@ export function ConferenceSubmissionPage() {
             Back to Contribute
           </Link>
           <div className="text-right">
-            <p className="text-xs text-[#AAB0D6]/40 uppercase tracking-widest">Sufi Science Symposium 2026</p>
+            <p className="text-xs text-[#AAB0D6]/40 uppercase tracking-widest">{conference ? conference.title : 'Sufi Science Symposium 2026'}</p>
             <p className="text-sm font-serif text-[#F5F3EE]">Conference Submission Portal</p>
           </div>
         </div>
@@ -266,12 +311,12 @@ export function ConferenceSubmissionPage() {
 
       <div className="max-w-3xl mx-auto px-4 py-12">
         <div className="text-center mb-10">
-          <p className="text-xs tracking-[0.25em] text-[#C8A75E]/60 uppercase mb-2">Featured Event · 2026</p>
+          <p className="text-xs tracking-[0.25em] text-[#C8A75E]/60 uppercase mb-2">Featured Event {conference?.start_date ? `· ${new Date(conference.start_date).getFullYear()}` : '· 2026'}</p>
           <h1 className="text-3xl md:text-4xl font-serif font-bold text-[#F5F3EE] mb-3">
             Submit Your Paper
           </h1>
           <p className="text-[#AAB0D6] max-w-lg mx-auto text-sm leading-relaxed">
-            Step {step} of 4 — complete all sections to register your submission to the Sufi Science Symposium.
+            Step {step} of 4 — complete all sections to register your submission to the {conference?.title || 'Sufi Science Symposium'}.
           </p>
         </div>
 

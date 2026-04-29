@@ -34,6 +34,7 @@ const NAV_GROUPS: NavGroup[] = [
       { label: 'Volunteer', href: '/institute/volunteer', icon: HandHeart },
       { label: 'Research Collaboration', href: '/institute/collaborations', icon: FlaskConical },
       { label: 'Conference Registration', href: '/contribute', icon: CalendarDays },
+      { label: 'Interview Applications', href: '/portal/interview-applications', icon: FlaskConical },
     ],
   },
   {

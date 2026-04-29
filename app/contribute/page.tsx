@@ -2,6 +2,7 @@ import { ObservatoryHero } from '@/components/observatory-hero';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { PrismaClient } from '@prisma/client';
 import {
   FileText,
   MessageSquare,
@@ -20,6 +21,33 @@ export const metadata = {
   title: "Contribute | Sufi Science Center",
   description: "Submit your research, dialogues, practices, and creative works to the Sufi Science Center knowledge ecosystem.",
 };
+
+const prisma = new PrismaClient();
+
+async function getActiveConference() {
+  try {
+    // Try to find published + active first
+    let conference = await prisma.conferenceEvent.findFirst({
+      where: {
+        status: 'published',
+        isActive: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    
+    // If none found, show any recent conference (for testing)
+    if (!conference) {
+      conference = await prisma.conferenceEvent.findFirst({
+        orderBy: { createdAt: 'desc' },
+      });
+    }
+    
+    return conference;
+  } catch (err) {
+    console.error('[contribute] getActiveConference error:', err);
+    return null;
+  }
+}
 
 const submissionTypes = [
   {
@@ -80,7 +108,15 @@ const submissionTypes = [
   },
 ];
 
-export default function ContributePage() {
+export default async function ContributePage() {
+  const conference = await getActiveConference();
+
+  function formatDate(date: Date | string | null | undefined): string {
+    if (!date) return 'TBA';
+    const d = new Date(date);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
   return (
     <div className="min-h-screen">
       <ObservatoryHero
@@ -135,6 +171,7 @@ export default function ContributePage() {
       </section>
 
       <section className="py-16 px-4 bg-gradient-to-br from-[#C8A75E]/10 via-[#8B7355]/5 to-transparent border-y border-[#C8A75E]/20">
+        {conference ? (
         <div className="max-w-5xl mx-auto">
           <Card className="glass-panel border-[#C8A75E]/40 bg-[#C8A75E]/5">
             <CardHeader>
@@ -142,33 +179,34 @@ export default function ContributePage() {
                 <div className="bg-[#C8A75E] text-[#0B0F2A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
                   Featured Event
                 </div>
-                <div className="text-[#C8A75E] text-sm font-mono">2026</div>
+                <div className="text-[#C8A75E] text-sm font-mono">{conference.startDate ? new Date(conference.startDate).getFullYear() : '2026'}</div>
               </div>
               <CardTitle className="text-3xl text-[#F5F3EE] mb-3">
-                Conference Registration
+                {conference.title}
               </CardTitle>
               <CardDescription className="text-[#AAB0D6] text-lg leading-relaxed">
-                Submit your paper for the upcoming <span className="text-[#C8A75E] font-semibold">Sufi Science Symposium</span>
+                {conference.subtitle || `Submit your paper for the upcoming ${conference.title}`}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4 mb-6">
+                {conference.description && (
                 <p className="text-[#AAB0D6] leading-relaxed">
-                  Join leading scholars, practitioners, and researchers at our flagship symposium exploring consciousness,
-                  contemplative science, and the integration of spiritual wisdom with modern inquiry.
+                  {conference.description}
                 </p>
+                )}
                 <div className="grid md:grid-cols-3 gap-4">
                   <div className="bg-[#0B0F2A]/40 rounded-lg p-4 border border-white/10">
                     <p className="text-xs text-[#AAB0D6] uppercase tracking-wide mb-1">Paper Deadline</p>
-                    <p className="text-[#F5F3EE] font-semibold">TBA</p>
+                    <p className="text-[#F5F3EE] font-semibold">{formatDate(conference.submissionDeadline)}</p>
                   </div>
                   <div className="bg-[#0B0F2A]/40 rounded-lg p-4 border border-white/10">
                     <p className="text-xs text-[#AAB0D6] uppercase tracking-wide mb-1">Event Date</p>
-                    <p className="text-[#F5F3EE] font-semibold">TBA</p>
+                    <p className="text-[#F5F3EE] font-semibold">{conference.startDate ? `${formatDate(conference.startDate)}${conference.endDate ? ` - ${formatDate(conference.endDate)}` : ''}` : 'TBA'}</p>
                   </div>
                   <div className="bg-[#0B0F2A]/40 rounded-lg p-4 border border-white/10">
                     <p className="text-xs text-[#AAB0D6] uppercase tracking-wide mb-1">Location</p>
-                    <p className="text-[#F5F3EE] font-semibold">TBA</p>
+                    <p className="text-[#F5F3EE] font-semibold">{conference.location || 'TBA'}</p>
                   </div>
                 </div>
               </div>
@@ -188,6 +226,31 @@ export default function ContributePage() {
             </CardContent>
           </Card>
         </div>
+        ) : (
+        <div className="max-w-5xl mx-auto">
+          <Card className="glass-panel border-white/10 bg-white/5">
+            <CardHeader className="text-center py-8">
+              <div className="bg-[#C8A75E]/20 text-[#C8A75E] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider inline-block mx-auto mb-4">
+                Upcoming Event
+              </div>
+              <CardTitle className="text-3xl text-[#F5F3EE] mb-3">
+                Conference Event Coming Soon
+              </CardTitle>
+              <CardDescription className="text-[#AAB0D6] text-lg leading-relaxed max-w-xl mx-auto">
+                We are preparing our next symposium on consciousness, contemplative science, and spiritual wisdom. 
+                Check back soon for registration details and submission deadlines.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex justify-center pb-4">
+              <Link href="/contribute/conference/status">
+                <Button variant="outline" className="border-[#C8A75E]/30 text-[#C8A75E] hover:bg-[#C8A75E]/10 py-6 px-6 text-sm font-medium">
+                  Track Submission
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+        )}
       </section>
 
       <section className="py-24 px-4">

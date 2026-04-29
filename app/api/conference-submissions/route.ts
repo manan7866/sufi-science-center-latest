@@ -24,6 +24,7 @@ export async function POST(request: Request) {
 
     const body = await request.json();
     const {
+      conferenceId,
       submissionType,
       title,
       abstract: abstractText,
@@ -44,6 +45,19 @@ export async function POST(request: Request) {
       );
     }
 
+    // Find active conference if not provided
+    let finalConferenceId = conferenceId;
+    if (!finalConferenceId) {
+      const activeConference = await prisma.conferenceEvent.findFirst({
+        where: {
+          status: 'published',
+          isActive: true,
+        },
+        orderBy: { createdAt: 'desc' },
+      });
+      finalConferenceId = activeConference?.id || null;
+    }
+
     let trackingCode = '';
     let unique = false;
     while (!unique) {
@@ -57,6 +71,7 @@ export async function POST(request: Request) {
     const submission = await prisma.conferenceSubmission.create({
       data: {
         userId: body.userId || null,
+        conferenceId: finalConferenceId,
         trackingCode,
         submissionType,
         title,
@@ -105,6 +120,9 @@ export async function GET(request: Request) {
         trackingCode,
         presenterEmail: email.toLowerCase().trim(),
       },
+      include: {
+        conference: true,
+      },
     });
 
     if (!submission) {
@@ -128,6 +146,11 @@ export async function GET(request: Request) {
       reviewer_decision: submission.reviewerDecision,
       submitted_at: submission.submittedAt?.toISOString(),
       updated_at: submission.updatedAt?.toISOString(),
+      conference: submission.conference ? {
+        id: submission.conference.id,
+        title: submission.conference.title,
+        location_detail: submission.conference.locationDetail,
+      } : null,
     };
 
     return NextResponse.json(mapped);

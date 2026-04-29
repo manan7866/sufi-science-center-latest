@@ -22,6 +22,11 @@ interface Submission {
   reviewer_decision: string | null;
   submitted_at: string;
   updated_at: string;
+  conference?: {
+    id: string;
+    title: string;
+    location_detail: string | null;
+  } | null;
 }
 
 const STATUS_CONFIG: Record<SubmissionStatus, { label: string; color: string; bg: string; icon: React.ComponentType<{ className?: string }> }> = {
@@ -104,7 +109,7 @@ export default function ConferenceStatusPage() {
             Back to Contribute
           </Link>
           <div className="text-right">
-            <p className="text-xs text-[#AAB0D6]/40 uppercase tracking-widest">Sufi Science Symposium 2026</p>
+            <p className="text-xs text-[#AAB0D6]/40 uppercase tracking-widest">{submission?.conference?.title || 'Sufi Science Symposium 2026'}</p>
             <p className="text-sm font-serif text-[#F5F3EE]">Submission Status</p>
           </div>
         </div>
@@ -229,6 +234,13 @@ export default function ConferenceStatusPage() {
               <div className="glass-panel border border-[#C8A75E]/20 rounded-2xl p-5 bg-[#C8A75E]/3">
                 <p className="text-[10px] text-[#C8A75E]/60 uppercase tracking-widest mb-2">Reviewer Notes</p>
                 <p className="text-sm text-[#AAB0D6] leading-relaxed">{submission.admin_notes}</p>
+              </div>
+            )}
+
+            {submission.status === 'accepted' && submission.conference?.location_detail && (
+              <div className="glass-panel border border-emerald-500/20 rounded-2xl p-5 bg-emerald-500/3">
+                <p className="text-[10px] text-emerald-400/60 uppercase tracking-widest mb-2">Location Details</p>
+                <p className="text-sm text-[#F5F3EE] leading-relaxed">{submission.conference.location_detail}</p>
               </div>
             )}
 
