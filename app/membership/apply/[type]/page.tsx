@@ -310,7 +310,7 @@ export function MembershipApplyPage() {
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label className={LABEL}>Full Name <span className="text-red-400/70">*</span></label>
-                  <input className={INPUT} value={form.full_name} onChange={(e) => set('full_name', e.target.value)} placeholder="Your full name" />
+                  <input className={`${INPUT} ${errors.full_name ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/30' : ''}`} value={form.full_name} onChange={(e) => set('full_name', e.target.value)} placeholder="Your full name" />
                   {errors.full_name && <p className="text-xs text-red-400/70 mt-1">{errors.full_name}</p>}
                 </div>
                 <div>
@@ -320,18 +320,18 @@ export function MembershipApplyPage() {
               </div>
               <div>
                 <label className={LABEL}>Email Address <span className="text-red-400/70">*</span></label>
-                <input className={INPUT} type="email" value={form.email} onChange={(e) => set('email', e.target.value)} placeholder="you@institution.edu" />
+                <input className={`${INPUT} ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/30' : ''}`} type="email" value={form.email} onChange={(e) => set('email', e.target.value)} placeholder="you@institution.edu" />
                 {errors.email && <p className="text-xs text-red-400/70 mt-1">{errors.email}</p>}
               </div>
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label className={LABEL}>Location <span className="text-red-400/70">*</span></label>
-                  <input className={INPUT} value={form.location} onChange={(e) => set('location', e.target.value)} placeholder="City, Country" />
+                  <input className={`${INPUT} ${errors.location ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/30' : ''}`} value={form.location} onChange={(e) => set('location', e.target.value)} placeholder="City, Country" />
                   {errors.location && <p className="text-xs text-red-400/70 mt-1">{errors.location}</p>}
                 </div>
                 <div>
                   <label className={LABEL}>Institutional Affiliation <span className="text-red-400/70">*</span></label>
-                  <input className={INPUT} value={form.affiliation} onChange={(e) => set('affiliation', e.target.value)} placeholder="University, Institute, or Independent" />
+                  <input className={`${INPUT} ${errors.affiliation ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/30' : ''}`} value={form.affiliation} onChange={(e) => set('affiliation', e.target.value)} placeholder="University, Institute, or Independent" />
                   {errors.affiliation && <p className="text-xs text-red-400/70 mt-1">{errors.affiliation}</p>}
                 </div>
               </div>
@@ -368,7 +368,7 @@ export function MembershipApplyPage() {
               <div>
                 <label className={LABEL}>Short Biography <span className="text-red-400/70">*</span></label>
                 <textarea
-                  className={`${TEXTAREA} min-h-[120px]`}
+                  className={`${TEXTAREA} min-h-[120px] ${errors.bio ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/30' : ''}`}
                   value={form.bio}
                   onChange={(e) => set('bio', e.target.value)}
                   placeholder="Briefly describe your academic or scholarly background (minimum 50 characters)"
@@ -430,13 +430,13 @@ export function MembershipApplyPage() {
               <h2 className="text-base font-serif font-semibold text-[#F5F3EE] mb-5">Academic Focus</h2>
               <div>
                 <label className={LABEL}>Academic Focus Area <span className="text-red-400/70">*</span></label>
-                <input className={INPUT} value={form.academic_focus} onChange={(e) => set('academic_focus', e.target.value)} placeholder="e.g. Sufi psychology and consciousness science" />
+                <input className={`${INPUT} ${errors.academic_focus ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/30' : ''}`} value={form.academic_focus} onChange={(e) => set('academic_focus', e.target.value)} placeholder="e.g. Sufi psychology and consciousness science" />
                 {errors.academic_focus && <p className="text-xs text-red-400/70 mt-1">{errors.academic_focus}</p>}
               </div>
               <div>
                 <label className={LABEL}>Current Research Interest <span className="text-red-400/70">*</span></label>
                 <textarea
-                  className={`${TEXTAREA} min-h-[100px]`}
+                  className={`${TEXTAREA} min-h-[100px] ${errors.research_interest ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/30' : ''}`}
                   value={form.research_interest}
                   onChange={(e) => set('research_interest', e.target.value)}
                   placeholder="Describe your current research interest and how it connects to Sufi science inquiry"
@@ -451,7 +451,7 @@ export function MembershipApplyPage() {
               <h2 className="text-base font-serif font-semibold text-[#F5F3EE] mb-5">Scholarly Record</h2>
               <div>
                 <label className={LABEL}>Years of Scholarly Engagement <span className="text-red-400/70">*</span></label>
-                <input className={INPUT} value={form.years_of_engagement} onChange={(e) => set('years_of_engagement', e.target.value)} placeholder="e.g. 12 years in Islamic philosophy and contemplative science" />
+                <input className={`${INPUT} ${errors.years_of_engagement ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/30' : ''}`} value={form.years_of_engagement} onChange={(e) => set('years_of_engagement', e.target.value)} placeholder="e.g. 12 years in Islamic philosophy and contemplative science" />
                 {errors.years_of_engagement && <p className="text-xs text-red-400/70 mt-1">{errors.years_of_engagement}</p>}
               </div>
               <div>
@@ -491,7 +491,7 @@ export function MembershipApplyPage() {
               </p>
               <div>
                 <textarea
-                  className={`${TEXTAREA} min-h-[240px]`}
+                  className={`${TEXTAREA} min-h-[240px] ${errors.statement ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/30' : ''}`}
                   value={form.statement}
                   onChange={(e) => set('statement', e.target.value)}
                   placeholder={isFellow ? 'Write your statement of contribution...' : 'Write your statement of intent...'}
@@ -551,7 +551,8 @@ export function MembershipApplyPage() {
               <button
                 type="button"
                 onClick={next}
-                className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-medium border transition-all"
+                disabled={Object.keys(errors).length > 0}
+                className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-medium border transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                 style={isFellow
                   ? { background: '#C8A75E18', borderColor: '#C8A75E4D', color: '#C8A75E' }
                   : { background: '#4A90D918', borderColor: '#4A90D94D', color: '#4A90D9' }}

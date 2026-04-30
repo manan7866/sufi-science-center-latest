@@ -127,6 +127,7 @@ export function ConferenceSubmissionPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [trackingCode, setTrackingCode] = useState('');
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     async function fetchConference() {
@@ -171,6 +172,27 @@ export function ConferenceSubmissionPage() {
 
   function removeCoPresenter(idx: number) {
     set('co_presenters', form.co_presenters.filter((_, i) => i !== idx));
+  }
+
+  function validateStep(): boolean {
+    const e: Record<string, string> = {};
+    if (step === 1) {
+      if (!form.submission_type) e.submission_type = 'Submission type is required';
+    }
+    if (step === 2) {
+      const name = user?.name || form.presenter_name;
+      const email = user?.email || form.presenter_email;
+      if (!name) e.presenter_name = 'Full name is required';
+      if (!email) e.presenter_email = 'Email is required';
+      if (!form.presenter_affiliation.trim()) e.presenter_affiliation = 'Affiliation is required';
+      if (!form.presenter_bio.trim()) e.presenter_bio = 'Bio is required';
+    }
+    if (step === 3) {
+      if (!form.title.trim()) e.title = 'Title is required';
+      if (!form.abstract.trim()) e.abstract = 'Abstract is required';
+    }
+    setFieldErrors(e);
+    return Object.keys(e).length === 0;
   }
 
   function canAdvance(): boolean {
@@ -334,17 +356,18 @@ export function ConferenceSubmissionPage() {
                 {SUBMISSION_TYPES.map((t) => (
                   <button
                     key={t.value}
-                    onClick={() => set('submission_type', t.value)}
+                    onClick={() => { set('submission_type', t.value); if (fieldErrors.submission_type) setFieldErrors(prev => ({ ...prev, submission_type: '' })); }}
                     className={`p-5 rounded-xl border text-left transition-all ${
                       form.submission_type === t.value
                         ? 'border-[#C8A75E] bg-[#C8A75E]/8 text-[#C8A75E]'
-                        : 'border-white/8 bg-white/2 text-[#AAB0D6] hover:border-white/20 hover:bg-white/4'
+                        : `${fieldErrors.submission_type ? 'border-red-500/50' : 'border-white/8'} bg-white/2 text-[#AAB0D6] hover:border-white/20 hover:bg-white/4`
                     }`}
                   >
                     <p className="font-semibold text-sm">{t.label}</p>
                   </button>
                 ))}
               </div>
+              {fieldErrors.submission_type && <p className="text-xs text-red-400 mt-2">{fieldErrors.submission_type}</p>}
 
               <div className="pt-4 p-4 rounded-xl bg-[#6B9BD1]/5 border border-[#6B9BD1]/15">
                 <p className="text-xs text-[#6B9BD1] font-semibold mb-1 uppercase tracking-wide">Deadline</p>
@@ -364,41 +387,45 @@ export function ConferenceSubmissionPage() {
                   <Label className="text-[#F5F3EE] text-sm mb-1.5 block">Full Name *</Label>
                   <Input
                     value={user?.name || form.presenter_name}
-                    onChange={(e) => set('presenter_name', e.target.value)}
+                    onChange={(e) => { set('presenter_name', e.target.value); if (fieldErrors.presenter_name) setFieldErrors(prev => ({ ...prev, presenter_name: '' })); }}
                     disabled={!!user}
-                    className={`bg-[#0D1020] border-white/10 text-[#F5F3EE] focus:border-[#C8A75E] ${user ? 'opacity-60 cursor-not-allowed' : ''}`}
+                    className={`bg-[#0D1020] border-white/10 text-[#F5F3EE] focus:border-[#C8A75E] ${user ? 'opacity-60 cursor-not-allowed' : ''} ${fieldErrors.presenter_name ? 'border-red-500 focus:border-red-500' : ''}`}
                     placeholder="Dr. Jane Smith"
                   />
+                  {fieldErrors.presenter_name && !user && <p className="text-xs text-red-400 mt-1">{fieldErrors.presenter_name}</p>}
                 </div>
                 <div>
                   <Label className="text-[#F5F3EE] text-sm mb-1.5 block">Email Address *</Label>
                   <Input
                     type="email"
                     value={user?.email || form.presenter_email}
-                    onChange={(e) => set('presenter_email', e.target.value)}
+                    onChange={(e) => { set('presenter_email', e.target.value); if (fieldErrors.presenter_email) setFieldErrors(prev => ({ ...prev, presenter_email: '' })); }}
                     disabled={!!user}
-                    className={`bg-[#0D1020] border-white/10 text-[#F5F3EE] focus:border-[#C8A75E] ${user ? 'opacity-60 cursor-not-allowed' : ''}`}
+                    className={`bg-[#0D1020] border-white/10 text-[#F5F3EE] focus:border-[#C8A75E] ${user ? 'opacity-60 cursor-not-allowed' : ''} ${fieldErrors.presenter_email ? 'border-red-500 focus:border-red-500' : ''}`}
                     placeholder="jane@university.edu"
                   />
+                  {fieldErrors.presenter_email && !user && <p className="text-xs text-red-400 mt-1">{fieldErrors.presenter_email}</p>}
                 </div>
               </div>
               <div>
                 <Label className="text-[#F5F3EE] text-sm mb-1.5 block">Institutional Affiliation *</Label>
                 <Input
                   value={form.presenter_affiliation}
-                  onChange={(e) => set('presenter_affiliation', e.target.value)}
-                  className="bg-[#0D1020] border-white/10 text-[#F5F3EE] focus:border-[#C8A75E]"
+                  onChange={(e) => { set('presenter_affiliation', e.target.value); if (fieldErrors.presenter_affiliation) setFieldErrors(prev => ({ ...prev, presenter_affiliation: '' })); }}
+                  className={`bg-[#0D1020] border-white/10 text-[#F5F3EE] focus:border-[#C8A75E] ${fieldErrors.presenter_affiliation ? 'border-red-500 focus:border-red-500' : ''}`}
                   placeholder="University or Organisation"
                 />
+                {fieldErrors.presenter_affiliation && <p className="text-xs text-red-400 mt-1">{fieldErrors.presenter_affiliation}</p>}
               </div>
               <div>
                 <Label className="text-[#F5F3EE] text-sm mb-1.5 block">Short Bio *</Label>
                 <Textarea
                   value={form.presenter_bio}
-                  onChange={(e) => set('presenter_bio', e.target.value)}
-                  className="bg-[#0D1020] border-white/10 text-[#F5F3EE] focus:border-[#C8A75E] min-h-[100px]"
+                  onChange={(e) => { set('presenter_bio', e.target.value); if (fieldErrors.presenter_bio) setFieldErrors(prev => ({ ...prev, presenter_bio: '' })); }}
+                  className={`bg-[#0D1020] border-white/10 text-[#F5F3EE] focus:border-[#C8A75E] min-h-[100px] ${fieldErrors.presenter_bio ? 'border-red-500 focus:border-red-500' : ''}`}
                   placeholder="2–3 sentences for the symposium programme (max 200 words)"
                 />
+                {fieldErrors.presenter_bio && <p className="text-xs text-red-400 mt-1">{fieldErrors.presenter_bio}</p>}
               </div>
 
               <div className="border-t border-white/5 pt-5">
@@ -457,20 +484,22 @@ export function ConferenceSubmissionPage() {
                 <Label className="text-[#F5F3EE] text-sm mb-1.5 block">Submission Title *</Label>
                 <Input
                   value={form.title}
-                  onChange={(e) => set('title', e.target.value)}
-                  className="bg-[#0D1020] border-white/10 text-[#F5F3EE] focus:border-[#C8A75E]"
+                  onChange={(e) => { set('title', e.target.value); if (fieldErrors.title) setFieldErrors(prev => ({ ...prev, title: '' })); }}
+                  className={`bg-[#0D1020] border-white/10 text-[#F5F3EE] focus:border-[#C8A75E] ${fieldErrors.title ? 'border-red-500 focus:border-red-500' : ''}`}
                   placeholder="Full title of your paper or proposal"
                 />
+                {fieldErrors.title && <p className="text-xs text-red-400 mt-1">{fieldErrors.title}</p>}
               </div>
               <div>
                 <Label className="text-[#F5F3EE] text-sm mb-1.5 block">Abstract *</Label>
                 <Textarea
                   value={form.abstract}
-                  onChange={(e) => set('abstract', e.target.value)}
-                  className="bg-[#0D1020] border-white/10 text-[#F5F3EE] focus:border-[#C8A75E] min-h-[140px]"
+                  onChange={(e) => { set('abstract', e.target.value); if (fieldErrors.abstract) setFieldErrors(prev => ({ ...prev, abstract: '' })); }}
+                  className={`bg-[#0D1020] border-white/10 text-[#F5F3EE] focus:border-[#C8A75E] min-h-[140px] ${fieldErrors.abstract ? 'border-red-500 focus:border-red-500' : ''}`}
                   placeholder="150–300 words summarising your research, methodology, and key findings"
                 />
                 <p className="text-[10px] text-[#AAB0D6]/30 mt-1">{form.abstract.split(/\s+/).filter(Boolean).length} words</p>
+                {fieldErrors.abstract && <p className="text-xs text-red-400 mt-1">{fieldErrors.abstract}</p>}
               </div>
               <div>
                 <Label className="text-[#F5F3EE] text-sm mb-1.5 block">Keywords</Label>
@@ -589,7 +618,7 @@ export function ConferenceSubmissionPage() {
             {step > 1 && (
               <Button
                 variant="ghost"
-                onClick={() => setStep((s) => (s - 1) as Step)}
+                onClick={() => { setFieldErrors({}); setStep((s) => (s - 1) as Step); }}
                 className="text-[#AAB0D6] hover:text-[#F5F3EE]"
                 disabled={isSubmitting}
               >
@@ -606,8 +635,11 @@ export function ConferenceSubmissionPage() {
             </Link>
             {step < 4 ? (
               <Button
-                onClick={() => setStep((s) => (s + 1) as Step)}
-                disabled={!canAdvance()}
+                onClick={() => {
+                  setFieldErrors({});
+                  if (validateStep()) setStep((s) => (s + 1) as Step);
+                }}
+                disabled={!canAdvance() || Object.keys(fieldErrors).length > 0}
                 className="bg-[#C8A75E] text-[#0B0F2A] hover:bg-[#C8A75E]/90 disabled:opacity-40 font-semibold px-6"
               >
                 Continue
