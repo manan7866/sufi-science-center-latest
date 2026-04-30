@@ -337,12 +337,12 @@ export function ApplyPage() {
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label className={labelClass}>Full Name *</label>
-                      <input value={form.name} onChange={set('name')} className={`${inputClass} ${fieldErrors.name ? 'border-red-500/50' : ''}`} placeholder="Your full name" />
+                      <input value={form.name} onChange={set('name')} className={`${inputClass} opacity-60 cursor-not-allowed ${fieldErrors.name ? 'border-red-500/50' : ''}`} placeholder="Your full name" />
                       {fieldErrors.name && <p className="text-xs text-red-400/70 mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{fieldErrors.name}</p>}
                     </div>
                     <div>
                       <label className={labelClass}>Email *</label>
-                      <input type="email" value={form.email} onChange={set('email')} className={`${inputClass} ${fieldErrors.email ? 'border-red-500/50' : ''}`} placeholder="your@email.com" />
+                      <input type="email" value={form.email} onChange={set('email')} className={`${inputClass} opacity-60 cursor-not-allowed ${fieldErrors.email ? 'border-red-500/50' : ''}`} placeholder="your@email.com" />
                       {fieldErrors.email && <p className="text-xs text-red-400/70 mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{fieldErrors.email}</p>}
                     </div>
                   </div>

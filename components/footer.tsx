@@ -238,7 +238,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-[#F5F3EE] font-semibold text-sm uppercase tracking-wider mb-4">
+            <h3 className="text-[#F5F3EE] w-max font-semibold text-sm uppercase tracking-wider mb-4">
               Applied Civilization
             </h3>
             <ul className="space-y-3">
