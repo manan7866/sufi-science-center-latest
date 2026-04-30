@@ -28,11 +28,15 @@ export async function POST(request: Request) {
 
     const { email } = validationResult.data;
 
+    console.log('[MEMBERSHIP STATUS] Searching for email:', email);
+
     // Find all membership applications for this email
     const applications = await prisma.membershipApplication.findMany({
       where: { email },
       orderBy: { createdAt: 'desc' },
     });
+
+    console.log('[MEMBERSHIP STATUS] Found:', applications.length, 'applications');
 
     return NextResponse.json({
       success: true,

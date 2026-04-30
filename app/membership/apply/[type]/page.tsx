@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Check, ChevronRight, ChevronLeft, Upload, X, Loader as Loader2, GraduationCap, Award, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -86,6 +86,17 @@ export function MembershipApplyPage() {
 
   const steps = stepLabels(type);
   const isFellow = type === 'fellow';
+
+  useEffect(() => {
+    if (user) {
+      setForm((p) => ({
+        ...p,
+        full_name: user.name || p.full_name,
+        email: user.email || p.email,
+        display_name: user.name || p.display_name,
+      }));
+    }
+  }, [user]);
 
   const set = (k: keyof FormData, v: string) => {
     setForm((p) => ({ ...p, [k]: v }));

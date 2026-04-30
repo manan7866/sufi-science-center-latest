@@ -35,29 +35,35 @@ function MembershipStatusForm() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const lookup = useCallback(async (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!email.trim()) return;
     setLoading(true);
     setSearched(false);
+    setError(null);
     try {
       const res = await fetch('/api/membership-status', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email.trim() }),
       });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || 'Lookup failed');
-      }
       const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Lookup failed');
+        setApplications([]);
+        setSearched(true);
+        return;
+      }
       setApplications(data.applications ?? []);
+      setSearched(true);
     } catch (err: any) {
+      setError('Something went wrong. Please try again.');
       setApplications([]);
+      setSearched(true);
     } finally {
       setLoading(false);
-      setSearched(true);
     }
   }, [email]);
 
@@ -96,7 +102,13 @@ function MembershipStatusForm() {
           </div>
         </form>
 
-        {searched && applications.length === 0 && (
+        {error && (
+          <div className="mb-6 bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-sm text-red-400">
+            {error}
+          </div>
+        )}
+
+        {searched && applications.length === 0 && !error && (
           <div className="text-center py-12 border border-white/5 rounded-2xl bg-white/2">
             <p className="text-[#AAB0D6]/40 text-sm mb-3">No applications found for this email address.</p>
             <Link href="/membership" className="text-sm text-[#C8A75E]/70 hover:text-[#C8A75E] transition-colors inline-flex items-center gap-1.5">

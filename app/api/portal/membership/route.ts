@@ -103,6 +103,8 @@ export async function POST(request: Request) {
       },
     });
 
+    console.log('[MEMBERSHIP SUBMIT] Created application with email:', application.email, 'id:', application.id);
+
     return NextResponse.json({
       success: true,
       id: application.id,

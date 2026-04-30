@@ -53,6 +53,7 @@ function CollaborationsPageContent() {
   const [scope, setScope] = useState('');
   const [timeline, setTimeline] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
   if (user) {
@@ -61,19 +62,38 @@ function CollaborationsPageContent() {
   }
 }, [user]);
 
+  function validateField(fieldName: string, value: string, schemaField: any): string | null {
+    try {
+      schemaField.parse(value);
+      return null;
+    } catch (err: any) {
+      if (err.errors && err.errors.length > 0) {
+        return err.errors[0].message;
+      }
+      return 'Invalid value';
+    }
+  }
+
+  function handleStepChange(newStep: number) {
+    setFieldErrors({});
+    setError(null);
+    setStep(newStep);
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setFieldErrors({});
 
     // Validate form data with Zod
     const validationResult = collaborationProposalSchema.safeParse({
       organizationName,
       contactName: user?.name || contactName,
-      contactEmail: user?.email || contactEmail,
+      email: user?.email || contactEmail,
       organizationType,
       collaborationType,
-      proposalSummary,
+      proposalTitle: proposalSummary,
       description: proposalDetails,
       timeline,
       expectedOutcomes: scope,
@@ -81,7 +101,14 @@ function CollaborationsPageContent() {
     });
 
     if (!validationResult.success) {
-      const errors = validationResult.error.errors.map(err => err.message).join(', ');
+      const fieldErrMap: Record<string, string> = {};
+      validationResult.error.errors.forEach((err) => {
+        const path = err.path.join('.');
+        fieldErrMap[path] = err.message;
+      });
+      setFieldErrors(fieldErrMap);
+      
+      const errors = Object.values(fieldErrMap).join(', ');
       setError(errors);
       setLoading(false);
       return;
@@ -197,8 +224,8 @@ function CollaborationsPageContent() {
                     <h3 className="text-lg font-semibold text-[#F5F3EE]">Organization Information</h3>
                     <div>
                       <Label htmlFor="orgType" className="text-[#F5F3EE]">Organization Type *</Label>
-                      <Select value={organizationType} onValueChange={setOrganizationType}>
-                        <SelectTrigger className="mt-2 h-11 bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border border-white/10 rounded-xl px-4 text-sm focus:outline-none focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30 shadow-inner shadow-black/20 transition-all"><SelectValue placeholder="Select organization type" /></SelectTrigger>
+                      <Select value={organizationType} onValueChange={(val) => { setOrganizationType(val); if (fieldErrors.organizationType) setFieldErrors(prev => ({ ...prev, organizationType: '' })); }}>
+                        <SelectTrigger className={`mt-2 h-11 bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border rounded-xl px-4 text-sm focus:outline-none shadow-inner shadow-black/20 transition-all ${fieldErrors.organizationType ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/30' : 'border-white/10 focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30'}`}><SelectValue placeholder="Select organization type" /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="academic">Academic Institution</SelectItem>
                           <SelectItem value="research">Research Organization</SelectItem>
@@ -207,19 +234,31 @@ function CollaborationsPageContent() {
                           <SelectItem value="other">Other</SelectItem>
                         </SelectContent>
                       </Select>
+                      {fieldErrors.organizationType && (
+                        <p className="mt-1 text-sm text-red-400">{fieldErrors.organizationType}</p>
+                      )}
                     </div>
                     <div>
                       <Label className="text-[#F5F3EE]">Organization Name *</Label>
-                      <Input type="text" required value={organizationName} onChange={(e) => setOrganizationName(e.target.value)}  className="mt-2 h-11 bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border border-white/10 rounded-xl px-4 text-sm focus:outline-none focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30 shadow-inner shadow-black/20 transition-all" />
+                      <Input type="text" required value={organizationName} onChange={(e) => { setOrganizationName(e.target.value); if (fieldErrors.organizationName) setFieldErrors(prev => ({ ...prev, organizationName: '' })); }} className={`mt-2 h-11 bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border rounded-xl px-4 text-sm focus:outline-none shadow-inner shadow-black/20 transition-all ${fieldErrors.organizationName ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/30' : 'border-white/10 focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30'}`} />
+                      {fieldErrors.organizationName && (
+                        <p className="mt-1 text-sm text-red-400">{fieldErrors.organizationName}</p>
+                      )}
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <Label className="text-[#F5F3EE]">Contact Name *</Label>
-                        <Input type="text" required value={user?.name || contactName} onChange={(e) => setContactName(e.target.value)} disabled={!!user} className={`mt-2 h-11 ${user ? 'bg-white/3 border-white/5 text-[#AAB0D6]/50 cursor-not-allowed' : 'bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border border-white/10 rounded-xl px-4 text-sm focus:outline-none focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30 shadow-inner shadow-black/20 transition-all'}`} />
+                        <Input type="text" required value={user?.name || contactName} onChange={(e) => { setContactName(e.target.value); if (fieldErrors.contactName) setFieldErrors(prev => ({ ...prev, contactName: '' })); }} disabled={!!user} className={`mt-2 h-11 ${user ? 'bg-white/3 border-white/5 text-[#AAB0D6]/50 cursor-not-allowed' : `bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border rounded-xl px-4 text-sm focus:outline-none shadow-inner shadow-black/20 transition-all ${fieldErrors.contactName ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/30' : 'border-white/10 focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30'}`}`} />
+                        {fieldErrors.contactName && !user && (
+                          <p className="mt-1 text-sm text-red-400">{fieldErrors.contactName}</p>
+                        )}
                       </div>
                       <div>
                         <Label className="text-[#F5F3EE]">Contact Email *</Label>
-                        <Input type="email" required value={user?.email || contactEmail} onChange={(e) => setContactEmail(e.target.value)} disabled={!!user} className={`mt-2 h-11 ${user ? 'bg-white/3 border-white/5 text-[#AAB0D6]/50 cursor-not-allowed' : 'bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border border-white/10 rounded-xl px-4 text-sm focus:outline-none focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30 shadow-inner shadow-black/20 transition-all'}`} />
+                        <Input type="email" required value={user?.email || contactEmail} onChange={(e) => { setContactEmail(e.target.value); if (fieldErrors.email) setFieldErrors(prev => ({ ...prev, email: '' })); }} disabled={!!user} className={`mt-2 h-11 ${user ? 'bg-white/3 border-white/5 text-[#AAB0D6]/50 cursor-not-allowed' : `bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border rounded-xl px-4 text-sm focus:outline-none shadow-inner shadow-black/20 transition-all ${fieldErrors.email ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/30' : 'border-white/10 focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30'}`}`} />
+                        {fieldErrors.email && !user && (
+                          <p className="mt-1 text-sm text-red-400">{fieldErrors.email}</p>
+                        )}
                       </div>
                     </div>
                     <div>
@@ -234,8 +273,8 @@ function CollaborationsPageContent() {
                     <h3 className="text-lg font-semibold text-[#F5F3EE]">Proposal Summary</h3>
                     <div>
                       <Label className="text-[#F5F3EE]">Collaboration Type *</Label>
-                      <Select value={collaborationType} onValueChange={setCollaborationType}>
-                        <SelectTrigger className="mt-2 h-11 bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border border-white/10 rounded-xl px-4 text-sm focus:outline-none focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30 shadow-inner shadow-black/20 transition-all"><SelectValue placeholder="Select collaboration type" /></SelectTrigger>
+                      <Select value={collaborationType} onValueChange={(val) => { setCollaborationType(val); if (fieldErrors.collaborationType) setFieldErrors(prev => ({ ...prev, collaborationType: '' })); }}>
+                        <SelectTrigger className={`mt-2 h-11 bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border rounded-xl px-4 text-sm focus:outline-none shadow-inner shadow-black/20 transition-all ${fieldErrors.collaborationType ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/30' : 'border-white/10 focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30'}`}><SelectValue placeholder="Select collaboration type" /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="research">Academic Research</SelectItem>
                           <SelectItem value="dialogue">Joint Dialogue Series</SelectItem>
@@ -245,10 +284,16 @@ function CollaborationsPageContent() {
                           <SelectItem value="translation">Translation and Archival</SelectItem>
                         </SelectContent>
                       </Select>
+                      {fieldErrors.collaborationType && (
+                        <p className="mt-1 text-sm text-red-400">{fieldErrors.collaborationType}</p>
+                      )}
                     </div>
                     <div>
                       <Label className="text-[#F5F3EE]">Proposal Summary *</Label>
-                      <Textarea required value={proposalSummary} onChange={(e) => setProposalSummary(e.target.value)} className="mt-2 min-h-[100px] w-full bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30 shadow-inner shadow-black/20 transition-all" placeholder="Provide a concise summary of the proposed collaboration (2-3 sentences)" />
+                      <Textarea required value={proposalSummary} onChange={(e) => { setProposalSummary(e.target.value); if (fieldErrors.proposalTitle) setFieldErrors(prev => ({ ...prev, proposalTitle: '' })); }} className={`mt-2 min-h-[100px] w-full bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border rounded-xl px-4 py-3 text-sm focus:outline-none shadow-inner shadow-black/20 transition-all ${fieldErrors.proposalTitle ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/30' : 'border-white/10 focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30'}`} placeholder="Provide a concise summary of the proposed collaboration (2-3 sentences)" />
+                      {fieldErrors.proposalTitle && (
+                        <p className="mt-1 text-sm text-red-400">{fieldErrors.proposalTitle}</p>
+                      )}
                     </div>
                   </div>
                 )}
@@ -258,11 +303,17 @@ function CollaborationsPageContent() {
                     <h3 className="text-lg font-semibold text-[#F5F3EE]">Scope and Deliverables</h3>
                     <div>
                       <Label className="text-[#F5F3EE]">Detailed Proposal *</Label>
-                      <Textarea required value={proposalDetails} onChange={(e) => setProposalDetails(e.target.value)} className="mt-2 min-h-[200px] w-full bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30 shadow-inner shadow-black/20 transition-all" placeholder="Provide a detailed description of the collaboration, including objectives, methodology, and expected outcomes..." />
+                      <Textarea required value={proposalDetails} onChange={(e) => { setProposalDetails(e.target.value); if (fieldErrors.description) setFieldErrors(prev => ({ ...prev, description: '' })); }} className={`mt-2 min-h-[200px] w-full bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border rounded-xl px-4 py-3 text-sm focus:outline-none shadow-inner shadow-black/20 transition-all ${fieldErrors.description ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/30' : 'border-white/10 focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30'}`} placeholder="Provide a detailed description of the collaboration, including objectives, methodology, and expected outcomes..." />
+                      {fieldErrors.description && (
+                        <p className="mt-1 text-sm text-red-400">{fieldErrors.description}</p>
+                      )}
                     </div>
                     <div>
                       <Label className="text-[#F5F3EE]">Scope of Work *</Label>
-                      <Textarea required value={scope} onChange={(e) => setScope(e.target.value)} className="mt-2 min-h-[120px] w-full bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30 shadow-inner shadow-black/20 transition-all" placeholder="Define the specific scope, responsibilities, and deliverables for each party..." />
+                      <Textarea required value={scope} onChange={(e) => { setScope(e.target.value); if (fieldErrors.expectedOutcomes) setFieldErrors(prev => ({ ...prev, expectedOutcomes: '' })); }} className={`mt-2 min-h-[120px] w-full bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border rounded-xl px-4 py-3 text-sm focus:outline-none shadow-inner shadow-black/20 transition-all ${fieldErrors.expectedOutcomes ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/30' : 'border-white/10 focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30'}`} placeholder="Define the specific scope, responsibilities, and deliverables for each party..." />
+                      {fieldErrors.expectedOutcomes && (
+                        <p className="mt-1 text-sm text-red-400">{fieldErrors.expectedOutcomes}</p>
+                      )}
                     </div>
                   </div>
                 )}
@@ -272,7 +323,10 @@ function CollaborationsPageContent() {
                     <h3 className="text-lg font-semibold text-[#F5F3EE]">Timeline and Resources</h3>
                     <div>
                       <Label className="text-[#F5F3EE]">Proposed Timeline *</Label>
-                      <Textarea required value={timeline} onChange={(e) => setTimeline(e.target.value)} className="mt-2 min-h-[120px] w-full bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30 shadow-inner shadow-black/20 transition-all" placeholder="Outline the proposed timeline, key milestones, and duration..." />
+                      <Textarea required value={timeline} onChange={(e) => { setTimeline(e.target.value); if (fieldErrors.timeline) setFieldErrors(prev => ({ ...prev, timeline: '' })); }} className={`mt-2 min-h-[120px] w-full bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border rounded-xl px-4 py-3 text-sm focus:outline-none shadow-inner shadow-black/20 transition-all ${fieldErrors.timeline ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/30' : 'border-white/10 focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30'}`} placeholder="Outline the proposed timeline, key milestones, and duration..." />
+                      {fieldErrors.timeline && (
+                        <p className="mt-1 text-sm text-red-400">{fieldErrors.timeline}</p>
+                      )}
                     </div>
                     <div className="bg-[#C8A75E]/10 border border-[#C8A75E]/30 rounded-lg p-6">
                       <h4 className="font-semibold text-[#F5F3EE] mb-3">Review Information</h4>
@@ -287,9 +341,9 @@ function CollaborationsPageContent() {
                 )}
 
                 <div className="flex gap-4">
-                  {step > 1 && (<Button type="button" variant="outline" onClick={() => setStep(step - 1)} className="flex-1">Previous</Button>)}
+                  {step > 1 && (<Button type="button" variant="outline" onClick={() => handleStepChange(step - 1)} className="flex-1">Previous</Button>)}
                   {step < 4 ? (
-                    <Button type="button" onClick={() => setStep(step + 1)} className="flex-1 bg-[#C8A75E] hover:bg-[#C8A75E]/90 text-[#0B0F2A]" disabled={(step === 1 && (!organizationType || !organizationName || !contactName || !contactEmail)) || (step === 2 && (!collaborationType || !proposalSummary)) || (step === 3 && (!proposalDetails || !scope))}>Next</Button>
+                    <Button type="button" onClick={() => handleStepChange(step + 1)} className="flex-1 bg-[#C8A75E] hover:bg-[#C8A75E]/90 text-[#0B0F2A]" disabled={(step === 1 && (!organizationType || !organizationName || !contactName || !contactEmail)) || (step === 2 && (!collaborationType || !proposalSummary)) || (step === 3 && (!proposalDetails || !scope))}>Next</Button>
                   ) : (
                     <Button type="submit" disabled={loading || !timeline} className="flex-1 bg-[#C8A75E] hover:bg-[#C8A75E]/90 text-[#0B0F2A]">{loading ? 'Submitting...' : 'Submit Proposal'}</Button>
                   )}
