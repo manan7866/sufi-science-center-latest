@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { getAdminTokenFromRequest } from '@/lib/auth';
+import { getAdminTokenFromRequest, hasCmsPermission } from '@/lib/auth';
 
 function auth(req: NextRequest) {
   const admin = getAdminTokenFromRequest(req);
-  if (!admin) return null;
+  if (!admin || !hasCmsPermission(admin)) return null;
   return admin;
 }
 

@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { getAdminTokenFromRequest } from '@/lib/auth';
+import { getAdminTokenFromRequest, hasFinancePermission } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
   const admin = getAdminTokenFromRequest(req);
-  if (!admin) return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+  if (!admin || !hasFinancePermission(admin)) return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
 
   const status = req.nextUrl.searchParams.get('status');
   const search = req.nextUrl.searchParams.get('search');

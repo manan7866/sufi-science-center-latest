@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAdminToken } from '@/lib/auth';
+import { verifyAdminToken, hasApplicationPermission } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 
 function checkAuth(req: NextRequest) {
   const token = req.cookies.get('admin_token')?.value;
   if (!token) return null;
   const payload = verifyAdminToken(token);
-  if (!payload || payload.role !== 'admin') return null;
+  if (!payload || !hasApplicationPermission(payload, 'collaboration')) return null;
   return payload;
 }
 

@@ -9,6 +9,7 @@ export interface AdminTokenPayload {
   adminId: string;
   email: string;
   role: string;
+  permissions?: string[];
 }
 
 export interface UserTokenPayload {
@@ -24,9 +25,9 @@ export function verifyAdminToken(token: string): AdminTokenPayload | null {
   }
 }
 
-export function signAdminToken(params: { email: string; adminId: string; role?: string }): string {
-  const { email, adminId, role = 'admin' } = params;
-  return jwt.sign({ adminId, email, role }, JWT_SECRET, { expiresIn: '7d' });
+export function signAdminToken(params: { email: string; adminId: string; role?: string; permissions?: string[] }): string {
+  const { email, adminId, role = 'admin', permissions = [] } = params;
+  return jwt.sign({ adminId, email, role, permissions }, JWT_SECRET, { expiresIn: '7d' });
 }
 
 export function comparePassword(password: string, hash: string): boolean {
@@ -71,6 +72,25 @@ export function getOTPExpiry(): Date {
 }
 
 export function isOTPExpired(expiry: Date | null): boolean {
-  if (!expiry) return true;
-  return new Date() > expiry;
+  if (!expiry) return true
+  return new Date() > expiry
+}
+
+export function hasApplicationPermission(
+  payload: AdminTokenPayload,
+  requiredPage: string
+): boolean {
+  if (payload.role === 'admin') return true
+  if (payload.role === 'application_handler') {
+    return payload.permissions?.includes(requiredPage) || false
+  }
+  return false
+}
+
+export function hasFinancePermission(payload: AdminTokenPayload): boolean {
+  return payload.role === 'admin' || payload.role === 'finance_handler'
+}
+
+export function hasCmsPermission(payload: AdminTokenPayload): boolean {
+  return payload.role === 'admin' || payload.role === 'cms_handler'
 }

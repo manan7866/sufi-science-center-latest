@@ -75,7 +75,15 @@ export async function GET(req: NextRequest) {
       ...mapActivity(recentMentorship, 'Mentorship', '#E8856A'),
     ].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()).slice(0, 12);
 
-    return NextResponse.json({ modules, totalDonations, donationCount: completedDonations.length, totalUsers: userCount, recentActivity });
+    return NextResponse.json({
+      modules,
+      totalDonations,
+      donationCount: completedDonations.length,
+      totalUsers: userCount,
+      recentActivity,
+      userRole: admin.role,
+      userPermissions: admin.permissions || [],
+    });
   } catch (err) {
     console.error('[admin/dashboard]', err);
     return NextResponse.json({ error: 'Internal error.' }, { status: 500 });
