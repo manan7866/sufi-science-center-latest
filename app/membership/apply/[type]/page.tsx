@@ -551,7 +551,7 @@ export function MembershipApplyPage() {
               <button
                 type="button"
                 onClick={next}
-                disabled={Object.keys(errors).length > 0}
+                disabled={Object.values(errors).some(Boolean)}
                 className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-medium border transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                 style={isFellow
                   ? { background: '#C8A75E18', borderColor: '#C8A75E4D', color: '#C8A75E' }

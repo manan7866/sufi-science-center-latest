@@ -483,12 +483,10 @@ export const membershipApplicationSchema = z.object({
     .optional()
     .transform((val) => val ? stripHtmlAndScripts(val) : ''),
 }).refine((data) => {
-  // Scholar type validation
-  if (data.academicFocus && data.researchInterests) {
-    return data.academicFocus.length >= 50 && data.researchInterests.length >= 50;
+  if (data.academicFocus && data.academicFocus.length > 0 && data.researchInterests && data.researchInterests.length > 0) {
+    return true;
   }
-  // Fellow type validation
-  if (data.yearsOfEngagement) {
+  if (data.yearsOfEngagement && data.yearsOfEngagement.length > 0) {
     return true;
   }
   return false;
