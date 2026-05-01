@@ -94,6 +94,42 @@ export const resendOtpSchema = z.object({
 });
 
 /**
+ * Forgot Password form validation
+ */
+export const forgotPasswordSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Invalid email address')
+    .regex(emailRegex, 'Invalid email format')
+    .max(254, 'Email is too long')
+    .transform((val) => val.trim().toLowerCase()),
+});
+
+/**
+ * Reset Password form validation
+ */
+export const resetPasswordSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Invalid email address')
+    .transform((val) => val.trim().toLowerCase()),
+  otp: z
+    .string()
+    .length(6, 'OTP must be 6 digits')
+    .regex(/^\d{6}$/, 'OTP must contain only numbers'),
+  password: z
+    .string()
+    .min(6, 'Password must be at least 6 characters')
+    .max(128, 'Password is too long')
+    .refine(
+      (val) => /[a-z]/.test(val) && /[A-Z]/.test(val) && /\d/.test(val),
+      'Password must contain uppercase, lowercase, and number'
+    ),
+});
+
+/**
  * Contact form validation
  */
 export const contactFormSchema = z.object({

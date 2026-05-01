@@ -61,6 +61,16 @@ export const RateLimits = {
     windowMs: 60 * 60 * 1000, // 3 OTP resends per hour
     message: 'Too many resend requests. Please wait before requesting another OTP.',
   },
+  AUTH_FORGOT_PASSWORD: {
+    max: 3,
+    windowMs: 60 * 60 * 1000, // 3 forgot password requests per hour
+    message: 'Too many password reset requests. Please try again later.',
+  },
+  AUTH_RESET_PASSWORD: {
+    max: 10,
+    windowMs: 15 * 60 * 1000, // 10 reset attempts per 15 minutes
+    message: 'Too many reset attempts. Please try again later.',
+  },
 
   // Form submission endpoints
   FORM_SUBMISSION: {

@@ -1,11 +1,11 @@
 'use client';
 
 import { Suspense, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth-context';
 import { Button } from '@/components/ui/button';
-import { Eye, EyeOff, Loader2, Mail, Lock, LogIn } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Mail, Lock, LogIn, CheckCircle } from 'lucide-react';
 
 const InputField = ({ icon: Icon, type, value, onChange, placeholder, label, rightElement, ...props }: any) => (
   <div>
@@ -28,7 +28,9 @@ const InputField = ({ icon: Icon, type, value, onChange, placeholder, label, rig
 function SignInForm() {
   const { login, signInWithGoogle } = useAuth();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const redirect = searchParams.get('redirect') || '/portal';
+  const resetSuccess = searchParams.get('reset') === 'success';
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -103,6 +105,13 @@ function SignInForm() {
             <h2 className="text-2xl font-serif font-semibold text-[#F5F3EE] mb-2">Sign in to your account</h2>
             <p className="text-sm text-[#AAB0D6]/60">Enter your credentials to continue</p>
           </div>
+
+          {resetSuccess && (
+            <div className="mb-6 p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-sm flex items-start gap-2">
+              <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+              <span>Your password has been reset successfully. Please sign in with your new password.</span>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <InputField
@@ -190,6 +199,11 @@ function SignInForm() {
             Don't have an account?{' '}
             <Link href="/auth/signup" className="text-[#C8A75E] hover:text-[#D4B56D] font-medium transition-colors">
               Create an account
+            </Link>
+          </p>
+          <p className="mt-2 text-center text-sm">
+            <Link href="/auth/forgot-password" className="text-[#AAB0D6]/40 hover:text-[#C8A75E] transition-colors">
+              Forgot your password?
             </Link>
           </p>
         </div>

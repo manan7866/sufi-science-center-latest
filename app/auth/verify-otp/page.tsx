@@ -1,16 +1,18 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth } from '@/lib/auth-context';
-import { Button } from '@/components/ui/button';
 import { Loader2, Shield, Mail, RefreshCw, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 function VerifyOTPForm() {
   const searchParams = useSearchParams();
-  const { verifyOTP, resendOTP } = useAuth();
+  const router = useRouter();
   const email = searchParams.get('email') || '';
+  const type = searchParams.get('type'); // 'reset' for password reset
+  const isResetFlow = type === 'reset';
+
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
@@ -33,7 +35,6 @@ function VerifyOTPForm() {
     newOtp[index] = value.slice(-1);
     setOtp(newOtp);
 
-    // Auto-focus next input
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
@@ -66,31 +67,65 @@ function VerifyOTPForm() {
     }
 
     setLoading(true);
-    const result = await verifyOTP(email, otpStr);
-    setLoading(false);
 
-    if (result.success) {
-      setSuccess(true);
-      setTimeout(() => {
-        window.location.href = '/auth/signin';
-      }, 2000);
-    } else {
-      setError(result.error || 'Verification failed. Please try again.');
+    try {
+      if (isResetFlow) {
+        // For reset flow, just redirect to reset password page with OTP
+        setSuccess(true);
+        setTimeout(() => {
+          router.push(`/auth/reset-password?email=${encodeURIComponent(email)}&otp=${otpStr}`);
+        }, 1500);
+      } else {
+        // Original signup verification flow
+        const response = await fetch('/api/auth/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, otp: otpStr }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Verification failed');
+        }
+
+        setSuccess(true);
+        setTimeout(() => {
+          window.location.href = '/auth/signin';
+        }, 2000);
+      }
+    } catch (err: any) {
+      setError(err.message || 'Verification failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleResend = async () => {
     setError('');
     setResending(true);
-    const result = await resendOTP(email);
-    setResending(false);
 
-    if (result.success) {
+    try {
+      const endpoint = isResetFlow ? '/api/auth/forgot-password' : '/api/auth/resend-otp';
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to resend OTP.');
+      }
+
       setCountdown(60);
       setOtp(['', '', '', '', '', '']);
       inputRefs.current[0]?.focus();
-    } else {
-      setError(result.error || 'Failed to resend OTP.');
+    } catch (err: any) {
+      setError(err.message || 'Failed to resend OTP.');
+    } finally {
+      setResending(false);
     }
   };
 
@@ -98,11 +133,11 @@ function VerifyOTPForm() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0B0F2A] px-4">
         <div className="text-center">
-          <p className="text-[#AAB0D6] mb-4">No email provided. Please sign up again.</p>
-          <Link href="/auth/signup">
+          <p className="text-[#AAB0D6] mb-4">No email provided. Please try again.</p>
+          <Link href={isResetFlow ? "/auth/forgot-password" : "/auth/signup"}>
             <Button className="bg-[#C8A75E] hover:bg-[#C8A75E]/90 text-[#0B0F2A]">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Go to Sign Up
+              {isResetFlow ? 'Go to Forgot Password' : 'Go to Sign Up'}
             </Button>
           </Link>
         </div>
@@ -123,12 +158,23 @@ function VerifyOTPForm() {
             <span className="text-xl font-bold text-[#C8A75E]">SSC</span>
           </div>
           <h1 className="text-4xl font-serif font-bold text-[#F5F3EE] mb-6 leading-tight">
-            Verify Your<br />
-            <span className="text-gradient">Email Address</span>
+            {isResetFlow ? (
+              <>
+                Verify Your<br />
+                <span className="text-gradient">Reset Code</span>
+              </>
+            ) : (
+              <>
+                Verify Your<br />
+                <span className="text-gradient">Email Address</span>
+              </>
+            )}
           </h1>
           <p className="text-[#AAB0D6]/70 text-base leading-relaxed mb-12">
-            We've sent a 6-digit verification code to your email. This helps us ensure
-            the security and authenticity of your account.
+            {isResetFlow
+              ? "We've sent a 6-digit verification code to your email. Enter it below to reset your password."
+              : "We've sent a 6-digit verification code to your email. This helps us ensure the security and authenticity of your account."
+            }
           </p>
           <div className="space-y-4">
             {[
@@ -149,11 +195,11 @@ function VerifyOTPForm() {
       <div className="flex-1 flex items-center justify-center px-6 py-12 lg:px-12">
         <div className="w-full max-w-md">
           <Link
-            href="/auth/signup"
+            href={isResetFlow ? "/auth/forgot-password" : "/auth/signup"}
             className="inline-flex items-center gap-2 text-sm text-[#AAB0D6]/50 hover:text-[#C8A75E] transition-colors mb-10"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to sign up
+            {isResetFlow ? 'Back to Forgot Password' : 'Back to sign up'}
           </Link>
 
           {success ? (
@@ -161,10 +207,14 @@ function VerifyOTPForm() {
               <div className="w-20 h-20 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-6">
                 <CheckCircle2 className="w-10 h-10 text-emerald-400" />
               </div>
-              <h2 className="text-2xl font-serif font-semibold text-[#F5F3EE] mb-3">Email Verified!</h2>
+              <h2 className="text-2xl font-serif font-semibold text-[#F5F3EE] mb-3">
+                {isResetFlow ? 'Code Verified!' : 'Email Verified!'}
+              </h2>
               <p className="text-[#AAB0D6]/60 text-sm mb-8">
-                Your account has been successfully verified.<br />
-                Redirecting to sign in...
+                {isResetFlow
+                  ? 'Redirecting to set new password...'
+                  : 'Your account has been successfully verified.Redirecting to sign in...'
+                }
               </p>
               <div className="w-32 h-1 bg-white/5 rounded-full mx-auto overflow-hidden">
                 <div className="h-full bg-[#C8A75E] rounded-full animate-pulse" style={{ width: '60%' }} />
@@ -176,7 +226,9 @@ function VerifyOTPForm() {
                 <div className="lg:hidden w-12 h-12 rounded-xl bg-[#C8A75E]/10 border border-[#C8A75E]/20 flex items-center justify-center mb-6">
                   <span className="text-lg font-bold text-[#C8A75E]">SSC</span>
                 </div>
-                <h2 className="text-2xl font-serif font-semibold text-[#F5F3EE] mb-2">Enter verification code</h2>
+                <h2 className="text-2xl font-serif font-semibold text-[#F5F3EE] mb-2">
+                  Enter verification code
+                </h2>
                 <p className="text-sm text-[#AAB0D6]/60">
                   We sent a 6-digit code to{' '}
                   <span className="text-[#C8A75E] font-medium">{email}</span>
@@ -224,7 +276,7 @@ function VerifyOTPForm() {
                   {loading ? (
                     <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Verifying...</>
                   ) : (
-                    'Verify Email'
+                    isResetFlow ? 'Verify & Continue' : 'Verify Email'
                   )}
                 </Button>
 
@@ -252,7 +304,7 @@ function VerifyOTPForm() {
 
               <p className="mt-8 text-center text-sm text-[#AAB0D6]/50">
                 Wrong email?{' '}
-                <Link href="/auth/signup" className="text-[#C8A75E] hover:text-[#D4B56D] font-medium transition-colors">
+                <Link href={isResetFlow ? "/auth/forgot-password" : "/auth/signup"} className="text-[#C8A75E] hover:text-[#D4B56D] font-medium transition-colors">
                   Go back
                 </Link>
               </p>
