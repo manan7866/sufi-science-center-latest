@@ -92,7 +92,8 @@ export default function AppliedPracticesPage() {
       </div> */}
       <ObservatoryHero 
       subtitle='Dialogues'
-      title='Applied Practices & Wisdom'
+      title='Applied Practices '
+      title2='& Wisdom'
       description='Sophisticated technologies of consciousness developed over centuries. Each practice represents a
             systematic methodology for transformation, grounded in experiential knowledge refined through
             generations of practitioners.'

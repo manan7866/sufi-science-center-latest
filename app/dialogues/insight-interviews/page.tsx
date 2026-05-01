@@ -1,6 +1,7 @@
 import InsightInterviewsContent from '@/components/dialogues/insight-interviews-content';
 import Link from 'next/link';
 import { Sparkles, ArrowRight } from 'lucide-react';
+import { ObservatoryHero } from '@/components/observatory-hero';
 
 export const metadata = {
   title: 'Insight Interviews | Sufi Science Center',
@@ -10,19 +11,12 @@ export const metadata = {
 export default function InsightInterviewsPage() {
   return (
     <div className="min-h-screen">
-      <div className="relative py-16 px-4 border-b border-white/5">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#C8A75E]/4 via-transparent to-transparent pointer-events-none" />
-        <div className="max-w-5xl mx-auto relative">
-          <p className="text-xs tracking-[0.22em] text-[#C8A75E]/60 uppercase mb-2">Dialogues</p>
-          <h1 className="text-4xl md:text-5xl font-serif font-bold text-[#F5F3EE] leading-tight mb-4">
-            Insight Interviews
-          </h1>
-          <p className="text-[#AAB0D6] leading-relaxed max-w-2xl">
-            Transformation narratives and personal insights from researchers, practitioners, and contemplatives
-            working at the intersection of science and spiritual wisdom.
-          </p>
-        </div>
-      </div>
+      
+      <ObservatoryHero 
+        subtitle="Dialogues"
+        title="Insight Interviews"
+        description="Transformation narratives and personal insights from individuals at the intersection of science and spirituality."
+       />
 
       <section className="py-12 px-4 border-b border-white/5">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-6">

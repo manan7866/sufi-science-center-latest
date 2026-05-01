@@ -45,7 +45,7 @@ export interface SurahView {
 }
 
 export interface ReflectionEntry {
-  userId: string;
+  userId?: string;
   surahNumber: number;
   reflectionText: string;
   updatedAt: string;
@@ -239,10 +239,9 @@ export function usePortalSession() {
     ]);
   }, []);
 
-  const saveReflection = useCallback(async (surahNumber: number, text: string , userId: string) => {
+  const saveReflection = useCallback(async (surahNumber: number, text: string, userId?: string) => {
     const token = localStorage.getItem(SESSION_KEY);
     if (!token) return;
-    if (!userId) return;
 
     await apiFetch('/api/portal/reflections', {
       method: 'POST',

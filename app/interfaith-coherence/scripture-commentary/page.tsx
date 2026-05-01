@@ -77,7 +77,8 @@ export default function ScriptureCommentaryPage() {
     <div className="min-h-screen">
       <ObservatoryHero
         subtitle="Holy Scripture Commentary"
-        title="The Qur'an through a Sufi Metaphysical Lens"
+        title="The Qur'an through a "
+        title2='Sufi Metaphysical Lens'
         description="Brief thematic reflections on all 114 chapters grounded in classical Sufi metaphysics, identifying spiritual architecture, ontological themes, and ethical structure."
       />
 

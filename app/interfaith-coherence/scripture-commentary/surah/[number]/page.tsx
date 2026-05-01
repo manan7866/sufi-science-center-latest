@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { usePortalSession } from '@/hooks/use-portal-session';
+import { useAuth } from '@/lib/auth-context';
 import { ReflectionJournalModal } from '@/components/portal/reflection-journal-modal';
 import { ScrollReveal } from '@/components/scroll-reveal';
 import { ChevronLeft, ChevronRight, BookOpen, Compass, Lightbulb, Users, CircleAlert as AlertCircle, PenLine, LayoutDashboard, Loader2 ,UserRound  } from 'lucide-react';
@@ -25,6 +26,7 @@ interface SurahData {
 export default function SurahDetailPage() {
   const params = useParams();
   const number = parseInt(params.number as string);
+  const { user } = useAuth();
 
   const [surah, setSurah] = useState<SurahData | null>(null);
   const [prev, setPrev] = useState<SurahData | null>(null);
@@ -329,7 +331,7 @@ export default function SurahDetailPage() {
       </div>
 
       <ReflectionJournalModal
-        userId=''
+        userId={user?.id || ''}
         surahNumber={journalOpen ? number : null}
         surahName={surah.arabic_name}
         existingReflection={reflections.find((r) => r.surahNumber === number)}

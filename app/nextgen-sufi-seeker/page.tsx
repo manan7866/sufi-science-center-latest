@@ -7,6 +7,7 @@ import {
   ArrowRight, Search, ChevronRight, BookOpen, Users, Layers,
   Microscope, Globe, Scale, Lightbulb, BrainCircuit, Briefcase,
   FlaskConical, Leaf,
+  Compass,
 } from 'lucide-react';
 
 const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -77,12 +78,13 @@ export default function NextGenSufiSeekerPage() {
         </div>
 
         <div className="max-w-7xl mx-auto relative">
-          <div className="flex my-20 items-center gap-2 mb-6">
-            <div className="h-px w-8 bg-[#C8A75E]/60" />
-            <p className="text-xs tracking-[0.25em] text-[#C8A75E]/70 uppercase font-medium">Sufi Science Center</p>
-          </div>
+          
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#C8A75E]/20 bg-[#C8A75E]/[0.06] mb-6">
+                      <Compass className="h-3.5 w-3.5 text-[#C8A75E]" />
+                      <span className="text-[10px] font-bold text-[#C8A75E] uppercase tracking-widest">Sufi Science Center</span>
+                    </div>
 
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-[#F5F3EE] leading-[1.05] mb-6 max-w-4xl">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-[#F5F3EE] leading-[1.05] mb-6 max-w-4xl">
             NextGEN Sufi Seeker
             <span className="block text-[#C8A75E]">Platform</span>
           </h1>

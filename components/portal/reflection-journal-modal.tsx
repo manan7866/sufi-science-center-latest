@@ -167,11 +167,11 @@ export function ReflectionJournalModal({
   useEffect(() => {
     if (surahNumber !== null) {
       setText(existingReflection?.reflectionText || '');
-      setSaved(false);
       setError('');
       setSaving(false);
+      setSaved(false);
     }
-  }, [surahNumber, existingReflection]);
+  }, [surahNumber]);
 
   if (surahNumber === null) return null;
 

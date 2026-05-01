@@ -80,7 +80,8 @@ export default function HeritagePage() {
     <div className="min-h-screen pt-20 bg-[#0B0F2A]">
       <ObservatoryHero
         subtitle="Origins & Continuity"
-        title="Heritage & Intellectual Lineage"
+        title="Heritage & Intellectual"
+        title2='Lineage'
         description="Tracing the civilizational roots and global transmission of Sufi knowledge traditions from Kashmir across Asia, the Middle East, and Africa."
       />
 
