@@ -1,6 +1,6 @@
 'use client';
 
-import { ObservatoryHero } from '@/components/observatory-hero';
+import { ObservatoryHeroWithImage } from '@/components/observatory-hero-with-image';
 import { Card } from '@/components/ui/card';
 
 const PILLARS = [
@@ -75,10 +75,12 @@ const MEDIA_AREAS = [
 export default function FounderPage() {
   return (
     <div className="min-h-screen pt-20 bg-[#0B0F2A]">
-      <ObservatoryHero
+      <ObservatoryHeroWithImage
         subtitle="Founder"
         title="Dr. Fayaz Khan"
         description="Founder, Sufi Science Center USA · Founder, Dr. Kumar Foundation USA · Founder, SufiPulse Studio USA"
+        imageSrc="/Fayaz-khan-image.png"
+        imageAlt="Dr. Fayaz Khan - Founder"
       />
 
       <section className="py-20 px-4 observatory-gradient">
