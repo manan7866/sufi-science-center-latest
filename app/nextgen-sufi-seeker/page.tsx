@@ -79,7 +79,7 @@ export default function NextGenSufiSeekerPage() {
 
         <div className="max-w-7xl mx-auto relative">
           
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#C8A75E]/20 bg-[#C8A75E]/[0.06] mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-[#C8A75E]/20 bg-[#C8A75E]/[0.06] mb-6">
                       <Compass className="h-3.5 w-3.5 text-[#C8A75E]" />
                       <span className="text-[10px] font-bold text-[#C8A75E] uppercase tracking-widest">Sufi Science Center</span>
                     </div>
@@ -216,7 +216,7 @@ export default function NextGenSufiSeekerPage() {
           <div className="flex flex-wrap gap-2 mb-8">
             <button
               onClick={() => setActiveCategory(null)}
-              className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
+              className={`text-xs px-3 py-1.5 rounded-md border transition-all ${
                 !activeCategory
                   ? 'border-[#C8A75E] bg-[#C8A75E]/10 text-[#C8A75E]'
                   : 'border-white/8 text-[#AAB0D6]/50 hover:border-white/20 hover:text-[#AAB0D6]'
@@ -230,7 +230,7 @@ export default function NextGenSufiSeekerPage() {
                 <button
                   key={cat.slug}
                   onClick={() => setActiveCategory(cat.slug === activeCategory ? null : cat.slug)}
-                  className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-all ${
+                  className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md border transition-all ${
                     activeCategory === cat.slug
                       ? 'border-[#C8A75E] bg-[#C8A75E]/10 text-[#C8A75E]'
                       : 'border-white/8 text-[#AAB0D6]/50 hover:border-white/20 hover:text-[#AAB0D6]'

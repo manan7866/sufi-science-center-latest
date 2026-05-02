@@ -42,6 +42,7 @@ const POWER_TYPE_COLORS: Record<string, string> = {
   Spiritual: '#9B8DC4', Technical: '#8BB89A', Institutional: '#B8A97A',
 };
 
+
 function DomainCard({ group, selected, onClick }: {
   group: ProfessionGroup;
   selected: boolean;
@@ -84,7 +85,7 @@ function DomainCard({ group, selected, onClick }: {
           {group.professions.length} {group.professions.length === 1 ? 'role' : 'roles'}
         </span>
         <div
-          className="h-1.5 w-6 rounded-full opacity-50"
+          className="h-1.5 w-6 rounded-md opacity-50"
           style={{ backgroundColor: group.color }}
         />
       </div>
@@ -112,7 +113,7 @@ function ProfessionPill({ profession, groupColor, onClick, selected, compareMode
         style={{ backgroundColor: selected ? `${groupColor}08` : 'transparent' }}
       >
         <div
-          className="w-1.5 h-8 rounded-full flex-shrink-0 transition-all duration-200"
+          className="w-1.5 h-8 rounded-md flex-shrink-0 transition-all duration-200"
           style={{ backgroundColor: selected ? groupColor : `${groupColor}30` }}
         />
         <div className="flex-1 min-w-0">
@@ -188,7 +189,7 @@ function MatrixRow({ group, allSelected, onSelect }: {
               </p>
               <div className="flex items-center justify-between gap-2">
                 <span
-                  className="text-[8px] px-1.5 py-0.5 rounded-full border uppercase tracking-wide font-bold"
+                  className="text-[8px] px-1.5 py-0.5 rounded-md border uppercase tracking-wide font-bold"
                   style={{ color: POWER_TYPE_COLORS[p.powerType], borderColor: `${POWER_TYPE_COLORS[p.powerType]}25`, backgroundColor: `${POWER_TYPE_COLORS[p.powerType]}08` }}
                 >
                   {p.powerType}
@@ -307,7 +308,7 @@ export default function SacredProfessionsPage() {
 
         {/* Hero */}
         <section className="pt-14 my-32 pb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#C8A75E]/20 bg-[#C8A75E]/[0.06] mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-[#C8A75E]/20 bg-[#C8A75E]/[0.06] mb-6">
             <Compass className="h-3.5 w-3.5 text-[#C8A75E]" />
             <span className="text-[10px] font-bold text-[#C8A75E] uppercase tracking-widest">Applied Civilization</span>
           </div>
@@ -342,7 +343,7 @@ export default function SacredProfessionsPage() {
               { label: 'Operational Framework', color: '#8BB89A' },
               { label: 'Accountability Boundaries', color: '#9B8DC4' },
             ].map(tag => (
-              <span key={tag.label} className="px-3 py-1 rounded-full text-[9px] font-bold border uppercase tracking-wider"
+              <span key={tag.label} className="px-3 py-1 rounded-md text-[9px] font-bold border uppercase tracking-wider"
                 style={{ color: tag.color, borderColor: `${tag.color}25`, backgroundColor: `${tag.color}06` }}>
                 {tag.label}
               </span>

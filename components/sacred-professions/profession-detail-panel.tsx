@@ -119,16 +119,16 @@ export function ProfessionDetailPanel({ profession, groupColor, onClose }: Props
         {/* Tags */}
         <div className="flex flex-wrap gap-2 mb-3">
           <span
-            className="text-[9px] font-bold px-2.5 py-1 rounded-full border uppercase tracking-wide"
+            className="text-[9px] font-bold px-2.5 py-1 rounded-md border uppercase tracking-wide"
             style={{ color: powerColor, borderColor: `${powerColor}30`, backgroundColor: `${powerColor}08` }}
           >
             {profession.powerType}
           </span>
-          <span className="text-[9px] font-bold px-2.5 py-1 rounded-full border border-white/10 text-[#AAB0D6]/60 uppercase tracking-wide">
+          <span className="text-[9px] font-bold px-2.5 py-1 rounded-md border border-white/10 text-[#AAB0D6]/60 uppercase tracking-wide">
             {profession.riskLevel}
           </span>
           {profession.ethicalTensions.map(t => (
-            <span key={t} className="text-[9px] px-2.5 py-1 rounded-full border border-[#C8A75E]/15 text-[#C8A75E]/60 uppercase tracking-wide">
+            <span key={t} className="text-[9px] px-2.5 py-1 rounded-md border border-[#C8A75E]/15 text-[#C8A75E]/60 uppercase tracking-wide">
               {t}
             </span>
           ))}

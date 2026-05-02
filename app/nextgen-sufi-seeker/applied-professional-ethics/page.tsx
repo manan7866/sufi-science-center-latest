@@ -195,7 +195,7 @@ export default function AppliedProfessionalEthicsPage() {
 
         {/* Hero */}
         <div className="my-32">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#C8A75E]/25 bg-[#C8A75E]/8 mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-[#C8A75E]/25 bg-[#C8A75E]/8 mb-6">
             <span className="text-[10px] font-bold text-[#C8A75E] uppercase tracking-widest">
               Structural Framework
             </span>
@@ -249,7 +249,7 @@ export default function AppliedProfessionalEthicsPage() {
           </div>
           <button
             onClick={() => setActiveFilter(null)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors border ${
+            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors border ${
               activeFilter === null
                 ? 'bg-[#C8A75E]/15 border-[#C8A75E]/40 text-[#C8A75E]'
                 : 'border-white/10 text-[#AAB0D6]/60 hover:text-[#AAB0D6] hover:border-white/20'
@@ -263,7 +263,7 @@ export default function AppliedProfessionalEthicsPage() {
               <button
                 key={cat.id}
                 onClick={() => setActiveFilter(activeFilter === cat.id ? null : cat.id)}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors border ${
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors border ${
                   activeFilter === cat.id
                     ? 'bg-[#C8A75E]/15 border-[#C8A75E]/40 text-[#C8A75E]'
                     : 'border-white/10 text-[#AAB0D6]/60 hover:text-[#AAB0D6] hover:border-white/20'

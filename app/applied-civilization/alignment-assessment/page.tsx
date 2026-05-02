@@ -122,7 +122,7 @@ function AssessmentDimension({ dim }: { dim: typeof ASSESSMENT_DIMENSIONS[0] }) 
       >
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: dim.color }} />
+            <div className="w-2 h-2 rounded-md" style={{ backgroundColor: dim.color }} />
             <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: dim.color }}>Dimension</p>
           </div>
           <h3
@@ -187,7 +187,7 @@ export default function AlignmentAssessmentPage() {
 
         {/* Hero */}
         <div className="my-32">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#C8A75E]/20 bg-[#C8A75E]/[0.06] mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-[#C8A75E]/20 bg-[#C8A75E]/[0.06] mb-6">
             <Compass className="h-3.5 w-3.5 text-[#C8A75E]" />
             <span className="text-[10px] font-bold text-[#C8A75E] uppercase tracking-widest">Applied Civilization</span>
           </div>
