@@ -44,6 +44,12 @@ export function getAdminTokenFromRequest(req: NextRequest): AdminTokenPayload | 
   return verifyAdminToken(token);
 }
 
+export function getUserFromRequest(req: NextRequest): UserTokenPayload | null {
+  const token = req.cookies.get('ssc_user_token')?.value;
+  if (!token) return null;
+  return verifyUserToken(token);
+}
+
 export function getCookieHeader(req: NextRequest): string | null {
   return req.headers.get('cookie');
 }

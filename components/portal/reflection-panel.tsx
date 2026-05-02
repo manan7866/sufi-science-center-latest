@@ -3,14 +3,15 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ReflectionEntry } from '@/hooks/use-portal-session';
-import { PenLine, ChevronRight, BookOpen } from 'lucide-react';
+import { PenLine, ChevronRight, BookOpen, Trash2 } from 'lucide-react';
 
 interface ReflectionPanelProps {
   reflections: ReflectionEntry[];
   onOpenJournal: (surahNumber: number) => void;
+  onDelete?: (surahNumber: number) => void;
 }
 
-export function ReflectionPanel({ reflections, onOpenJournal }: ReflectionPanelProps) {
+export function ReflectionPanel({ reflections, onOpenJournal, onDelete }: ReflectionPanelProps) {
   const sorted = [...reflections].sort(
     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
   );
@@ -37,20 +38,41 @@ export function ReflectionPanel({ reflections, onOpenJournal }: ReflectionPanelP
   return (
     <div className="space-y-3">
       {sorted.slice(0, 5).map((r) => (
-        <button
+        <div
           key={r.surahNumber}
-          onClick={() => onOpenJournal(r.surahNumber)}
-          className="w-full text-left p-4 rounded-xl bg-white/3 border border-white/6 hover:border-[#C8A75E]/25 hover:bg-[#C8A75E]/5 transition-all group"
+          className="p-4 rounded-xl bg-white/3 border border-white/6 hover:border-[#C8A75E]/25 hover:bg-[#C8A75E]/5 transition-all group"
         >
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-xs text-[#C8A75E]/70 tracking-wider uppercase">Surah {r.surahNumber}</span>
-            <ChevronRight className="w-3.5 h-3.5 text-[#AAB0D6]/30 group-hover:text-[#C8A75E] transition-colors" />
+            <div className="flex items-center gap-2">
+              {onDelete && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (confirm('Delete this reflection?')) {
+                      onDelete(r.surahNumber);
+                    }
+                  }}
+                  className="text-red-400/50 hover:text-red-400 transition-colors"
+                  title="Delete reflection"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              )}
+              <button
+                onClick={() => onOpenJournal(r.surahNumber)}
+                className="flex items-center gap-1 text-xs text-[#C8A75E] hover:text-[#D4B56D] transition-colors"
+              >
+                Edit
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
           <p className="text-sm text-[#AAB0D6] line-clamp-2 leading-relaxed">{r.reflectionText}</p>
           <p className="text-[10px] text-[#AAB0D6]/30 mt-1.5">
             {new Date(r.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
           </p>
-        </button>
+        </div>
       ))}
       {sorted.length > 5 && (
         <p className="text-xs text-[#AAB0D6]/40 text-center pt-1">

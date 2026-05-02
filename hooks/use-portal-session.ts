@@ -45,6 +45,7 @@ export interface SurahView {
 }
 
 export interface ReflectionEntry {
+  id?: string;
   userId?: string;
   surahNumber: number;
   reflectionText: string;
@@ -110,6 +111,16 @@ export function usePortalSession() {
     async function loadSession() {
       const token = getOrCreateToken();
 
+      // Check if user is logged in
+      let userId: string | null = null;
+      try {
+        const userStr = localStorage.getItem('ssc_user');
+        if (userStr) {
+          const user = JSON.parse(userStr);
+          if (user?.id) userId = user.id;
+        }
+      } catch {}
+
       const [sessionRes, profileRes, membershipRes, viewsRes, reflectionsRes, activityRes] = await Promise.all([
         apiFetch('/api/portal/session', {
           method: 'POST',
@@ -119,7 +130,8 @@ export function usePortalSession() {
         apiFetch(`/api/portal/profile?sessionToken=${encodeURIComponent(token)}`),
         apiFetch(`/api/portal/membership?sessionToken=${encodeURIComponent(token)}`),
         apiFetch(`/api/portal/surah-views?sessionToken=${encodeURIComponent(token)}`),
-        apiFetch(`/api/portal/reflections?sessionToken=${encodeURIComponent(token)}`),
+        // Fetch reflections by sessionToken and userId (if logged in)
+        apiFetch(`/api/portal/reflections?sessionToken=${encodeURIComponent(token)}${userId ? `&userId=${encodeURIComponent(userId)}` : ''}`),
         apiFetch(`/api/portal/activity?sessionToken=${encodeURIComponent(token)}`),
       ]);
 

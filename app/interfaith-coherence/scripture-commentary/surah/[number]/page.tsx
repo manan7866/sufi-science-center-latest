@@ -7,7 +7,7 @@ import { usePortalSession } from '@/hooks/use-portal-session';
 import { useAuth } from '@/lib/auth-context';
 import { ReflectionJournalModal } from '@/components/portal/reflection-journal-modal';
 import { ScrollReveal } from '@/components/scroll-reveal';
-import { ChevronLeft, ChevronRight, BookOpen, Compass, Lightbulb, Users, CircleAlert as AlertCircle, PenLine, LayoutDashboard, Loader2 ,UserRound  } from 'lucide-react';
+import { ChevronLeft, ChevronRight, BookOpen, Compass, Lightbulb, Users, CircleAlert as AlertCircle, PenLine, LayoutDashboard, Loader2 ,UserRound, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 
 interface SurahData {
@@ -223,44 +223,62 @@ export default function SurahDetailPage() {
       </h2>
     </div>
 
-    <div className="space-y-4">
-      {approvedReflections.map((r) => (
-        <div
-          key={r.id}
-          className="p-4 rounded-xl bg-white/3 border border-white/8"
-        >
+               <div className="space-y-4">
+       {approvedReflections.map((r) => (
+         <div
+           key={r.id}
+           className="p-4 rounded-xl bg-white/3 border border-white/8"
+         >
 
-          {/* USER INFO */}
-          <div className="flex items-center gap-3 mb-2">
-            { r.user?.avatarUrl ? (
-              <Image
-              width={100}
-              height={100}
+           {/* USER INFO */}
+           <div className="flex items-center gap-3 mb-2">
+             { r.user?.avatarUrl ? (
+               <Image
+               width={100}
+               height={100}
 
-                src={r.user.avatarUrl}
-                alt={r.user?.name || "User"}
-                className="w-6 h-6 rounded-full object-cover border border-white/10"
-              />
-            ) : (
-              <UserRound className="w-6 h-6 text-[#C8A75E]" />
-            )}
-            
+                 src={r.user.avatarUrl}
+                 alt={r.user?.name || "User"}
+                 className="w-6 h-6 rounded-full object-cover border border-white/10"
+               />
+             ) : (
+               <UserRound className="w-6 h-6 text-[#C8A75E]" />
+             )}
 
-            <span className="text-sm text-[#F5F3EE] font-medium">
-              {r.user?.name || "Anonymous"}
-            </span>
-          </div>
 
-          {/* TEXT */}
-          <p className="text-sm text-[#AAB0D6] leading-relaxed">
-            {r.reflectionText}
-          </p>
+             <span className="text-sm text-[#F5F3EE] font-medium flex-1">
+               {r.user?.name || "Anonymous"}
+             </span>
 
-          
+             {/* DELETE BUTTON - only for own reflections */}
+             {user && r.userId === user.id && (
+               <button
+                 onClick={async () => {
+                   if (!confirm('Delete this reflection?')) return;
+                   const res = await fetch(`/api/portal/reflections?id=${r.id}`, {
+                     method: 'DELETE',
+                   });
+                   if (res.ok) {
+                     setApprovedReflections(prev => prev.filter(x => x.id !== r.id));
+                   }
+                 }}
+                 className="text-red-400 hover:text-red-300 transition-colors"
+                 title="Delete reflection"
+               >
+                 <Trash2 className="w-4 h-4" />
+               </button>
+             )}
+           </div>
 
-        </div>
-      ))}
-    </div>
+           {/* TEXT */}
+           <p className="text-sm text-[#AAB0D6] leading-relaxed">
+             {r.reflectionText}
+           </p>
+
+
+         </div>
+       ))}
+     </div>
 
   </div>
 )}

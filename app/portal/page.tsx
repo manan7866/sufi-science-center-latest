@@ -82,6 +82,24 @@ export default function PortalPage() {
   const [journalSurahName, setJournalSurahName] = useState('');
   const [completedModules, setCompletedModules] = useState<Set<string>>(new Set());
 
+  const handleDeleteReflection = async (surahNumber: number) => {
+    try {
+      const reflectionId = reflections.find(r => r.surahNumber === surahNumber)?.id;
+      if (!reflectionId) return;
+
+      const res = await fetch(`/api/portal/reflections?id=${reflectionId}`, {
+        method: 'DELETE',
+      });
+
+      if (res.ok) {
+        // Refresh the page to update reflections
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Failed to delete reflection:', error);
+    }
+  };
+
   useEffect(() => {
     if (!loading) {
       if (profile.completedModules && profile.completedModules.length > 0) {
@@ -365,6 +383,7 @@ export default function PortalPage() {
                 <ReflectionPanel
                   reflections={reflections}
                   onOpenJournal={openJournal}
+                  onDelete={handleDeleteReflection}
                 />
               </div>
             </section>
