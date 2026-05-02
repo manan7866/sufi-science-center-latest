@@ -189,53 +189,7 @@ export function Footer() {
             </ul>
           </div>
 
-          <div>
-            <h3 className="text-[#F5F3EE] font-semibold text-sm uppercase tracking-wider mb-4">
-              Support
-            </h3>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  href="/support/donate"
-                  className="text-[#AAB0D6] hover:text-[#C8A75E] transition-colors text-sm whitespace-nowrap"
-                >
-                  Donate
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/support/membership"
-                  className="text-[#AAB0D6] hover:text-[#C8A75E] transition-colors text-sm whitespace-nowrap"
-                >
-                  Membership
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="text-[#AAB0D6] hover:text-[#C8A75E] transition-colors text-sm whitespace-nowrap"
-                >
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/questions-and-understanding"
-                  className="text-[#AAB0D6] hover:text-[#C8A75E] transition-colors text-sm whitespace-nowrap"
-                >
-                  FAQs
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/nextgen-sufi-seeker"
-                  className="text-[#AAB0D6] hover:text-[#C8A75E] transition-colors text-sm whitespace-nowrap"
-                >
-                  NextGEN
-                </Link>
-              </li>
-            </ul>
-          </div>
+          
 
           <div>
             <h3 className="text-[#F5F3EE] w-max font-semibold text-sm uppercase tracking-wider mb-4">
@@ -280,6 +234,54 @@ export function Footer() {
                   className="text-[#AAB0D6] hover:text-[#C8A75E] transition-colors text-sm whitespace-nowrap"
                 >
                   Civilizational Research
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div className='mx-4'>
+            <h3 className="text-[#F5F3EE] font-semibold text-sm uppercase tracking-wider mb-4">
+              Support
+            </h3>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  href="/support/membership"
+                  className="text-[#AAB0D6] hover:text-[#C8A75E] transition-colors text-sm whitespace-nowrap"
+                >
+                  Membership
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/support/donate"
+                  className="text-[#AAB0D6] hover:text-[#C8A75E] transition-colors text-sm whitespace-nowrap"
+                >
+                  Donate
+                </Link>
+              </li>
+              
+              <li>
+                <Link
+                  href="/nextgen-sufi-seeker"
+                  className="text-[#AAB0D6] hover:text-[#C8A75E] transition-colors text-sm whitespace-nowrap"
+                >
+                  NextGEN
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/questions-and-understanding"
+                  className="text-[#AAB0D6] hover:text-[#C8A75E] transition-colors text-sm whitespace-nowrap"
+                >
+                  FAQs
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="text-[#AAB0D6] hover:text-[#C8A75E] transition-colors text-sm whitespace-nowrap"
+                >
+                  Contact
                 </Link>
               </li>
             </ul>

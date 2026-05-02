@@ -112,8 +112,16 @@ export function ObservatoryHeroWithImage({
       <canvas ref={canvasRef} className="absolute inset-0 opacity-60" />
 
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0B0F2A]/20 to-[#0B0F2A]" />
+      
 
-      <div className="relative z-10 h-full flex flex-col lg:flex-row items-center justify-center  px-6 py-20 lg:py-0 gap-10 lg:gap-16 max-w-7xl mx-auto">
+      <div className="relative z-10 h-full flex flex-col-reverse lg:flex-row items-center justify-center  px-6 py-20 lg:py-0 gap-10 lg:gap-16 max-w-7xl mx-auto">
+        {imageSrc && (
+          <div className="flex justify-end  w-60">
+            <div className="relative  w-full aspect-[3/4] rounded-2xl overflow-hidden border border-[rgba(255,255,255,0.08)] shadow-2xl">
+              <Image src={imageSrc} alt={imageAlt} fill className="object-cover" priority />
+            </div>
+          </div>
+        )}
         {/* Content Side */}
         <div className="flex-1 flex flex-col lg:items-start items-center justify-center  text-center lg:text-left">
           {subtitle && (
@@ -146,13 +154,7 @@ export function ObservatoryHeroWithImage({
         </div>
 
         {/* Image Side */}
-        {imageSrc && (
-          <div className="flex justify-end  w-60">
-            <div className="relative  w-full aspect-[3/4] rounded-2xl overflow-hidden border border-[rgba(255,255,255,0.08)] shadow-2xl">
-              <Image src={imageSrc} alt={imageAlt} fill className="object-cover" priority />
-            </div>
-          </div>
-        )}
+        
       </div>
     </section>
   );
