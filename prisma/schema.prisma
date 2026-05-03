@@ -1101,6 +1101,27 @@ model ConferenceEvent {
   @@map("conference_events")
 }
 
+model ContactSubmission {
+  id           String   @id @default(uuid())
+  fullName     String   @map("full_name")
+  email        String
+  enquiryType  String   @default("general") @map("enquiry_type")
+  subject      String
+  message      String
+  status       String   @default("new")
+  replied      Boolean  @default(false)
+  repliedAt    DateTime? @map("replied_at")
+  adminNotes   String?  @map("admin_notes")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([email])
+  @@index([enquiryType])
+  @@index([createdAt(sort: Desc)])
+  @@map("contact_submissions")
+}
+
 model MediaThemeConnection {
   id            String   @id @default(uuid())
   mediaType     String   @map("media_type")

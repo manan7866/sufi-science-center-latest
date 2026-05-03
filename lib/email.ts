@@ -40,3 +40,38 @@ export async function sendOTPVerificationEmail(
     return { success: false, error: 'Failed to send email' };
   }
 }
+
+export async function sendAdminReplyEmail(
+  to: string,
+  userName: string,
+  date: string,
+  message: string
+) {
+  try {
+    const resend = getResend();
+    const { data, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: [to],
+      template: {
+        id: 'new-message-notification',
+        variables: {
+          user_name: userName,
+          user_email: to,
+          date,
+          message,
+        },
+      },
+    });
+
+    if (error) {
+      console.error('[Resend] Admin reply email error:', error);
+      return { success: false, error: error.message };
+    }
+
+    console.log(`[Resend] Admin reply email sent to ${to}:`, data?.id);
+    return { success: true, data };
+  } catch (error) {
+    console.error('[sendAdminReplyEmail]', error);
+    return { success: false, error: 'Failed to send email' };
+  }
+}

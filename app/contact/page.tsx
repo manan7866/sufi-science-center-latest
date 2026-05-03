@@ -10,6 +10,7 @@ const ENQUIRY_TYPES = [
   { value: 'media', label: 'Media and Press' },
   { value: 'membership', label: 'Membership and Fellowship' },
   { value: 'events', label: 'Events and Dialogues' },
+  { value: 'complain', label: 'Complaint' },
   { value: 'other', label: 'Other' },
 ];
 

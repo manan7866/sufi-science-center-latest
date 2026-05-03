@@ -14,12 +14,14 @@ export async function GET(req: NextRequest) {
       mentorshipTotal, mentorshipPending, mentorshipApproved, mentorshipDeclined,
       collaborationTotal, collaborationPending, collaborationApproved, collaborationDeclined,
       conferenceTotal, conferencePending, conferenceApproved, conferenceDeclined,
+      contactTotal, contactPending, contactReplied,
       completedDonations,
       userCount,
       recentMembership,
       recentVolunteer,
       recentPathway,
       recentMentorship,
+      recentContact,
     ] = await Promise.all([
       prisma.membershipApplication.count(),
       prisma.membershipApplication.count({ where: { status: 'pending' } }),
@@ -45,12 +47,16 @@ export async function GET(req: NextRequest) {
       prisma.conferenceSubmission.count({ where: { status: 'pending' } }),
       prisma.conferenceSubmission.count({ where: { status: { in: ['approved', 'accepted'] } } }),
       prisma.conferenceSubmission.count({ where: { status: { in: ['declined', 'rejected'] } } }),
+      prisma.contactSubmission.count(),
+      prisma.contactSubmission.count({ where: { status: 'new' } }),
+      prisma.contactSubmission.count({ where: { replied: true } }),
       prisma.donation.findMany({ where: { status: { in: ['completed', 'paid'] } }, select: { amount: true } }),
       prisma.portalProfile.count(),
       prisma.membershipApplication.findMany({ orderBy: { createdAt: 'desc' }, take: 4, select: { fullName: true, status: true, createdAt: true } }),
       prisma.volunteerApplication.findMany({ orderBy: { createdAt: 'desc' }, take: 4, select: { fullName: true, status: true, createdAt: true } }),
       prisma.pathwayApplication.findMany({ orderBy: { createdAt: 'desc' }, take: 4, select: { fullName: true, status: true, createdAt: true } }),
       prisma.mentorshipApplication.findMany({ orderBy: { createdAt: 'desc' }, take: 4, select: { fullName: true, status: true, createdAt: true } }),
+      prisma.contactSubmission.findMany({ orderBy: { createdAt: 'desc' }, take: 3, select: { fullName: true, status: true, createdAt: true } }),
     ]);
 
     const modules = [
@@ -60,6 +66,7 @@ export async function GET(req: NextRequest) {
       { label: 'Mentorship',    href: '/admin/mentorship',    color: '#E8856A', value: mentorshipTotal,    pending: mentorshipPending,    approved: mentorshipApproved,    declined: mentorshipDeclined },
       { label: 'Collaboration', href: '/admin/collaboration', color: '#5CB8B2', value: collaborationTotal, pending: collaborationPending, approved: collaborationApproved, declined: collaborationDeclined },
       { label: 'Conference',    href: '/admin/conference',    color: '#B06AB3', value: conferenceTotal,    pending: conferencePending,    approved: conferenceApproved,    declined: conferenceDeclined },
+      { label: 'Contact',       href: '/admin/contact-submissions', color: '#F59E0B', value: contactTotal, pending: contactPending, approved: contactReplied, declined: 0 },
     ];
 
     const totalDonations = completedDonations.reduce((s: number, d: { amount: unknown }) => s + Number(d.amount), 0);
@@ -73,6 +80,7 @@ export async function GET(req: NextRequest) {
       ...mapActivity(recentVolunteer, 'Volunteer', '#6B9BD1'),
       ...mapActivity(recentPathway, 'Pathway', '#7BC47F'),
       ...mapActivity(recentMentorship, 'Mentorship', '#E8856A'),
+      ...mapActivity(recentContact, 'Contact', '#F59E0B'),
     ].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()).slice(0, 12);
 
     return NextResponse.json({

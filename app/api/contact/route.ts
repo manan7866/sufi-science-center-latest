@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import prisma from '@/lib/prisma';
 import { createRateLimiter, RateLimits } from '@/lib/rate-limit';
 import { contactFormSchema } from '@/lib/validations';
 
@@ -17,7 +18,6 @@ const FROM_EMAIL = process.env.EMAIL_FROM || 'onboarding@resend.dev';
 
 export async function POST(request: Request) {
   try {
-    // Check rate limiting
     const rateLimitResult = await rateLimiter(request);
     if (!rateLimitResult.allowed) {
       return rateLimitResult.response!;
@@ -25,7 +25,6 @@ export async function POST(request: Request) {
 
     const body = await request.json();
 
-    // Validate input with Zod
     const validationResult = contactFormSchema.safeParse(body);
     if (!validationResult.success) {
       const errors = validationResult.error.errors.map(e => e.message).join(', ');
@@ -37,7 +36,16 @@ export async function POST(request: Request) {
 
     const { fullName, email, enquiryType, subject, message } = validationResult.data;
 
-    // Send confirmation email to user using template
+    await prisma.contactSubmission.create({
+      data: {
+        fullName,
+        email,
+        enquiryType,
+        subject,
+        message,
+      },
+    });
+
     const resend = getResend();
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
