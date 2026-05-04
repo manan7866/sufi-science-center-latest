@@ -75,7 +75,7 @@ export default function ContactPage() {
                 </div>
                 <h3 className="text-sm font-semibold text-[#F5F3EE] mb-1">Email</h3>
                 <p className="text-xs text-[#AAB0D6]/60 mb-2">General enquiries</p>
-                <p className="text-sm text-[#C8A75E]">contact@sufisciencecenter.org</p>
+                <p className="text-sm text-[#C8A75E]">contact@sufisciencecenter.info</p>
               </div>
 
               <div className="glass-panel rounded-2xl p-6 border border-white/5">
@@ -84,7 +84,7 @@ export default function ContactPage() {
                 </div>
                 <h3 className="text-sm font-semibold text-[#F5F3EE] mb-1">Research Office</h3>
                 <p className="text-xs text-[#AAB0D6]/60 mb-2">Collaboration and funding</p>
-                <p className="text-sm text-[#C8A75E]">research@sufisciencecenter.org</p>
+                <p className="text-sm text-[#C8A75E]">research@sufisciencecenter.info</p>
               </div>
 
               <div className="glass-panel rounded-2xl p-6 border border-white/5">
@@ -104,7 +104,7 @@ export default function ContactPage() {
                 <ul className="space-y-1.5 text-xs text-[#AAB0D6]/60">
                   <li>Research collaborations: <span className="text-[#C8A75E]/80">use the Collaborations page</span></li>
                   <li>Membership enquiries: <span className="text-[#C8A75E]/80">use the Membership page</span></li>
-                  <li>Media press kit: <span className="text-[#C8A75E]/80">media@sufisciencecenter.org</span></li>
+                  <li>Media press kit: <span className="text-[#C8A75E]/80">media@sufisciencecenter.info</span></li>
                 </ul>
               </div>
             </div>
