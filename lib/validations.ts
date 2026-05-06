@@ -408,6 +408,145 @@ export const conferenceSubmissionSchema = z.object({
 });
 
 /**
+ * Research Paper submission validation
+ */
+export const researchPaperSchema = z.object({
+  authorName: z.string().min(1, 'Author name is required').max(100).transform(stripHtmlAndScripts),
+  email: z.string().min(1, 'Email is required').email('Invalid email').regex(emailRegex).max(254).transform((val) => val.trim().toLowerCase()),
+  affiliation: z.string().min(1, 'Affiliation is required').max(200).transform(stripHtmlAndScripts),
+  paperTitle: z.string().min(5, 'Title must be at least 5 characters').max(300).transform(stripHtmlAndScripts),
+  abstract: z.string().min(50, 'Abstract must be at least 50 characters').max(3000).transform(stripHtmlAndScripts),
+  discipline: z.string().min(1, 'Discipline is required').max(100).transform(stripHtmlAndScripts),
+  keywords: z.string().min(1, 'Keywords are required').max(500).transform(stripHtmlAndScripts),
+  fileUrl: z.string().optional(),
+  citationStyle: z.string().optional(),
+  originalityDeclaration: z.boolean().refine((val) => val === true, 'You must confirm originality'),
+  ethicsDeclaration: z.boolean().refine((val) => val === true, 'You must confirm ethics compliance'),
+  suggestedModule: z.string().optional(),
+  coAuthors: z.string().optional(),
+  orcidLink: z.string().optional().refine((val) => !val || urlRegex.test(val), 'Invalid ORCID link format'),
+});
+
+/**
+ * Dialogue Proposal submission validation
+ */
+export const dialogueProposalSchema = z.object({
+  proposerName: z.string().min(1, 'Proposer name is required').max(100).transform(stripHtmlAndScripts),
+  email: z.string().min(1, 'Email is required').email('Invalid email').regex(emailRegex).max(254).transform((val) => val.trim().toLowerCase()),
+  dialogueTitle: z.string().min(5, 'Title must be at least 5 characters').max(200).transform(stripHtmlAndScripts),
+  mainQuestion: z.string().min(10, 'Please describe the main question/theme').max(2000).transform(stripHtmlAndScripts),
+  proposedSpeakers: z.string().min(1, 'Proposed speakers are required').max(1000).transform(stripHtmlAndScripts),
+  format: z.string().min(1, 'Format is required'),
+  targetAudience: z.string().min(1, 'Target audience is required').max(200).transform(stripHtmlAndScripts),
+  whyItMatters: z.string().min(50, 'Please explain why this matters (at least 50 characters)').max(3000).transform(stripHtmlAndScripts),
+  preferredDateTime: z.string().optional(),
+  supportingNotes: z.string().optional().transform((val) => val ? stripHtmlAndScripts(val) : ''),
+});
+
+/**
+ * Interview Proposal submission validation
+ */
+export const interviewProposalSchema = z.object({
+  nominatorName: z.string().min(1, 'Nominator name is required').max(100).transform(stripHtmlAndScripts),
+  nomineeName: z.string().min(1, 'Nominee name is required').max(100).transform(stripHtmlAndScripts),
+  nomineeBio: z.string().min(50, 'Nominee bio is required (at least 50 characters)').max(3000).transform(stripHtmlAndScripts),
+  email: z.string().min(1, 'Email is required').email('Invalid email').regex(emailRegex).max(254).transform((val) => val.trim().toLowerCase()),
+  fieldOfWork: z.string().min(1, 'Field of work is required').max(200).transform(stripHtmlAndScripts),
+  whyInterview: z.string().min(50, 'Please explain why this person should be interviewed').max(3000).transform(stripHtmlAndScripts),
+  suggestedQuestions: z.string().min(1, 'Suggested questions are required').max(3000).transform(stripHtmlAndScripts),
+  linksToWork: z.string().optional(),
+  consentConfirmation: z.boolean().refine((val) => val === true, 'You must confirm consent'),
+});
+
+/**
+ * Sacred Media submission validation
+ */
+export const sacredMediaSchema = z.object({
+  artistName: z.string().min(1, 'Artist name is required').max(100).transform(stripHtmlAndScripts),
+  email: z.string().min(1, 'Email is required').email('Invalid email').regex(emailRegex).max(254).transform((val) => val.trim().toLowerCase()),
+  mediaTitle: z.string().min(3, 'Title must be at least 3 characters').max(200).transform(stripHtmlAndScripts),
+  mediaType: z.string().min(1, 'Media type is required'),
+  language: z.string().min(1, 'Language is required').max(100).transform(stripHtmlAndScripts),
+  traditionContext: z.string().min(1, 'Tradition/context is required').max(500).transform(stripHtmlAndScripts),
+  lyricsText: z.string().optional().transform((val) => val ? stripHtmlAndScripts(val) : ''),
+  fileUrl: z.string().optional(),
+  rightsOwnership: z.boolean().refine((val) => val === true, 'You must confirm rights ownership'),
+  permissionToPublish: z.boolean().refine((val) => val === true, 'You must grant permission to publish'),
+  culturalContext: z.string().min(1, 'Cultural/spiritual context is required').max(2000).transform(stripHtmlAndScripts),
+  credits: z.string().optional().transform((val) => val ? stripHtmlAndScripts(val) : ''),
+});
+
+/**
+ * Practice and Ritual submission validation
+ */
+export const practiceRitualSchema = z.object({
+  contributorName: z.string().min(1, 'Contributor name is required').max(100).transform(stripHtmlAndScripts),
+  email: z.string().min(1, 'Email is required').email('Invalid email').regex(emailRegex).max(254).transform((val) => val.trim().toLowerCase()),
+  practiceName: z.string().min(3, 'Practice name is required').max(200).transform(stripHtmlAndScripts),
+  traditionSource: z.string().min(1, 'Tradition/source is required').max(500).transform(stripHtmlAndScripts),
+  lineageContext: z.string().min(1, 'Lineage/context is required').max(2000).transform(stripHtmlAndScripts),
+  stepDescription: z.string().min(50, 'Step-by-step description is required').max(5000).transform(stripHtmlAndScripts),
+  safetyConsiderations: z.string().min(1, 'Safety considerations are required').max(2000).transform(stripHtmlAndScripts),
+  whoShouldPractice: z.string().min(1, 'Please specify who should/should not practice').max(1000).transform(stripHtmlAndScripts),
+  durationFrequency: z.string().min(1, 'Duration/frequency is required').max(200).transform(stripHtmlAndScripts),
+  requiredPreparation: z.string().optional().transform((val) => val ? stripHtmlAndScripts(val) : ''),
+  culturalSensitivity: z.string().optional().transform((val) => val ? stripHtmlAndScripts(val) : ''),
+});
+
+/**
+ * Sacred Text and Poetry submission validation
+ */
+export const sacredTextSchema = z.object({
+  contributorName: z.string().min(1, 'Contributor name is required').max(100).transform(stripHtmlAndScripts),
+  email: z.string().min(1, 'Email is required').email('Invalid email').regex(emailRegex).max(254).transform((val) => val.trim().toLowerCase()),
+  title: z.string().min(3, 'Title must be at least 3 characters').max(200).transform(stripHtmlAndScripts),
+  contentType: z.string().min(1, 'Content type is required'),
+  language: z.string().min(1, 'Language is required').max(100).transform(stripHtmlAndScripts),
+  originalSource: z.string().optional().transform((val) => val ? stripHtmlAndScripts(val) : ''),
+  translationRights: z.string().optional(),
+  textBody: z.string().min(50, 'Text body is required').max(10000).transform(stripHtmlAndScripts),
+  commentaryContext: z.string().optional().transform((val) => val ? stripHtmlAndScripts(val) : ''),
+  authorAttribution: z.string().min(1, 'Author attribution is required').max(200).transform(stripHtmlAndScripts),
+  permissionToPublish: z.boolean().refine((val) => val === true, 'You must grant permission to publish'),
+});
+
+/**
+ * Thematic Article submission validation
+ */
+export const thematicArticleSchema = z.object({
+  authorName: z.string().min(1, 'Author name is required').max(100).transform(stripHtmlAndScripts),
+  email: z.string().min(1, 'Email is required').email('Invalid email').regex(emailRegex).max(254).transform((val) => val.trim().toLowerCase()),
+  articleTitle: z.string().min(5, 'Title must be at least 5 characters').max(300).transform(stripHtmlAndScripts),
+  themeCategory: z.string().min(1, 'Theme/category is required').max(200).transform(stripHtmlAndScripts),
+  abstractSummary: z.string().min(50, 'Abstract/summary is required').max(2000).transform(stripHtmlAndScripts),
+  fullText: z.string().min(100, 'Full article text is required').max(15000).transform(stripHtmlAndScripts),
+  references: z.string().optional().transform((val) => val ? stripHtmlAndScripts(val) : ''),
+  keywords: z.string().min(1, 'Keywords are required').max(500).transform(stripHtmlAndScripts),
+  intendedAudience: z.string().min(1, 'Intended audience is required').max(200).transform(stripHtmlAndScripts),
+  originalityDeclaration: z.boolean().refine((val) => val === true, 'You must confirm originality'),
+});
+
+/**
+ * Conference / Workshop submission validation
+ */
+export const conferenceWorkshopSchema = z.object({
+  organizerName: z.string().min(1, 'Organizer name is required').max(100).transform(stripHtmlAndScripts),
+  email: z.string().min(1, 'Email is required').email('Invalid email').regex(emailRegex).max(254).transform((val) => val.trim().toLowerCase()),
+  programTitle: z.string().min(5, 'Title must be at least 5 characters').max(200).transform(stripHtmlAndScripts),
+  programType: z.string().min(1, 'Program type is required'),
+  description: z.string().min(50, 'Description is required').max(5000).transform(stripHtmlAndScripts),
+  objectives: z.string().min(50, 'Objectives are required').max(3000).transform(stripHtmlAndScripts),
+  speakersFacilitators: z.string().min(1, 'Speakers/facilitators are required').max(2000).transform(stripHtmlAndScripts),
+  duration: z.string().min(1, 'Duration is required').max(100).transform(stripHtmlAndScripts),
+  preferredDates: z.string().min(1, 'Preferred dates are required').max(200).transform(stripHtmlAndScripts),
+  format: z.string().min(1, 'Format is required'),
+  audience: z.string().min(1, 'Audience description is required').max(500).transform(stripHtmlAndScripts),
+  expectedParticipants: z.string().min(1, 'Expected participants is required').max(100).transform(stripHtmlAndScripts),
+  requirementsResources: z.string().optional().transform((val) => val ? stripHtmlAndScripts(val) : ''),
+  budgetSponsorship: z.string().optional().transform((val) => val ? stripHtmlAndScripts(val) : ''),
+});
+
+/**
  * General Submission form validation (contribute/submit)
  */
 export const generalSubmissionSchema = z.object({
@@ -581,6 +720,26 @@ export const formSchemas = {
   membershipApplication: membershipApplicationSchema,
   trackIdLookup: trackIdLookupSchema,
   membershipStatus: membershipStatusSchema,
+  researchPaper: researchPaperSchema,
+  dialogueProposal: dialogueProposalSchema,
+  interviewProposal: interviewProposalSchema,
+  sacredMedia: sacredMediaSchema,
+  practiceRitual: practiceRitualSchema,
+  sacredText: sacredTextSchema,
+  thematicArticle: thematicArticleSchema,
+  conferenceWorkshop: conferenceWorkshopSchema,
+};
+
+// Submission type to schema mapping
+export const submissionTypeSchemas: Record<string, z.ZodTypeAny> = {
+  research_paper: researchPaperSchema,
+  dialogue_proposal: dialogueProposalSchema,
+  interview_proposal: interviewProposalSchema,
+  sacred_media: sacredMediaSchema,
+  practice_submission: practiceRitualSchema,
+  sacred_text: sacredTextSchema,
+  article_essay: thematicArticleSchema,
+  conference_workshop: conferenceWorkshopSchema,
 };
 
 // Type exports for use in forms
@@ -597,3 +756,11 @@ export type GeneralSubmissionInput = z.infer<typeof generalSubmissionSchema>;
 export type MembershipApplicationInput = z.infer<typeof membershipApplicationSchema>;
 export type TrackIdLookupInput = z.infer<typeof trackIdLookupSchema>;
 export type MembershipStatusInput = z.infer<typeof membershipStatusSchema>;
+export type ResearchPaperInput = z.infer<typeof researchPaperSchema>;
+export type DialogueProposalInput = z.infer<typeof dialogueProposalSchema>;
+export type InterviewProposalInput = z.infer<typeof interviewProposalSchema>;
+export type SacredMediaInput = z.infer<typeof sacredMediaSchema>;
+export type PracticeRitualInput = z.infer<typeof practiceRitualSchema>;
+export type SacredTextInput = z.infer<typeof sacredTextSchema>;
+export type ThematicArticleInput = z.infer<typeof thematicArticleSchema>;
+export type ConferenceWorkshopInput = z.infer<typeof conferenceWorkshopSchema>;

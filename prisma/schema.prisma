@@ -1041,6 +1041,7 @@ model Submission {
   abstract           String
   content            String
   attachmentsJson    Json               @default("[]") @map("attachments_json")
+  submissionData     Json?              @default("{}") @map("submission_data")
   contactName        String             @map("contact_name")
   contactEmail       String             @map("contact_email")
   contactAffiliation String?            @map("contact_affiliation")
