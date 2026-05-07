@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense, useState, useCallback } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { ObservatoryHero } from '@/components/observatory-hero';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,20 +13,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import Link from 'next/link';
 import { ArrowLeft, FileText, Send, CircleCheck as CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
-import FormGuard from '@/components/form-guard';
 import { submissionTypeSchemas } from '@/lib/validations';
 import { sanitizeInput, validateAndSanitizeString } from '@/lib/sanitization';
 import { z } from 'zod';
 
 const SUBMISSION_TYPES = {
-  research_paper: { label: 'Research Paper', schemaKey: 'research_paper' },
-  dialogue_proposal: { label: 'Dialogue Proposal', schemaKey: 'dialogue_proposal' },
-  interview_proposal: { label: 'Interview Proposal', schemaKey: 'interview_proposal' },
-  sacred_media: { label: 'Sacred Media Submission', schemaKey: 'sacred_media' },
-  practice_submission: { label: 'Practice and Ritual', schemaKey: 'practice_submission' },
-  sacred_text: { label: 'Sacred Text and Poetry', schemaKey: 'sacred_text' },
-  article_essay: { label: 'Thematic Article', schemaKey: 'article_essay' },
-  conference_workshop: { label: 'Conference / Workshop', schemaKey: 'conference_workshop' },
+  research_paper: { label: 'Research Paper', schemaKey: 'research_paper', userNameField: 'authorName' },
+  dialogue_proposal: { label: 'Dialogue Proposal', schemaKey: 'dialogue_proposal', userNameField: 'proposerName' },
+  interview_proposal: { label: 'Interview Proposal', schemaKey: 'interview_proposal', userNameField: 'nominatorName' },
+  sacred_media: { label: 'Sacred Media Submission', schemaKey: 'sacred_media', userNameField: 'artistName' },
+  practice_submission: { label: 'Practice and Ritual', schemaKey: 'practice_submission', userNameField: 'contributorName' },
+  sacred_text: { label: 'Sacred Text and Poetry', schemaKey: 'sacred_text', userNameField: 'contributorName' },
+  article_essay: { label: 'Thematic Article', schemaKey: 'article_essay', userNameField: 'authorName' },
+  conference_workshop: { label: 'Conference / Workshop', schemaKey: 'conference_workshop', userNameField: 'organizerName' },
 };
 
 const TYPE_DESCRIPTIONS: Record<string, string> = {
@@ -40,10 +39,18 @@ const TYPE_DESCRIPTIONS: Record<string, string> = {
   conference_workshop: 'Propose conferences, workshops, or training programs.',
 };
 
-function FieldRenderer({ fieldKey, value, onChange, error, fieldOrder }: { fieldKey: string; value: any; onChange: (v: any) => void; error?: string; fieldOrder?: string[] }) {
+const AUTO_FILL_NAME_FIELDS = ['authorName', 'proposerName', 'contributorName', 'nominatorName', 'artistName', 'organizerName'];
+
+function FieldRenderer({ fieldKey, value, onChange, error, fieldOrder, autoFillFieldName, autoFillNameValue, autoFillEmail, isRequired }: { fieldKey: string; value: any; onChange: (v: any) => void; error?: string; fieldOrder?: string[]; autoFillFieldName?: string; autoFillNameValue?: string; autoFillEmail?: string; isRequired?: boolean }) {
   const baseInput = 'mt-2 bg-[#141A3A] text-[#F5F7FA] placeholder:text-[#9CA3AF] border-white/10 focus:border-[#C8A75E] focus:ring-1 focus:ring-[#C8A75E]/30 shadow-inner shadow-black/20';
   const baseLabel = 'text-[#F5F3EE]';
   const errorBorder = error ? 'border-red-500/50' : '';
+  const disabledStyle = 'bg-white/5 border-white/10 text-[#AAB0D6]/70 cursor-not-allowed';
+
+  const isAutoName = fieldKey === autoFillFieldName;
+  const isAutoEmail = fieldKey === 'email';
+  const isDisabled = isAutoName || isAutoEmail;
+  const displayValue = isAutoName ? (autoFillNameValue || '') : isAutoEmail ? (autoFillEmail || '') : (value || '');
 
   const boolFields = ['originalityDeclaration', 'ethicsDeclaration', 'rightsOwnership', 'permissionToPublish', 'consentConfirmation'];
   if (boolFields.includes(fieldKey)) {
@@ -56,7 +63,9 @@ function FieldRenderer({ fieldKey, value, onChange, error, fieldOrder }: { field
           {fieldKey === 'rightsOwnership' && 'I confirm I own the rights to this media or have obtained proper permissions.'}
           {fieldKey === 'permissionToPublish' && 'I grant permission for Sufi Science Center to publish and distribute this work.'}
           {fieldKey === 'consentConfirmation' && 'I confirm I have obtained consent from the nominee (if nominating someone else).'}
+          {isRequired && <span className="text-red-400 ml-1">*</span>}
         </Label>
+        {error && <p className="text-red-400 text-xs mt-1 ml-7">{error}</p>}
       </div>
     );
   }
@@ -65,8 +74,8 @@ function FieldRenderer({ fieldKey, value, onChange, error, fieldOrder }: { field
   if (textareaFields.includes(fieldKey)) {
     return (
       <div>
-        <Label htmlFor={fieldKey} className={baseLabel}>{getFieldLabel(fieldKey)}</Label>
-        <Textarea id={fieldKey} value={value || ''} onChange={(e) => onChange(e.target.value)} className={`${baseInput} ${errorBorder} min-h-[100px]`} placeholder={getFieldPlaceholder(fieldKey)} />
+        <Label htmlFor={fieldKey} className={baseLabel}>{getFieldLabel(fieldKey)}{isRequired && <span className="text-red-400 ml-1">*</span>}</Label>
+        <Textarea id={fieldKey} value={displayValue} onChange={(e) => onChange(e.target.value)} disabled={isDisabled} className={`${baseInput} ${errorBorder} ${isDisabled ? disabledStyle : ''} min-h-[100px]`} placeholder={getFieldPlaceholder(fieldKey)} />
         {error && <p className="text-red-400 text-xs mt-1">{error}</p>}
       </div>
     );
@@ -79,9 +88,9 @@ function FieldRenderer({ fieldKey, value, onChange, error, fieldOrder }: { field
       : [['conference', 'Conference'], ['workshop', 'Workshop'], ['training', 'Training'], ['seminar', 'Seminar']];
     return (
       <div>
-        <Label htmlFor={fieldKey} className={baseLabel}>{getFieldLabel(fieldKey)}</Label>
-        <Select value={value || ''} onValueChange={onChange}>
-          <SelectTrigger className={`${baseInput} ${errorBorder}`}>
+        <Label htmlFor={fieldKey} className={baseLabel}>{getFieldLabel(fieldKey)}{isRequired && <span className="text-red-400 ml-1">*</span>}</Label>
+        <Select value={displayValue} onValueChange={onChange} disabled={isDisabled}>
+          <SelectTrigger className={`${baseInput} ${errorBorder} ${isDisabled ? disabledStyle : ''}`}>
             <SelectValue placeholder={`Select ${getFieldLabel(fieldKey).toLowerCase()}`} />
           </SelectTrigger>
           <SelectContent>
@@ -100,9 +109,9 @@ function FieldRenderer({ fieldKey, value, onChange, error, fieldOrder }: { field
       : [['online', 'Online'], ['in-person', 'In-Person'], ['hybrid', 'Hybrid']];
     return (
       <div>
-        <Label htmlFor={fieldKey} className={baseLabel}>{getFieldLabel(fieldKey)}</Label>
-        <Select value={value || ''} onValueChange={onChange}>
-          <SelectTrigger className={`${baseInput} ${errorBorder}`}>
+        <Label htmlFor={fieldKey} className={baseLabel}>{getFieldLabel(fieldKey)}{isRequired && <span className="text-red-400 ml-1">*</span>}</Label>
+        <Select value={displayValue} onValueChange={onChange} disabled={isDisabled}>
+          <SelectTrigger className={`${baseInput} ${errorBorder} ${isDisabled ? disabledStyle : ''}`}>
             <SelectValue placeholder="Select format" />
           </SelectTrigger>
           <SelectContent>
@@ -118,9 +127,9 @@ function FieldRenderer({ fieldKey, value, onChange, error, fieldOrder }: { field
     const options = [['original_poetry', 'Original Poetry'], ['translation', 'Translation'], ['commentary', 'Commentary'], ['sacred_text_excerpt', 'Sacred Text Excerpt']];
     return (
       <div>
-        <Label htmlFor={fieldKey} className={baseLabel}>{getFieldLabel(fieldKey)}</Label>
-        <Select value={value || ''} onValueChange={onChange}>
-          <SelectTrigger className={`${baseInput} ${errorBorder}`}>
+        <Label htmlFor={fieldKey} className={baseLabel}>{getFieldLabel(fieldKey)}{isRequired && <span className="text-red-400 ml-1">*</span>}</Label>
+        <Select value={displayValue} onValueChange={onChange} disabled={isDisabled}>
+          <SelectTrigger className={`${baseInput} ${errorBorder} ${isDisabled ? disabledStyle : ''}`}>
             <SelectValue placeholder="Select content type" />
           </SelectTrigger>
           <SelectContent>
@@ -134,8 +143,8 @@ function FieldRenderer({ fieldKey, value, onChange, error, fieldOrder }: { field
 
   return (
     <div>
-      <Label htmlFor={fieldKey} className={baseLabel}>{getFieldLabel(fieldKey)}</Label>
-      <Input id={fieldKey} type={fieldKey.includes('email') || fieldKey.includes('link') || fieldKey.includes('url') ? 'url' : 'text'} value={value || ''} onChange={(e) => onChange(e.target.value)} className={`${baseInput} ${errorBorder}`} placeholder={getFieldPlaceholder(fieldKey)} />
+      <Label htmlFor={fieldKey} className={baseLabel}>{getFieldLabel(fieldKey)}{isRequired && <span className="text-red-400 ml-1">*</span>}</Label>
+      <Input id={fieldKey} type={fieldKey.includes('email') || fieldKey.includes('link') || fieldKey.includes('url') ? 'url' : 'text'} value={displayValue} onChange={(e) => onChange(e.target.value)} disabled={isDisabled} className={`${baseInput} ${errorBorder} ${isDisabled ? disabledStyle : ''}`} placeholder={getFieldPlaceholder(fieldKey)} />
       {error && <p className="text-red-400 text-xs mt-1">{error}</p>}
     </div>
   );
@@ -178,24 +187,24 @@ function getFieldLabel(key: string): string {
 
 function getFieldPlaceholder(key: string): string {
   const placeholders: Record<string, string> = {
-    authorName: 'Enter your full name', email: 'your.email@example.com', affiliation: 'University or institution',
+    authorName: 'Your full name (auto-filled)', email: 'your.email@example.com', affiliation: 'University or institution',
     paperTitle: 'Enter the title of your paper', abstract: 'Provide a brief summary (150-300 words)',
     discipline: 'e.g., Sufi Philosophy, Islamic Studies, Neuroscience', keywords: 'Comma-separated keywords',
     fileUrl: 'https://drive.google.com/... or upload link', citationStyle: 'APA, MLA, Chicago, etc.',
     suggestedModule: 'Suggest which knowledge module this fits', coAuthors: 'Names and affiliations of co-authors',
-    orcidLink: 'https://orcid.org/...', proposerName: 'Your full name',
+    orcidLink: 'https://orcid.org/...', proposerName: 'Your full name (auto-filled)',
     dialogueTitle: 'Title of the proposed dialogue', mainQuestion: 'What central question or theme will be explored?',
     proposedSpeakers: 'Names and brief backgrounds of proposed speakers', targetAudience: 'Who should attend this dialogue?',
     whyItMatters: 'Explain the significance and relevance of this dialogue',
     preferredDateTime: 'Preferred dates and times (flexible)', supportingNotes: 'Any additional context or supporting information',
-    nominatorName: 'Your full name', nomineeName: 'Full name of the nominee',
+    nominatorName: 'Your full name (auto-filled)', nomineeName: 'Full name of the nominee',
     nomineeBio: 'Brief biography of the nominee', fieldOfWork: 'Primary field or discipline',
     whyInterview: 'Explain why this person deserves to be interviewed',
     suggestedQuestions: 'List 5-10 suggested interview questions', linksToWork: 'Links to their published work or media',
-    artistName: 'Your name or artist name', mediaTitle: 'Title of the media work',
+    artistName: 'Your name or artist name (auto-filled)', mediaTitle: 'Title of the media work',
     language: 'Primary language of the media', traditionContext: 'Spiritual or cultural tradition this media belongs to',
     lyricsText: 'Include lyrics, script, or descriptive text', culturalContext: 'Describe the cultural and spiritual significance',
-    credits: 'Additional credits and acknowledgments', contributorName: 'Your full name',
+    credits: 'Additional credits and acknowledgments', contributorName: 'Your full name (auto-filled)',
     practiceName: 'Name of the practice or ritual', traditionSource: 'Source tradition or lineage',
     lineageContext: 'Historical and spiritual lineage context',
     stepDescription: 'Detailed step-by-step instructions for the practice',
@@ -209,7 +218,7 @@ function getFieldPlaceholder(key: string): string {
     authorAttribution: 'How should the author be credited?', articleTitle: 'Title of your article',
     themeCategory: 'Category or theme of the article', abstractSummary: 'Brief summary of the article',
     fullText: 'Paste or write the full article here', references: 'List of references and citations',
-    intendedAudience: 'Who is this article written for?', organizerName: 'Your full name',
+    intendedAudience: 'Who is this article written for?', organizerName: 'Your full name (auto-filled)',
     programTitle: 'Title of the program', description: 'Detailed description of the program',
     objectives: 'What are the learning objectives and outcomes?', speakersFacilitators: 'Names and roles of speakers/facilitators',
     duration: 'e.g., 2 days, 4 hours, 1 week', preferredDates: 'Preferred dates or date range',
@@ -223,7 +232,7 @@ function getFieldPlaceholder(key: string): string {
 const TYPE_FIELD_ORDER: Record<string, string[]> = {
   research_paper: ['authorName', 'email', 'affiliation', 'paperTitle', 'abstract', 'discipline', 'keywords', 'fileUrl', 'citationStyle', 'coAuthors', 'orcidLink', 'suggestedModule', 'originalityDeclaration', 'ethicsDeclaration'],
   dialogue_proposal: ['proposerName', 'email', 'dialogueTitle', 'mainQuestion', 'proposedSpeakers', 'format', 'targetAudience', 'whyItMatters', 'preferredDateTime', 'supportingNotes'],
-  interview_proposal: ['nominatorName', 'nomineeName', 'nomineeBio', 'email', 'fieldOfWork', 'whyInterview', 'suggestedQuestions', 'linksToWork', 'consentConfirmation'],
+  interview_proposal: ['nominatorName', 'email', 'nomineeName', 'nomineeBio', 'fieldOfWork', 'whyInterview', 'suggestedQuestions', 'linksToWork', 'consentConfirmation'],
   sacred_media: ['artistName', 'email', 'mediaTitle', 'mediaType', 'language', 'traditionContext', 'lyricsText', 'fileUrl', 'culturalContext', 'credits', 'rightsOwnership', 'permissionToPublish'],
   practice_submission: ['contributorName', 'email', 'practiceName', 'traditionSource', 'lineageContext', 'stepDescription', 'safetyConsiderations', 'whoShouldPractice', 'durationFrequency', 'requiredPreparation', 'culturalSensitivity'],
   sacred_text: ['contributorName', 'email', 'title', 'contentType', 'language', 'originalSource', 'translationRights', 'textBody', 'commentaryContext', 'authorAttribution', 'permissionToPublish'],
@@ -231,10 +240,20 @@ const TYPE_FIELD_ORDER: Record<string, string[]> = {
   conference_workshop: ['organizerName', 'email', 'programTitle', 'programType', 'description', 'objectives', 'speakersFacilitators', 'duration', 'preferredDates', 'format', 'audience', 'expectedParticipants', 'requirementsResources', 'budgetSponsorship'],
 };
 
+const REQUIRED_FIELDS: Record<string, string[]> = {
+  research_paper: ['authorName', 'email', 'affiliation', 'paperTitle', 'abstract', 'discipline', 'keywords', 'originalityDeclaration', 'ethicsDeclaration'],
+  dialogue_proposal: ['proposerName', 'email', 'dialogueTitle', 'mainQuestion', 'proposedSpeakers', 'format', 'targetAudience', 'whyItMatters'],
+  interview_proposal: ['nominatorName', 'email', 'nomineeName', 'nomineeBio', 'fieldOfWork', 'whyInterview', 'suggestedQuestions', 'consentConfirmation'],
+  sacred_media: ['artistName', 'email', 'mediaTitle', 'mediaType', 'language', 'traditionContext', 'culturalContext', 'rightsOwnership', 'permissionToPublish'],
+  practice_submission: ['contributorName', 'email', 'practiceName', 'traditionSource', 'lineageContext', 'stepDescription', 'safetyConsiderations', 'whoShouldPractice', 'durationFrequency'],
+  sacred_text: ['contributorName', 'email', 'title', 'contentType', 'language', 'textBody', 'authorAttribution', 'permissionToPublish'],
+  article_essay: ['authorName', 'email', 'articleTitle', 'themeCategory', 'abstractSummary', 'fullText', 'keywords', 'intendedAudience', 'originalityDeclaration'],
+  conference_workshop: ['organizerName', 'email', 'programTitle', 'programType', 'description', 'objectives', 'speakersFacilitators', 'duration', 'preferredDates', 'format', 'audience', 'expectedParticipants'],
+};
+
 function SubmitFormContent() {
   const { user } = useAuth();
   const searchParams = useSearchParams();
-  const router = useRouter();
   const typeParam = searchParams.get('type') || '';
 
   const validType = SUBMISSION_TYPES[typeParam as keyof typeof SUBMISSION_TYPES];
@@ -269,6 +288,7 @@ function SubmitFormContent() {
 
   const schema = submissionTypeSchemas[validType.schemaKey];
   const fieldOrder = TYPE_FIELD_ORDER[validType.schemaKey] || [];
+  const requiredFields = REQUIRED_FIELDS[validType.schemaKey] || [];
 
   const handleFieldChange = useCallback((key: string, value: any) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
@@ -291,13 +311,8 @@ function SubmitFormContent() {
 
     const dataToValidate = {
       ...formData,
+      [validType.userNameField]: user?.name || formData[validType.userNameField] || '',
       email: user?.email || formData.email || '',
-      authorName: formData.authorName || user?.name || '',
-      contributorName: formData.contributorName || user?.name || '',
-      proposerName: formData.proposerName || user?.name || '',
-      nominatorName: formData.nominatorName || user?.name || '',
-      artistName: formData.artistName || user?.name || '',
-      organizerName: formData.organizerName || user?.name || '',
     };
 
     try {
@@ -317,7 +332,10 @@ function SubmitFormContent() {
     setIsSubmitting(true);
 
     try {
-      const submissionData: Record<string, any> = {};
+      const submissionData: Record<string, any> = {
+        [validType.userNameField]: user?.name || '',
+        email: user?.email || '',
+      };
       for (const key of Object.keys(formData)) {
         const val = formData[key];
         if (typeof val === 'boolean') {
@@ -343,8 +361,8 @@ function SubmitFormContent() {
           abstract: sanitizeInput(abstract),
           content: sanitizeInput(formData.stepDescription || formData.textBody || formData.fullText || formData.mainQuestion || 'N/A'),
           submission_data: submissionData,
-          contact_name: sanitizeInput(user?.name || formData.authorName || formData.contributorName || formData.proposerName || formData.nominatorName || formData.artistName || formData.organizerName || ''),
-          contact_email: (user?.email || formData.email || '').trim().toLowerCase(),
+          contact_name: sanitizeInput(user?.name || ''),
+          contact_email: (user?.email || '').trim().toLowerCase(),
           contact_affiliation: sanitizeInput(formData.affiliation || ''),
           status: 'submitted',
         }),
@@ -406,23 +424,23 @@ function SubmitFormContent() {
               <FileText className="w-6 h-6 text-[#C8A75E]" />
               <CardTitle className="text-2xl text-[#F5F3EE]">{validType.label} Form</CardTitle>
             </div>
-            <p className="text-[#AAB0D6]">Please complete all required fields marked with *. Your submission will be reviewed by our editorial team.</p>
+            <p className="text-[#AAB0D6]">Fields marked with <span className="text-red-400">*</span> are required. Fields with a grey background are auto-filled from your account.</p>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid sm:grid-cols-2 gap-4 p-4 rounded-lg bg-white/2 border border-white/5">
-                <div>
-                  <Label className="text-[#AAB0D6]/50 text-xs">Your Name</Label>
-                  <Input value={user?.name || ''} disabled className="mt-1 bg-white/3 border-white/5 text-[#AAB0D6]/50 cursor-not-allowed" />
-                </div>
-                <div>
-                  <Label className="text-[#AAB0D6]/50 text-xs">Email Address</Label>
-                  <Input value={user?.email || ''} disabled className="mt-1 bg-white/3 border-white/5 text-[#AAB0D6]/50 cursor-not-allowed" />
-                </div>
-              </div>
-
               {fieldOrder.map((key) => (
-                <FieldRenderer key={key} fieldKey={key} value={formData[key]} onChange={(v) => handleFieldChange(key, v)} error={fieldErrors[key]} fieldOrder={fieldOrder} />
+                <FieldRenderer
+                  key={key}
+                  fieldKey={key}
+                  value={formData[key]}
+                  onChange={(v) => handleFieldChange(key, v)}
+                  error={fieldErrors[key]}
+                  fieldOrder={fieldOrder}
+                  autoFillFieldName={validType.userNameField}
+                  autoFillNameValue={user?.name || ''}
+                  autoFillEmail={user?.email || ''}
+                  isRequired={requiredFields.includes(key)}
+                />
               ))}
 
               <div className="flex items-start space-x-3 pt-4">
@@ -463,21 +481,8 @@ export default function SubmitPage() {
   }
 
   return (
-    <FormGuard
-      formType="submission"
-      checkExisting={async (uid) => {
-        const res = await fetch('/api/form-status', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: uid, formType: 'submission' }),
-        });
-        const data = await res.json();
-        return data.exists;
-      }}
-    >
-      <Suspense fallback={<div className="min-h-screen pt-20 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-[#C8A75E]" /></div>}>
-        <SubmitFormContent />
-      </Suspense>
-    </FormGuard>
+    <Suspense fallback={<div className="min-h-screen pt-20 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-[#C8A75E]" /></div>}>
+      <SubmitFormContent />
+    </Suspense>
   );
 }

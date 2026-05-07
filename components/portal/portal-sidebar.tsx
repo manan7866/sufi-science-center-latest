@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, BookOpen, Compass, Users, HandHeart, FlaskConical, CalendarDays, CircleUser as UserCircle, Phone, Shield, BadgeCheck, Receipt, LogOut, X, Menu, UserPlus, LifeBuoy, MessageSquare, ShieldCheck, Loader2 } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Compass, Users, HandHeart, FlaskConical, CalendarDays, CircleUser as UserCircle, Phone, Shield, BadgeCheck, Receipt, LogOut, X, Menu, UserPlus, LifeBuoy, MessageSquare, ShieldCheck, Loader2, FileText } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 
 interface NavItem {
@@ -34,6 +34,7 @@ const NAV_GROUPS: NavGroup[] = [
       { label: 'Volunteer', href: '/institute/volunteer', icon: HandHeart },
       { label: 'Research Collaboration', href: '/institute/collaborations', icon: FlaskConical },
       { label: 'Conference Registration', href: '/contribute', icon: CalendarDays },
+      { label: 'My Contributions', href: '/portal/contributions', icon: FileText },
       { label: 'Interview Applications', href: '/portal/interview-applications', icon: FlaskConical },
     ],
   },
