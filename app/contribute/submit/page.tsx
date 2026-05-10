@@ -81,10 +81,14 @@ function FieldRenderer({ fieldKey, value, onChange, error, fieldOrder, autoFillF
     );
   }
 
-  const selectFields = ['mediaType', 'programType'];
+  const selectFields = ['mediaType', 'programType', 'category', 'difficultyLevel'];
   if (selectFields.includes(fieldKey)) {
     const options = fieldKey === 'mediaType'
       ? [['audio', 'Audio'], ['video', 'Video'], ['image', 'Image'], ['performance', 'Performance']]
+      : fieldKey === 'category'
+      ? [['meditation', 'Meditation'], ['dhikr', 'Dhikr'], ['breath_work', 'Breath Work'], ['contemplation', 'Contemplation'], ['visualization', 'Visualization']]
+      : fieldKey === 'difficultyLevel'
+      ? [['beginner', 'Beginner'], ['intermediate', 'Intermediate'], ['advanced', 'Advanced']]
       : [['conference', 'Conference'], ['workshop', 'Workshop'], ['training', 'Training'], ['seminar', 'Seminar']];
     return (
       <div>
@@ -167,11 +171,10 @@ function getFieldLabel(key: string): string {
     traditionContext: 'Tradition / Context', lyricsText: 'Lyrics / Text (if applicable)',
     rightsOwnership: 'Rights Ownership', permissionToPublish: 'Permission to Publish',
     culturalContext: 'Cultural / Spiritual Context', credits: 'Credits',
-    contributorName: 'Contributor Name', practiceName: 'Practice Name', traditionSource: 'Tradition / Source',
-    lineageContext: 'Lineage / Context', stepDescription: 'Step-by-Step Description',
-    safetyConsiderations: 'Safety Considerations', whoShouldPractice: 'Who Should / Should Not Practice',
-    durationFrequency: 'Duration / Frequency', requiredPreparation: 'Required Preparation',
-    culturalSensitivity: 'Cultural Sensitivity Note',
+    contributorName: 'Contributor Name', practiceName: 'Practice Name', category: 'Category',
+    description: 'Description', instructions: 'Instructions', benefits: 'Benefits',
+    prerequisites: 'Prerequisites', difficultyLevel: 'Difficulty Level', durationMinutes: 'Duration (minutes)',
+    traditionSource: 'Tradition / Source',
     title: 'Title', contentType: 'Content Type', originalSource: 'Original Source (if translated)',
     translationRights: 'Translation Rights', textBody: 'Text Body',
     commentaryContext: 'Commentary / Context', authorAttribution: 'Author Attribution',
@@ -204,14 +207,13 @@ function getFieldPlaceholder(key: string): string {
     artistName: 'Your name or artist name (auto-filled)', mediaTitle: 'Title of the media work',
     language: 'Primary language of the media', traditionContext: 'Spiritual or cultural tradition this media belongs to',
     lyricsText: 'Include lyrics, script, or descriptive text', culturalContext: 'Describe the cultural and spiritual significance',
-    credits: 'Additional credits and acknowledgments', contributorName: 'Your full name (auto-filled)',
-    practiceName: 'Name of the practice or ritual', traditionSource: 'Source tradition or lineage',
-    lineageContext: 'Historical and spiritual lineage context',
-    stepDescription: 'Detailed step-by-step instructions for the practice',
-    safetyConsiderations: 'Important safety warnings and precautions',
-    whoShouldPractice: 'Who benefits from this practice and who should avoid it',
-    durationFrequency: 'e.g., 20 minutes daily, 1 hour weekly', requiredPreparation: 'Any preparation needed before practicing',
-    culturalSensitivity: 'Notes on cultural sensitivity and appropriate context',
+    credits: 'Additional credits and acknowledgments',     contributorName: 'Your full name (auto-filled)',
+    practiceName: 'Name of the practice or ritual', category: 'Select category',
+    description: 'Describe the practice and its purpose',
+    instructions: 'Detailed step-by-step instructions (comma-separated steps)',
+    benefits: 'Benefits (comma-separated)', prerequisites: 'Prerequisites (comma-separated)',
+    difficultyLevel: 'Select difficulty level', durationMinutes: 'e.g., 30',
+    traditionSource: 'Source tradition or lineage',
     title: 'Title of the work', originalSource: 'Original author and source text',
     translationRights: 'Do you hold translation rights?',
     textBody: 'Paste the full text here', commentaryContext: 'Provide context or commentary about the text',
@@ -219,7 +221,7 @@ function getFieldPlaceholder(key: string): string {
     themeCategory: 'Category or theme of the article', abstractSummary: 'Brief summary of the article',
     fullText: 'Paste or write the full article here', references: 'List of references and citations',
     intendedAudience: 'Who is this article written for?', organizerName: 'Your full name (auto-filled)',
-    programTitle: 'Title of the program', description: 'Detailed description of the program',
+    programTitle: 'Title of the program', programDescription: 'Detailed description of the program',
     objectives: 'What are the learning objectives and outcomes?', speakersFacilitators: 'Names and roles of speakers/facilitators',
     duration: 'e.g., 2 days, 4 hours, 1 week', preferredDates: 'Preferred dates or date range',
     audience: 'Target audience description', expectedParticipants: 'Expected number of participants',
@@ -234,10 +236,10 @@ const TYPE_FIELD_ORDER: Record<string, string[]> = {
   dialogue_proposal: ['proposerName', 'email', 'dialogueTitle', 'mainQuestion', 'proposedSpeakers', 'format', 'targetAudience', 'whyItMatters', 'preferredDateTime', 'supportingNotes'],
   interview_proposal: ['nominatorName', 'email', 'nomineeName', 'nomineeBio', 'fieldOfWork', 'whyInterview', 'suggestedQuestions', 'linksToWork', 'consentConfirmation'],
   sacred_media: ['artistName', 'email', 'mediaTitle', 'mediaType', 'language', 'traditionContext', 'lyricsText', 'fileUrl', 'culturalContext', 'credits', 'rightsOwnership', 'permissionToPublish'],
-  practice_submission: ['contributorName', 'email', 'practiceName', 'traditionSource', 'lineageContext', 'stepDescription', 'safetyConsiderations', 'whoShouldPractice', 'durationFrequency', 'requiredPreparation', 'culturalSensitivity'],
+  practice_submission: ['contributorName', 'email', 'practiceName', 'category', 'description', 'instructions', 'benefits', 'prerequisites', 'difficultyLevel', 'durationMinutes', 'traditionSource'],
   sacred_text: ['contributorName', 'email', 'title', 'contentType', 'language', 'originalSource', 'translationRights', 'textBody', 'commentaryContext', 'authorAttribution', 'permissionToPublish'],
   article_essay: ['authorName', 'email', 'articleTitle', 'themeCategory', 'abstractSummary', 'fullText', 'references', 'keywords', 'intendedAudience', 'originalityDeclaration'],
-  conference_workshop: ['organizerName', 'email', 'programTitle', 'programType', 'description', 'objectives', 'speakersFacilitators', 'duration', 'preferredDates', 'format', 'audience', 'expectedParticipants', 'requirementsResources', 'budgetSponsorship'],
+  conference_workshop: ['organizerName', 'email', 'programTitle', 'programType', 'programDescription', 'objectives', 'speakersFacilitators', 'duration', 'preferredDates', 'format', 'audience', 'expectedParticipants', 'requirementsResources', 'budgetSponsorship'],
 };
 
 const REQUIRED_FIELDS: Record<string, string[]> = {
@@ -245,10 +247,10 @@ const REQUIRED_FIELDS: Record<string, string[]> = {
   dialogue_proposal: ['proposerName', 'email', 'dialogueTitle', 'mainQuestion', 'proposedSpeakers', 'format', 'targetAudience', 'whyItMatters'],
   interview_proposal: ['nominatorName', 'email', 'nomineeName', 'nomineeBio', 'fieldOfWork', 'whyInterview', 'suggestedQuestions', 'consentConfirmation'],
   sacred_media: ['artistName', 'email', 'mediaTitle', 'mediaType', 'language', 'traditionContext', 'culturalContext', 'rightsOwnership', 'permissionToPublish'],
-  practice_submission: ['contributorName', 'email', 'practiceName', 'traditionSource', 'lineageContext', 'stepDescription', 'safetyConsiderations', 'whoShouldPractice', 'durationFrequency'],
+  practice_submission: ['contributorName', 'email', 'practiceName', 'category', 'description', 'instructions', 'traditionSource'],
   sacred_text: ['contributorName', 'email', 'title', 'contentType', 'language', 'textBody', 'authorAttribution', 'permissionToPublish'],
   article_essay: ['authorName', 'email', 'articleTitle', 'themeCategory', 'abstractSummary', 'fullText', 'keywords', 'intendedAudience', 'originalityDeclaration'],
-  conference_workshop: ['organizerName', 'email', 'programTitle', 'programType', 'description', 'objectives', 'speakersFacilitators', 'duration', 'preferredDates', 'format', 'audience', 'expectedParticipants'],
+  conference_workshop: ['organizerName', 'email', 'programTitle', 'programType', 'programDescription', 'objectives', 'speakersFacilitators', 'duration', 'preferredDates', 'format', 'audience', 'expectedParticipants'],
 };
 
 function SubmitFormContent() {
@@ -349,24 +351,62 @@ function SubmitFormContent() {
       }
 
       const title = formData.paperTitle || formData.dialogueTitle || formData.mediaTitle || formData.practiceName || formData.articleTitle || formData.programTitle || formData.title || formData.nomineeName || 'Untitled Submission';
-      const abstract = formData.abstract || formData.whyItMatters || formData.whyInterview || formData.culturalContext || formData.lineageContext || formData.abstractSummary || formData.description || 'No abstract provided';
+      const abstract = formData.abstract || formData.whyItMatters || formData.whyInterview || formData.culturalContext || formData.lineageContext || formData.abstractSummary || formData.description || formData.programDescription || 'No abstract provided';
 
-      const res = await fetch('/api/submissions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: user?.id || null,
-          submission_type: typeParam,
-          title: sanitizeInput(title),
-          abstract: sanitizeInput(abstract),
-          content: sanitizeInput(formData.stepDescription || formData.textBody || formData.fullText || formData.mainQuestion || 'N/A'),
-          submission_data: submissionData,
-          contact_name: sanitizeInput(user?.name || ''),
-          contact_email: (user?.email || '').trim().toLowerCase(),
-          contact_affiliation: sanitizeInput(formData.affiliation || ''),
-          status: 'submitted',
-        }),
-      });
+      let res;
+      if (typeParam === 'practice_submission') {
+        res = await fetch('/api/submissions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: user?.id || null,
+            submission_type: 'practice_submission',
+            title: sanitizeInput(title),
+            abstract: sanitizeInput(abstract),
+            content: sanitizeInput(formData.stepDescription || formData.textBody || formData.fullText || formData.instructions || 'N/A'),
+            submission_data: submissionData,
+            contact_name: sanitizeInput(user?.name || ''),
+            contact_email: (user?.email || '').trim().toLowerCase(),
+            contact_affiliation: sanitizeInput(formData.affiliation || ''),
+            status: 'submitted',
+          }),
+        });
+        if (res.ok) {
+          await fetch('/api/practice-submissions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ...submissionData,
+              practiceName: formData.practiceName,
+              category: formData.category,
+              description: formData.description,
+              instructions: formData.instructions,
+              benefits: formData.benefits,
+              prerequisites: formData.prerequisites,
+              difficultyLevel: formData.difficultyLevel,
+              durationMinutes: formData.durationMinutes,
+              traditionSource: formData.traditionSource,
+            }),
+          }).catch(() => {});
+        }
+      } else {
+        res = await fetch('/api/submissions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: user?.id || null,
+            submission_type: typeParam,
+            title: sanitizeInput(title),
+            abstract: sanitizeInput(abstract),
+            content: sanitizeInput(formData.stepDescription || formData.textBody || formData.fullText || formData.mainQuestion || 'N/A'),
+            submission_data: submissionData,
+            contact_name: sanitizeInput(user?.name || ''),
+            contact_email: (user?.email || '').trim().toLowerCase(),
+            contact_affiliation: sanitizeInput(formData.affiliation || ''),
+            status: 'submitted',
+          }),
+        });
+      }
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));

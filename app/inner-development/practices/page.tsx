@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Clock, ChartBar as BarChart3, Heart, Wind, Eye, Sparkles } from 'lucide-react';
+import { Clock, ChartBar as BarChart3, Heart, Wind, Eye, Sparkles, ChevronDown } from 'lucide-react';
 import { ScrollReveal } from '@/components/scroll-reveal';
 import { ObservatoryHero } from '@/components/observatory-hero';
 
@@ -46,12 +46,17 @@ function PracticesPageInner() {
   const [practices, setPractices] = useState<Practice[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedPractice, setSelectedPractice] = useState<Practice | null>(null);
+  const [visibleCount, setVisibleCount] = useState(6);
 
   const selectedCategory = searchParams.get('category') || 'all';
 
   useEffect(() => {
     fetchPractices();
   }, []);
+
+  useEffect(() => {
+    setVisibleCount(6);
+  }, [selectedCategory]);
 
   const fetchPractices = async () => {
     try {
@@ -81,6 +86,9 @@ function PracticesPageInner() {
   const filteredPractices = selectedCategory === 'all'
     ? practices
     : practices.filter(p => p.category === selectedCategory);
+
+  const displayPractices = filteredPractices.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredPractices.length;
 
   if (loading) {
     return (
@@ -119,8 +127,9 @@ function PracticesPageInner() {
         </ScrollReveal>
 
         {!selectedPractice ? (
+          <>
           <div className="grid md:grid-cols-2 gap-6">
-            {filteredPractices.map((practice, index) => {
+            {displayPractices.map((practice, index) => {
               const Icon = categoryIcons[practice.category] || Sparkles;
 
               return (
@@ -169,6 +178,19 @@ function PracticesPageInner() {
               );
             })}
           </div>
+
+          {hasMore && (
+            <div className="flex justify-center mt-8">
+              <Button
+                onClick={() => setVisibleCount((prev) => prev + 6)}
+                className="bg-[#C8A75E]/10 text-[#C8A75E] hover:bg-[#C8A75E]/20 border border-[#C8A75E]/30 px-8"
+              >
+                <ChevronDown className="w-4 h-4 mr-2" />
+                Load More ({filteredPractices.length - visibleCount} more)
+              </Button>
+            </div>
+          )}
+          </>
         ) : (
           <ScrollReveal>
             <Card className="glass-panel border-white/5 p-8 max-w-4xl mx-auto">

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAdminToken, hasApplicationPermission } from '@/lib/auth';
 import prisma from '@/lib/prisma';
+import { sendMediaAcceptedEmail, sendArticleAcceptedEmail } from '@/lib/email';
 
 export async function GET(req: NextRequest) {
   const token = req.cookies.get('admin_token')?.value;
@@ -46,6 +47,24 @@ export async function PATCH(req: NextRequest) {
       where: { id },
       data: { status, adminNotes: adminNotes ?? null, updatedAt: new Date() },
     });
+
+    const data = (submission.submissionData || {}) as Record<string, any>;
+
+    if (submission.submissionType === 'sacred_media' && status === 'accepted') {
+      await sendMediaAcceptedEmail(
+        submission.contactEmail,
+        submission.contactName,
+        data.mediaTitle || submission.title
+      ).catch((err) => console.error('Failed to send media accepted email:', err));
+    }
+
+    if (submission.submissionType === 'article_essay' && (status === 'accepted' || status === 'published')) {
+      await sendArticleAcceptedEmail(
+        submission.contactEmail,
+        submission.contactName,
+        data.articleTitle || submission.title
+      ).catch((err) => console.error('Failed to send article accepted email:', err));
+    }
 
     return NextResponse.json({ submission });
   } catch {

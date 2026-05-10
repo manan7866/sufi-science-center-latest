@@ -112,31 +112,33 @@ export async function PATCH(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { id, title, slug, category, difficultyLevel, difficulty_level, durationMinutes, duration_minutes, description, instructions, benefits, prerequisites, traditionSource, tradition_source, videoUrl, video_url, audioUrl, audio_url } = body;
+    const { id, title, slug, category, difficultyLevel, difficulty_level, durationMinutes, duration_minutes, description, instructions, benefits, prerequisites, traditionSource, tradition_source, videoUrl, video_url, audioUrl, audio_url, status } = body;
 
     if (!id) return NextResponse.json({ error: 'id required.' }, { status: 400 });
 
+    const updateData: Record<string, any> = {};
+    if (title !== undefined) updateData.title = title;
+    if (slug !== undefined) updateData.slug = slug;
+    if (category !== undefined) updateData.category = category;
+    if (difficultyLevel !== undefined) updateData.difficultyLevel = difficultyLevel;
+    else if (difficulty_level !== undefined) updateData.difficultyLevel = difficulty_level;
+    if (durationMinutes !== undefined) updateData.durationMinutes = durationMinutes;
+    else if (duration_minutes !== undefined) updateData.durationMinutes = duration_minutes;
+    if (description !== undefined) updateData.description = description;
+    if (instructions !== undefined) updateData.instructions = instructions;
+    if (benefits !== undefined) updateData.benefits = benefits;
+    if (prerequisites !== undefined) updateData.prerequisites = prerequisites;
+    if (traditionSource !== undefined) updateData.traditionSource = traditionSource;
+    else if (tradition_source !== undefined) updateData.traditionSource = tradition_source;
+    if (videoUrl !== undefined) updateData.videoUrl = videoUrl;
+    else if (video_url !== undefined) updateData.videoUrl = video_url;
+    if (audioUrl !== undefined) updateData.audioUrl = audioUrl;
+    else if (audio_url !== undefined) updateData.audioUrl = audio_url;
+    if (status !== undefined) updateData.status = status;
+
     const practice = await prisma.practice.update({
       where: { id },
-      data: {
-        ...(title !== undefined && { title }),
-        ...(slug !== undefined && { slug }),
-        ...(category !== undefined && { category }),
-        ...(difficultyLevel !== undefined && { difficultyLevel }) ||
-        (difficulty_level !== undefined && { difficultyLevel: difficulty_level }),
-        ...(durationMinutes !== undefined && { durationMinutes }) ||
-        (duration_minutes !== undefined && { durationMinutes: duration_minutes }),
-        ...(description !== undefined && { description }),
-        ...(instructions !== undefined && { instructions }),
-        ...(benefits !== undefined && { benefits }),
-        ...(prerequisites !== undefined && { prerequisites }),
-        ...(traditionSource !== undefined && { traditionSource }) ||
-        (tradition_source !== undefined && { traditionSource: tradition_source }),
-        ...(videoUrl !== undefined && { videoUrl }) ||
-        (video_url !== undefined && { videoUrl: video_url }),
-        ...(audioUrl !== undefined && { audioUrl }) ||
-        (audio_url !== undefined && { audioUrl: audio_url }),
-      },
+      data: updateData,
     });
 
     return NextResponse.json({ item: practice });

@@ -881,14 +881,12 @@ model Practice {
   traditionSource String?            @map("tradition_source")
   videoUrl        String?            @map("video_url")
   audioUrl        String?            @map("audio_url")
+  status          String             @default("draft")
+  submitterName   String?            @map("submitter_name")
+  submitterEmail  String?            @map("submitter_email")
   createdAt       DateTime           @default(now()) @map("created_at")
   updatedAt       DateTime           @updatedAt @map("updated_at")
   resources       PracticeResource[]
-
-  @@index([category])
-  @@index([difficultyLevel])
-  @@index([slug])
-  @@map("practices")
 }
 
 model PracticeResource {
@@ -1133,4 +1131,26 @@ model MediaThemeConnection {
   @@index([mediaType, mediaId])
   @@index([themeCategory])
   @@map("media_theme_connections")
+}
+
+model WazifaSubmission {
+  id                String   @id @default(uuid())
+  userId            String?  @map("user_id")
+  userName          String   @map("user_name")
+  email             String
+  title             String
+  category          String
+  components        String[] @default([])
+  ethicalFoundations String[] @default([]) @map("ethical_foundations")
+  outcomes          String[] @default([])
+  description       String
+  status            String   @default("draft")
+  reviewNotes       String?  @map("review_notes")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([email])
+  @@index([userId])
+  @@map("wazifa_submissions")
 }

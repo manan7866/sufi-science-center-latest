@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, BookOpen, Compass, Users, HandHeart, FlaskConical, CalendarDays, CircleUser as UserCircle, Phone, Shield, BadgeCheck, Receipt, LogOut, X, Menu, UserPlus, LifeBuoy, MessageSquare, ShieldCheck, Loader2, FileText } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Compass, Users, HandHeart, FlaskConical, CalendarDays, CircleUser as UserCircle, Phone, Shield, BadgeCheck, Receipt, LogOut, X, Menu, UserPlus, LifeBuoy, MessageSquare, ShieldCheck, Loader2, FileText, ArrowRight } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 
 interface NavItem {
@@ -35,6 +35,7 @@ const NAV_GROUPS: NavGroup[] = [
       { label: 'Research Collaboration', href: '/institute/collaborations', icon: FlaskConical },
       { label: 'Conference Registration', href: '/contribute', icon: CalendarDays },
       { label: 'My Contributions', href: '/portal/contributions', icon: FileText },
+      { label: 'Write Wazeefia', href: '/portal/write-wazifa', icon: FileText },
       { label: 'Interview Applications', href: '/portal/interview-applications', icon: FlaskConical },
     ],
   },
@@ -179,6 +180,13 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
           <UserPlus className="w-3.5 h-3.5 flex-shrink-0" />
           <span>Complete Your Account</span>
         </Link>
+        
+        <Link href="/" className="flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-[#AAB0D6]/50 hover:text-[#C8A75E] hover:bg-[#C8A75E]/5 transition-all w-full group border border-transparent hover:border-[#C8A75E]/10">
+          <ArrowRight className="w-3.5 h-3.5  text-lg rotate-180" />
+          <p >Back to Website</p>
+          
+        </Link>
+                      
         <button
           onClick={handleLogout}
           className="flex items-center gap-3 px-3 py-2 rounded-lg text-xs text-[#AAB0D6]/40 hover:text-rose-400/70 hover:bg-rose-400/5 transition-all w-full group"

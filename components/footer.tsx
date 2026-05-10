@@ -56,7 +56,7 @@ export function Footer() {
 
           <div >
             <h3 className="text-[#F5F3EE] font-semibold text-sm uppercase tracking-wider mb-4">
-              Media
+              Media / WorkShops
             </h3>
             <ul className="space-y-3">
               <li>
@@ -75,14 +75,22 @@ export function Footer() {
                   Sacred Kalam Library
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/conference-work"
+                  className="text-[#AAB0D6] hover:text-[#C8A75E] transition-colors text-sm whitespace-nowrap"
+                >
+                  Conference
+                </Link>
+              </li>
             </ul>
-            <h3 className="text-[#F5F3EE] font-semibold text-sm uppercase tracking-wider mb-4 mt-12">
+            <h3 className="text-[#F5F3EE] font-semibold text-sm uppercase tracking-wider mb-4 mt-4">
               Ecommerce
             </h3>
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="https://purplecloudfaith.com"
+                  href="https://purplesoul.shop/"
                   className="text-[#AAB0D6] hover:text-[#C8A75E] transition-colors text-sm whitespace-nowrap"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -300,7 +308,7 @@ export function Footer() {
             </p>
             <p className="text-xs">
               Sponsored by{' '}
-              <a href="https://ps.dekoshurcrfats.com/" target="_blank" rel="noopener noreferrer" className="text-[#C8A75E] font-medium hover:underline">Purple Soul Collective by DKC</a>
+              <a href="https://purplesoul.shop/" target="_blank" rel="noopener noreferrer" className="text-[#C8A75E] font-medium hover:underline">Purple Soul Collective by DKC</a>
             </p>
           </div>
           <div className="text-center text-xs">

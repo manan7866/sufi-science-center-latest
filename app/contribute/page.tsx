@@ -102,7 +102,7 @@ const submissionTypes = [
   {
     type: 'conference_workshop',
     title: 'Conference / Workshop',
-    description: 'Propose conferences, workshops, or educational programs that advance the mission of the institute.',
+    description: 'Submit proposals for conferences, workshops, seminars, or educational programs that contribute to the mission and vision of the institute.',
     icon: Users,
     exampleTopics: ['Academic conferences', 'Practitioner workshops', 'Public programs', 'Training series'],
   },
@@ -121,7 +121,8 @@ export default async function ContributePage() {
     <div className="min-h-screen">
       <ObservatoryHero
         subtitle="Community"
-        title="Contribute to the Knowledge Ecosystem"
+        title="Contribute to the"
+        title2="Knowledge Ecosystem"
         description="Join scholars, practitioners, and creators in building a living archive of wisdom at the intersection of science and spirituality."
       />
 
