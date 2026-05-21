@@ -83,8 +83,8 @@ export default function FounderPage() {
         imageAlt="Dr. Fayaz Khan - Founder"
       />
 
-      <section className="py-20 px-4 observatory-gradient">
-        <div className="max-w-6xl mx-auto space-y-20">
+      <section className="py-20 px-4 pt-6 observatory-gradient">
+        <div className="max-w-7xl mx-auto space-y-20">
 
           {/* Founder's Vision */}
           <div>
