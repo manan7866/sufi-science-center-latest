@@ -1,288 +1,488 @@
-'use client';
-
+import { ObservatoryHero } from '@/components/observatory-hero';
 import { ObservatoryHeroWithImage } from '@/components/observatory-hero-with-image';
 import { Card } from '@/components/ui/card';
+import {
+  BookOpen,
+  Heart,
+  Brain,
+  Scale,
+  Tv,
+  Users,
+  Mountain,
+  Globe2,
+  Compass,
+  ArrowRight,
+  Sparkles,
+  Library,
+  Microscope,
+  Shield,
+  MessageCircle,
+  Star,
+  Quote,
+} from 'lucide-react';
+import Link from 'next/link';
 
-const PILLARS = [
+const ETHICAL_PRINCIPLES = [
   {
-    number: '01',
-    title: 'Foundational Studies',
-    body: 'Theological grounding anchored in disciplined methodology.',
+    icon: BookOpen,
+    title: 'Knowledge Must Transform Character',
+    body: 'Information without ethical refinement produces fragmentation rather than wisdom.',
   },
   {
-    number: '02',
-    title: 'Knowledge Systems',
-    body: 'Comparative epistemology and structured inquiry across traditions.',
+    icon: Heart,
+    title: 'Spirituality Must Remain Ethical',
+    body: 'Spiritual language without humility, restraint, and conduct becomes performance.',
   },
   {
-    number: '03',
-    title: 'Inner Development',
-    body: 'Ethical refinement, self-discipline, and character cultivation.',
+    icon: Brain,
+    title: 'Science Must Remain Humane',
+    body: 'Scientific advancement must remain connected to human dignity and moral responsibility.',
   },
   {
-    number: '04',
-    title: 'Interfaith Coherence',
-    body: 'Dialogue rooted in intellectual respect, without dilution.',
+    icon: MessageCircle,
+    title: 'Religion Must Not Become Hostility',
+    body: 'Faith traditions must cultivate coexistence, reflection, depth, and accountability rather than hatred and polarization.',
   },
   {
-    number: '05',
-    title: 'Media Expression',
-    body: 'Responsible transmission of sacred knowledge through SufiPulse Studio USA.',
+    icon: Shield,
+    title: 'Institutions Must Outlive Personalities',
+    body: 'Sustainable institutions require principles, documentation, continuity structures, and ethical governance.',
   },
   {
-    number: '06',
-    title: 'Institutional Ethics',
-    body: 'Governance frameworks grounded in accountability, transparency, and principled leadership.',
+    icon: Tv,
+    title: 'Media Must Carry Responsibility',
+    body: 'Communication systems shape civilizations and therefore carry moral consequences.',
   },
 ];
 
-const MILESTONES = [
-  'Formation of Sufi Science Center USA',
-  'Establishment of Dr. Kumar Foundation USA',
-  'Launch of SufiPulse Studio USA as Media Partner',
-  'Development of Sacred Kalam Library',
-  'Creation of Research Publications division',
-  'Youth-oriented spiritual literacy initiatives',
-  'Interfaith coherence modules',
-  'Institutional transparency and ethics frameworks',
-];
-
-const GOVERNANCE_DOMAINS = [
-  'Governance architecture',
-  'Ethical compliance and methodology',
-  'Advisory council coordination',
-  'Institutional accountability systems',
-  'Transparency and impact reporting',
-];
-
-const RESEARCH_AREAS = [
-  'Spiritual epistemology',
-  'Civilizational coherence modeling',
-  'Comparative theology',
-  'Ethical governance structures',
+const INSTITUTIONAL_INITIATIVES = [
+  'Sufi Science Center USA',
+  'Dr. Kumar Foundation USA',
+  'SufiPulse Studio USA',
+  'Sacred Kalam preservation systems',
+  'Consciousness and contemplative studies initiatives',
+  'Interfaith educational dialogue',
   'Youth spiritual literacy systems',
-  'Faith and science integration frameworks',
+  'Ethical media and communication frameworks',
+  'Civilizational coherence research',
 ];
 
-const MEDIA_AREAS = [
-  'Spiritual music and youth programming',
-  'Interfaith children\'s educational content',
-  'Spoken word and poetic expression',
-  'Structured dialogue recordings',
-  'Ethical digital dissemination',
+const CTA_LINKS = [
+  { label: 'Explore Sufi Science Center', href: '/institute' },
+  { label: 'View Representative Stewardship', href: '/institute/representative-stewardship' },
+  { label: 'Explore SufiPulse Studio USA', href: 'https://sufipulse.studio' },
+  { label: 'Research & Publications', href: '/research' },
+  { label: 'Institutional Heritage', href: '/institute/heritage' },
+  { label: 'Consciousness Research Initiatives', href: '/institute/purpose' },
+];
+
+const INFLUENCE_DOMAINS = [
+  { domain: 'Consciousness Studies', orientation: 'Inner development and reflective inquiry' },
+  { domain: 'Ethical Governance', orientation: 'Accountability and institutional continuity' },
+  { domain: 'Spiritual Literacy', orientation: 'Character, discipline, humility' },
+  { domain: 'Media Responsibility', orientation: 'Ethical transmission and cultural preservation' },
+  { domain: 'Civilizational Research', orientation: 'Harmonization of knowledge systems' },
+  { domain: 'Interfaith Dialogue', orientation: 'Respectful intellectual engagement' },
+  { domain: 'Healing Orientation', orientation: 'Human-centered ethical care' },
 ];
 
 export default function FounderPage() {
   return (
-    <div className="min-h-screen pt-20 bg-[#0B0F2A]">
+    <div className="min-h-screen pt-40 bg-[#0B0F2A]">
       <ObservatoryHeroWithImage
         subtitle="Founder"
-        title="Dr. Fayaz Khan"
-        description="Founder, Sufi Science Center USA · Founder, Dr. Kumar Foundation USA · Founder, SufiPulse Studio USA"
-        imageSrc="/Fayaz-khan-image.png"
-        imageAlt="Dr. Fayaz Khan - Founder"
+        title="Dr. Gulam"
+        title2="Mohammad Kumar"
+        imageSrc="/dr_kumar_image.png"
+        imageAlt="Dr. Gulam Mohammad Kumar - Founder"
+        description="His teachings emphasized love, humility, compassion, and peaceful coexistence across cultures and faiths.
+
+The institution believes societies heal through understanding, dignity, dialogue, and shared humanity — not hatred or domination."
+        
       />
 
-      <section className="py-20 px-4 pt-6 observatory-gradient">
+      <section className="py-20 px-4 pt-0 observatory-gradient">
         <div className="max-w-7xl mx-auto space-y-20">
 
-          {/* Founder's Vision */}
+          {/* Section 01 - Meaning of Founder/Bani */}
           <div>
-            <div className="flex items-center gap-4 mb-6">
-              <h2 className="text-3xl font-bold text-[#F5F3EE]">Founder's Vision</h2>
-            </div>
+            <h2 className="text-3xl font-bold text-[#F5F3EE] mb-6">
+              The Meaning of &ldquo;Founder ;
+            </h2>
             <div className="h-px bg-gradient-to-r from-[#C8A75E]/60 to-transparent mb-8" />
             <div className="space-y-5 text-[#AAB0D6] leading-relaxed">
               <p>
-                The Sufi Science Center USA was established in response to a visible fracture in modern civilization:
-                Humanity has expanded knowledge, but lost integration.
-              </p>
-              <p className="text-[#F5F3EE]/80 italic border-l-2 border-[#C8A75E]/50 pl-5">
-                Information is abundant. Wisdom is fragmented. Institutions are structured, yet inner development is neglected.
+                Within SSC USA, the term <span className="text-[#C8A75E] font-semibold">Bani</span> refers to the foundational spiritual and
+                philosophical origin from which the institution&rsquo;s ethical orientation, contemplative methodology,
+                and civilizational framework emerge.
               </p>
               <p>
-                Dr. Fayaz Khan founded SSC USA as a structured institutional platform designed to harmonize Faith and Science,
-                Revelation and Reason, Character and Scholarship, Interfaith Dialogue and Doctrinal Integrity,
-                and Media Expression with Ethical Responsibility.
+                The term does not signify inherited authority, personality worship, or sectarian hierarchy.
               </p>
               <p>
-                The institution was conceived not as a movement, nor as a personality platform, but as a long-term
-                knowledge architecture. Its purpose is alignment.
+                Rather, it acknowledges the originating source whose teachings, conduct, and intellectual-spiritual
+                orientation shaped the institution&rsquo;s foundational direction.
               </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8">
+              <div className="bg-[#C8A75E]/10 border border-[#C8A75E]/30 rounded-lg p-6">
+                <span className="text-[#C8A75E] font-semibold block mb-2">Spiritual and Ethical Origin</span>
+                <p className="text-sm text-[#AAB0D6]">The Founder / Bani represents spiritual and ethical origin.</p>
+              </div>
+              <div className="bg-[#C8A75E]/10 border border-[#C8A75E]/30 rounded-lg p-6">
+                <span className="text-[#C8A75E] font-semibold block mb-2">Representative Stewardship</span>
+                <p className="text-sm text-[#AAB0D6]">Representative stewardship carries forward institutional structuring and public responsibility.</p>
+              </div>
+              <div className="bg-[#C8A75E]/10 border border-[#C8A75E]/30 rounded-lg p-6">
+                <span className="text-[#C8A75E] font-semibold block mb-2">Institutional Governance</span>
+                <p className="text-sm text-[#AAB0D6]">The institution itself remains governed through documented methodology, accountability, and long-term continuity.</p>
+              </div>
             </div>
           </div>
 
-          {/* Intellectual Architecture */}
+          {/* Section 02 - Kashmir, Contemplation, and Civilizational Memory */}
           <div>
-            <h2 className="text-3xl font-bold text-[#F5F3EE] mb-6">Intellectual Architecture</h2>
+            <h2 className="text-3xl font-bold text-[#F5F3EE] mb-6">
+              Kashmir, Contemplation, and Civilizational Memory
+            </h2>
+            <div className="h-px bg-gradient-to-r from-[#C8A75E]/60 to-transparent mb-8" />
+            <div className="space-y-5 text-[#AAB0D6] leading-relaxed">
+              <p>
+                The intellectual atmosphere associated with Dr. Gulam Mohammad Kumar emerges from the broader
+                contemplative and philosophical traditions of Kashmir, a region historically shaped by centuries
+                of mystical inquiry, poetic philosophy, spiritual reflection, and intercultural knowledge exchange.
+              </p>
+              <p>
+                Within this environment, contemplation was never separated from ethics, and spirituality was never
+                detached from responsibility.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+              {['inward refinement', 'disciplined self-observation', 'humility', 'ethical conduct', 'reflective silence', 'the pursuit of truth beyond ideological spectacle'].map((item) => (
+                <div key={item} className="flex items-start gap-3 p-4 bg-[#080C1E] border border-white/5 rounded-lg">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#C8A75E] mt-2 flex-shrink-0" />
+                  <span className="text-sm text-[#AAB0D6]">{item}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-[#AAB0D6] leading-relaxed mt-6 italic border-l-2 border-[#C8A75E]/50 pl-5">
+              This orientation continues to influence the institutional culture of SSC USA.
+            </p>
+          </div>
+
+          {/* Section 03 - Healing, Knowledge, and Human Development */}
+          <div>
+            <h2 className="text-3xl font-bold text-[#F5F3EE] mb-6">
+              Healing, Knowledge, and Human Development
+            </h2>
+            <div className="h-px bg-gradient-to-r from-[#C8A75E]/60 to-transparent mb-8" />
+            <div className="space-y-5 text-[#AAB0D6] leading-relaxed">
+              <p>
+                With a professional background shaped through medicine and human care, Dr. Kumar approached the
+                human being as more than a biological or psychological system.
+              </p>
+              <p>
+                Healing, within this orientation, involved:
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+              {['ethical balance', 'emotional stability', 'contemplative awareness', 'inner discipline', 'community responsibility', 'spiritual grounding'].map((item) => (
+                <div key={item} className="flex items-start gap-3 p-4 bg-[#C8A75E]/5 border border-[#C8A75E]/20 rounded-lg">
+                  <Star className="w-4 h-4 text-[#C8A75E] mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-[#AAB0D6]">{item}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-[#AAB0D6] leading-relaxed mt-6">
+              This integrated understanding later informed the broader institutional philosophy of SSC USA, where
+              consciousness research, contemplative inquiry, and human development are approached through
+              interdisciplinary frameworks rather than reductionist models.
+            </p>
+          </div>
+
+          {/* Section 04 - Foundational Ethical Orientation */}
+          <div>
+            <h2 className="text-3xl font-bold text-[#F5F3EE] mb-6">
+              Foundational Ethical Orientation
+            </h2>
             <div className="h-px bg-gradient-to-r from-[#C8A75E]/60 to-transparent mb-8" />
             <p className="text-[#AAB0D6] leading-relaxed mb-10">
-              The Founder structured SSC USA upon six integrated pillars. This architecture avoids reactionism,
-              syncretism, and ideological spectacle. It prioritizes disciplined integration.
+              The philosophical orientation associated with the Founder / Bani may be understood through several
+              recurring principles.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {PILLARS.map((pillar) => (
-                <Card key={pillar.number} className="glass-panel border-[rgba(255,255,255,0.08)] hover:border-[#C8A75E]/40 transition-all">
-                  <div className="p-6 flex gap-5">
-                    <span className="text-[#C8A75E]/50 font-bold text-2xl leading-none mt-0.5 flex-shrink-0">{pillar.number}</span>
-                    <div>
-                      <h3 className="text-[#F5F3EE] font-semibold mb-2">{pillar.title}</h3>
-                      <p className="text-sm text-[#AAB0D6]">{pillar.body}</p>
+              {ETHICAL_PRINCIPLES.map((principle) => {
+                const Icon = principle.icon;
+                return (
+                  <Card
+                    key={principle.title}
+                    className="glass-panel border-[rgba(255,255,255,0.08)] hover:border-[#C8A75E]/40 transition-all duration-300"
+                  >
+                    <div className="p-6">
+                      <div className="flex items-start gap-4 mb-3">
+                        <Icon className="w-5 h-5 text-[#C8A75E] mt-0.5 flex-shrink-0" />
+                        <h3 className="text-[#F5F3EE] font-semibold">{principle.title}</h3>
+                      </div>
+                      <p className="text-sm text-[#AAB0D6] leading-relaxed pl-9">{principle.body}</p>
                     </div>
-                  </div>
-                </Card>
-              ))}
+                  </Card>
+                );
+              })}
             </div>
           </div>
 
-          {/* Academic & Professional */}
+          {/* Section 05 - Banday Bagh and the Culture of Reflection */}
           <div>
-            <h2 className="text-3xl font-bold text-[#F5F3EE] mb-6">Academic &amp; Professional Orientation</h2>
-            <div className="h-px bg-gradient-to-r from-[#C8A75E]/60 to-transparent mb-8" />
-            <div className="space-y-5 text-[#AAB0D6] leading-relaxed">
-              <p>Dr. Fayaz Khan's interdisciplinary orientation integrates:</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-2">
-                {[
-                  'Environmental and systems thinking',
-                  'Socioeconomic structuring models',
-                  'Institutional design and governance frameworks',
-                  'Digital platform architecture',
-                  'Faith-centered epistemological inquiry',
-                ].map((item) => (
-                  <div key={item} className="flex items-start gap-3">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#C8A75E] mt-2 flex-shrink-0" />
-                    <span className="text-sm">{item}</span>
-                  </div>
-                ))}
-              </div>
-              <p className="text-[#F5F3EE]/80 italic border-l-2 border-[#C8A75E]/50 pl-5">
-                Spiritual insight becomes structured. Structure becomes accountable. Institutions become sustainable.
-              </p>
-            </div>
-          </div>
-
-          {/* Institutional Milestones */}
-          <div>
-            <h2 className="text-3xl font-bold text-[#F5F3EE] mb-6">Institutional Milestones</h2>
-            <div className="h-px bg-gradient-to-r from-[#C8A75E]/60 to-transparent mb-8" />
-            <p className="text-[#AAB0D6] leading-relaxed mb-8">
-              Under the Founder's direction, the following structural milestones were established. Each milestone reflects documented institutional structuring.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {MILESTONES.map((item) => (
-                <div key={item} className="flex items-start gap-3">
-                  <span className="h-2 w-2 rounded-full bg-[#C8A75E] mt-2 flex-shrink-0" />
-                  <span className="text-[#AAB0D6] text-sm">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Governance Insight */}
-          <div className="bg-[#080C1E] border border-[rgba(255,255,255,0.06)] rounded-xl p-8 md:p-12 border-l-4 border-l-[#C8A75E]">
-            <h2 className="text-3xl font-bold text-[#F5F3EE] mb-2">Governance Insight</h2>
-            <p className="text-[#C8A75E] font-medium mb-6">Institutional Stewardship Under Dr. Gulam Mohammad Kumar</p>
+            <h2 className="text-3xl font-bold text-[#F5F3EE] mb-6">
+              Banday Bagh and the Culture of Reflection
+            </h2>
             <div className="h-px bg-gradient-to-r from-[#C8A75E]/60 to-transparent mb-8" />
             <div className="space-y-5 text-[#AAB0D6] leading-relaxed">
               <p>
-                While the visionary and intellectual architecture of SSC USA was initiated by Dr. Fayaz Khan,
-                the governance framework operates under the stewardship of <span className="text-[#F5F3EE] font-medium">Dr. Gulam Mohammad Kumar</span>.
+                The contemplative environment associated with Banday Bagh became an important atmosphere within
+                the broader continuity of Dr. Kumar&rsquo;s teachings and ethical influence.
               </p>
-              <p>Dr. Kumar provides structured oversight across:</p>
-              <div className="space-y-2 pl-2">
-                {GOVERNANCE_DOMAINS.map((item) => (
-                  <div key={item} className="flex items-start gap-3">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#C8A75E] mt-2 flex-shrink-0" />
-                    <span className="text-sm">{item}</span>
-                  </div>
-                ))}
-              </div>
-              <p className="text-[#F5F3EE]/80 italic border-l-2 border-[#C8A75E]/50 pl-5">
-                The institution is not personality-dependent. Authority is structured, not symbolic.
-                Continuity extends beyond individual leadership. SSC USA is designed for durability.
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+              {['quiet reflection', 'respectful dialogue', 'sacred recitation', 'moral accountability', 'disciplined conduct', 'interpersonal dignity'].map((item) => (
+                <div key={item} className="flex items-start gap-3 p-4 bg-[#080C1E] border border-white/5 rounded-lg">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#C8A75E] mt-2 flex-shrink-0" />
+                  <span className="text-sm text-[#AAB0D6]">{item}</span>
+                </div>
+              ))}
+            </div>
+            <div className="space-y-3 text-[#AAB0D6] leading-relaxed mt-6">
+              <p>
+                Rather than functioning as spectacle or ideological performance, these gatherings cultivated
+                inward attention, simplicity, and reflective presence.
+              </p>
+              <p className="italic border-l-2 border-[#C8A75E]/50 pl-5">
+                This orientation continues to influence the ethical culture surrounding the institutional ecosystem
+                associated with SSC USA and DKF USA.
               </p>
             </div>
           </div>
 
-          {/* Institutional Philosophy */}
+          {/* Section 06 - Influence Upon Institutional Development */}
           <div>
-            <h2 className="text-3xl font-bold text-[#F5F3EE] mb-6">Institutional Philosophy: Why "Sufi Science"</h2>
+            <h2 className="text-3xl font-bold text-[#F5F3EE] mb-6">
+              Influence Upon Institutional Development
+            </h2>
+            <div className="h-px bg-gradient-to-r from-[#C8A75E]/60 to-transparent mb-8" />
+            <p className="text-[#AAB0D6] leading-relaxed mb-8">
+              The ethical and contemplative orientation associated with the Founder / Bani influenced the
+              development of multiple institutional initiatives, including:
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {INSTITUTIONAL_INITIATIVES.map((item) => (
+                <div key={item} className="flex items-start gap-3 p-4 bg-[#C8A75E]/5 border border-[#C8A75E]/20 rounded-lg">
+                  <ArrowRight className="w-4 h-4 text-[#C8A75E] mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-[#AAB0D6]">{item}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-[#AAB0D6] leading-relaxed mt-6 text-sm italic">
+              These initiatives were later institutionally structured and publicly expanded under representative stewardship.
+            </p>
+          </div>
+
+          {/* Section 07 - Founder/Bani and Representative Stewardship */}
+          <div>
+            <h2 className="text-3xl font-bold text-[#F5F3EE] mb-6">
+              Founder / Bani and Representative Stewardship
+            </h2>
+            <div className="h-px bg-gradient-to-r from-[#C8A75E]/60 to-transparent mb-8" />
+            <p className="text-[#AAB0D6] leading-relaxed mb-8">
+              SSC USA maintains a distinction between spiritual origin and institutional stewardship.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="glass-panel border-[rgba(255,255,255,0.08)]">
+                <div className="p-6">
+                  <h3 className="text-[#C8A75E] font-semibold mb-4 flex items-center gap-2">
+                    <Star className="w-5 h-5" />
+                    The Founder / Bani
+                  </h3>
+                  <ul className="space-y-2">
+                    {['foundational guidance', 'ethical orientation', 'contemplative methodology', 'philosophical origin'].map((item) => (
+                      <li key={item} className="flex items-start gap-2 text-sm text-[#AAB0D6]">
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#C8A75E] mt-2 flex-shrink-0" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Card>
+              <Card className="glass-panel border-[rgba(255,255,255,0.08)]">
+                <div className="p-6">
+                  <h3 className="text-[#C8A75E] font-semibold mb-4 flex items-center gap-2">
+                    <Users className="w-5 h-5" />
+                    Representative Stewardship
+                  </h3>
+                  <p className="text-sm text-[#AAB0D6] mb-3">
+                    Carried forward under <span className="text-[#F5F3EE]">Dr. Fayaz Khan</span>:
+                  </p>
+                  <ul className="space-y-2">
+                    {['institutional structuring', 'research architecture', 'public systems', 'governance frameworks', 'educational expansion', 'media development'].map((item) => (
+                      <li key={item} className="flex items-start gap-2 text-sm text-[#AAB0D6]">
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#C8A75E] mt-2 flex-shrink-0" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Card>
+            </div>
+            <p className="text-[#AAB0D6] leading-relaxed mt-6 text-sm italic">
+              This distinction preserves institutional continuity while preventing personality dependency and
+              organizational instability.
+            </p>
+          </div>
+
+          {/* Section 08 - Why This Foundation Matters Today */}
+          <div>
+            <h2 className="text-3xl font-bold text-[#F5F3EE] mb-6">
+              Why This Foundation Matters Today
+            </h2>
             <div className="h-px bg-gradient-to-r from-[#C8A75E]/60 to-transparent mb-8" />
             <div className="space-y-5 text-[#AAB0D6] leading-relaxed">
-              <p>Within SSC USA, the term "Sufi" does not denote sectarian identity. It signifies:</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-2">
-                {[
-                  'Depth over noise',
-                  'Character over rhetoric',
-                  'Discipline over spectacle',
-                  'Love rooted in truth',
-                ].map((item) => (
-                  <div key={item} className="flex items-start gap-3">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#C8A75E] mt-2 flex-shrink-0" />
-                    <span className="text-sm">{item}</span>
-                  </div>
-                ))}
-              </div>
               <p>
-                "Sufi Science" represents the harmonization of inner purification, intellectual rigor,
-                ethical governance, and public responsibility. It is a civilizational integration model.
+                Modern civilization possesses unprecedented technological capability, yet increasingly struggles with:
               </p>
             </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 mb-8">
+              {['fragmentation of meaning', 'ethical instability', 'spiritual exhaustion', 'institutional distrust', 'ecological imbalance', 'polarization of knowledge systems'].map((item) => (
+                <div key={item} className="flex items-start gap-3 p-4 bg-[#080C1E] border border-white/5 rounded-lg">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#C8A75E] mt-2 flex-shrink-0" />
+                  <span className="text-sm text-[#AAB0D6] capitalize">{item}</span>
+                </div>
+              ))}
+            </div>
+            <div className="space-y-5 text-[#AAB0D6] leading-relaxed">
+              <p>
+                The foundational orientation associated with the Founder / Bani emphasizes that sustainable societies
+                require harmony between:
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+              {[
+                { pair: 'science and ethics' },
+                { pair: 'faith and responsibility' },
+                { pair: 'knowledge and wisdom' },
+                { pair: 'institutional structure and human dignity' },
+              ].map((item) => (
+                <div key={item.pair} className="flex items-center gap-3 p-4 bg-[#C8A75E]/5 border border-[#C8A75E]/20 rounded-lg">
+                  <Scale className="w-4 h-4 text-[#C8A75E] flex-shrink-0" />
+                  <span className="text-sm text-[#AAB0D6] capitalize">{item.pair}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-[#AAB0D6] leading-relaxed mt-6 italic border-l-2 border-[#C8A75E]/50 pl-5">
+              SSC USA exists as a long-term institutional effort toward that integration.
+            </p>
           </div>
 
-          {/* Media & Cultural Transmission */}
+          {/* Section 09 - Legacy and Continuity */}
           <div>
-            <h2 className="text-3xl font-bold text-[#F5F3EE] mb-6">Media &amp; Cultural Transmission</h2>
+            <h2 className="text-3xl font-bold text-[#F5F3EE] mb-6">
+              Legacy and Continuity
+            </h2>
             <div className="h-px bg-gradient-to-r from-[#C8A75E]/60 to-transparent mb-8" />
-            <p className="text-[#AAB0D6] leading-relaxed mb-8">
-              Through SufiPulse Studio USA, the Founder integrates media as moral infrastructure.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {MEDIA_AREAS.map((item) => (
-                <div key={item} className="flex items-start gap-3">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#C8A75E] mt-2 flex-shrink-0" />
-                  <span className="text-[#AAB0D6] text-sm">{item}</span>
+            <div className="space-y-5 text-[#AAB0D6] leading-relaxed">
+              <p>
+                The preservation of this legacy is not intended as nostalgia or symbolic heritage alone.
+              </p>
+              <p>
+                Its purpose is continuity.
+              </p>
+              <p>
+                The institutional objective is to cultivate future generations capable of:
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+              {['disciplined inquiry', 'ethical leadership', 'contemplative literacy', 'humane scientific thinking', 'responsible media engagement', 'spiritually grounded public responsibility'].map((item) => (
+                <div key={item} className="flex items-start gap-3 p-4 bg-[#C8A75E]/5 border border-[#C8A75E]/20 rounded-lg">
+                  <Sparkles className="w-4 h-4 text-[#C8A75E] mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-[#AAB0D6]">{item}</span>
                 </div>
+              ))}
+            </div>
+            <p className="text-[#AAB0D6] leading-relaxed mt-6">
+              The Founder / Bani framework within SSC USA therefore functions as a long-term ethical and
+              civilizational foundation for continuing institutional development.
+            </p>
+          </div>
+
+          {/* Closing Quote Section */}
+          <Card className="glass-panel border-[rgba(255,255,255,0.08)] overflow-hidden">
+            <div className="p-8 md:p-12 xl:text-center lg:text-center md:text-center sm:text-center">
+              <Quote className="w-12 h-12 text-[#C8A75E]/40 mx-auto mb-6" />
+              <blockquote className="max-w-4xl mx-auto space-y-4">
+                <p className="text-[#F5F3EE] text-lg md:text-xl leading-relaxed italic">
+                  &ldquo;Civilizations do not decline merely from lack of information.
+                </p>
+                <p className="text-[#F5F3EE] text-lg md:text-xl leading-relaxed italic">
+                  They decline when knowledge loses ethics, institutions lose meaning, and spirituality loses humility.&rdquo;
+                </p>
+              </blockquote>
+              <div className="h-px bg-gradient-to-r from-transparent via-[#C8A75E]/40 to-transparent max-w-xs mx-auto my-6" />
+              <p className="text-[#C8A75E] font-semibold tracking-wide">
+                &mdash; Dr. Gulam Mohammad Kumar
+              </p>
+            </div>
+          </Card>
+
+          {/* CTA Section */}
+          <div>
+            <div className="xl:text-center lg:text-center md:text-center sm:text-center mb-10">
+              <h2 className="text-3xl font-bold text-[#F5F3EE] mb-4">
+                Continue the Journey of Conscious Inquiry
+              </h2>
+              <p className="text-[#AAB0D6] max-w-3xl mx-auto leading-relaxed">
+                Explore the institutional, educational, contemplative, and research initiatives shaped through
+                this foundational vision.
+              </p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-4">
+              {CTA_LINKS.map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#C8A75E]/10 border border-[#C8A75E]/30 rounded-lg text-[#C8A75E] hover:bg-[#C8A75E]/20 transition-all duration-300 text-sm font-medium"
+                >
+                  {link.label}
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
               ))}
             </div>
           </div>
 
-          {/* Publications & Research */}
-          <div>
-            <h2 className="text-3xl font-bold text-[#F5F3EE] mb-6">Publications &amp; Research Focus</h2>
-            <div className="h-px bg-gradient-to-r from-[#C8A75E]/60 to-transparent mb-8" />
-            <p className="text-[#AAB0D6] leading-relaxed mb-8">
-              The Founder's ongoing research and publication engagement includes the following domains,
-              all operating under institutional ethical methodology.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {RESEARCH_AREAS.map((item) => (
-                <div key={item} className="flex items-start gap-3">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#C8A75E] mt-2 flex-shrink-0" />
-                  <span className="text-[#AAB0D6] text-sm">{item}</span>
-                </div>
-              ))}
+          {/* Optional Side Module - Foundational Areas of Influence */}
+          <Card className="glass-panel border-[rgba(255,255,255,0.08)]">
+            <div className="p-8 md:p-12">
+              <h2 className="text-3xl font-bold text-[#F5F3EE] mb-6">
+                Foundational Areas of Influence
+              </h2>
+              <div className="h-px bg-gradient-to-r from-[#C8A75E]/60 to-transparent mb-8" />
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead>
+                    <tr className="border-b border-[rgba(255,255,255,0.08)]">
+                      <th className="pb-4 text-[#C8A75E] font-semibold text-sm uppercase tracking-wider">Domain</th>
+                      <th className="pb-4 text-[#C8A75E] font-semibold text-sm uppercase tracking-wider">Orientation</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {INFLUENCE_DOMAINS.map((item) => (
+                      <tr key={item.domain} className="border-b border-[rgba(255,255,255,0.04)] last:border-0">
+                        <td className="py-4 text-[#F5F3EE] font-medium pr-8">{item.domain}</td>
+                        <td className="py-4 text-[#AAB0D6]">{item.orientation}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-
-          {/* Founder's Statement */}
-          <div className="xl:text-center lg:text-center md:text-center sm:text-center py-8">
-            <div className="text-[#C8A75E] text-7xl leading-none font-serif mb-6 opacity-60">"</div>
-            <blockquote className="max-w-3xl mx-auto space-y-4 text-[#F5F3EE]/90 text-lg md:text-xl leading-relaxed italic mb-10">
-              <p>Civilizations do not decline from lack of information.</p>
-              <p>They decline from fragmentation of meaning.</p>
-              <p className="mt-6 not-italic text-[#AAB0D6]">
-                The future requires individuals capable of thinking scientifically,
-                feeling spiritually, and acting ethically.
-              </p>
-              <p className="not-italic">
-                The Sufi Science Center USA exists to cultivate that alignment.
-              </p>
-            </blockquote>
-            <div className="h-px bg-gradient-to-r from-transparent via-[#C8A75E]/40 to-transparent mb-6 max-w-xs mx-auto" />
-            <p className="text-[#C8A75E] font-semibold tracking-wide">— Dr. Fayaz Khan</p>
-            <p className="text-[#AAB0D6] text-sm mt-1">Founder</p>
-          </div>
+          </Card>
 
         </div>
       </section>

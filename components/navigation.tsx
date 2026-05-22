@@ -73,6 +73,7 @@ const researchSubmenu: SubmenuLink[] = [
 
 const instituteSubmenu: SubmenuLink[] = [
   { href: '/institute/purpose', label: 'Purpose & Vision' },
+  { href: '/institute/representative-stewardship', label: 'Representative Stewardship' },
   { href: '/institute/founder', label: 'Founder' },
   { href: '/institute/founders-framework', label: "Founder's Framework" },
   { href: '/institute/heritage', label: 'Heritage' },
