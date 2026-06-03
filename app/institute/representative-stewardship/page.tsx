@@ -77,10 +77,10 @@ export default function FounderPage() {
     <div className="min-h-screen  pt-40 bg-[#0B0F2A]">
       <ObservatoryHeroWithImage
         subtitle="Representative Stewardship"
-        title="Dr. Fayaz Khan"
+        title="Dr. Zarf-e-Noori"
         description="Founder, Sufi Science Center USA · Founder, Dr. Kumar Foundation USA · Founder, SufiPulse Studio USA"
         imageSrc="/Fayaz-khan-image.png"
-        imageAlt="Dr. Fayaz Khan - Representative Stewardship"
+        imageAlt="Dr. Zarf-e-Noori - Representative Stewardship"
       />
 
       <section className=" px-4 pt-0 observatory-gradient">
@@ -280,7 +280,7 @@ export default function FounderPage() {
               </p>
             </blockquote>
             <div className="h-px bg-gradient-to-r from-transparent via-[#C8A75E]/40 to-transparent mb-6 max-w-xs mx-auto" />
-            <p className="text-[#C8A75E] font-semibold tracking-wide">— Dr. Fayaz Khan</p>
+            <p className="text-[#C8A75E] font-semibold tracking-wide">— Dr. Zarf-e-Noori</p>
             <p className="text-[#AAB0D6] text-sm mt-1">Representative Stewardship</p>
           </div>
 
