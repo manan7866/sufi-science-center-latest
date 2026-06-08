@@ -311,11 +311,20 @@ export function Footer() {
               <a href="https://purplesoul.shop/" target="_blank" rel="noopener noreferrer" className="text-[#C8A75E] font-medium hover:underline">Purple Soul Collective by DKC</a>
             </p>
           </div>
-          <div className="text-center text-xs">
-            <p className="mb-1">Media Partner</p>
+          <div className="text-start ">
+            <p className="text-xs">
+              Media Partner{' '}
+              <a href="https://sufipulse.com/" target="_blank" rel="noopener noreferrer" className="text-[#C8A75E] font-medium hover:underline">SufiPulse Studio USA</a>
+            </p>
+            <p className="text-xs">
+              Interfaith program{' '}
+              <a href="https://ifpb.sufisciencecenter.info/" target="_blank" rel="noopener noreferrer" className="text-[#C8A75E] font-medium hover:underline">
+Interfaith Peace Bridge USA</a>
+            </p>
+            {/* <p className="mb-1">Media Partner</p>
             <a href="https://sufipulse.com/" target="_blank" rel="noopener noreferrer" className="text-[#C8A75E] font-medium hover:underline">
               SufiPulse Studio USA
-            </a>
+            </a> */}
           </div>
           <div className="text-center md:text-right text-xs">
             <p>&copy; {new Date().getFullYear()} Sufi Science Center</p>
